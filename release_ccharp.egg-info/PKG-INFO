@@ -1,0 +1,16 @@
+Metadata-Version: 1.1
+Name: release-ccharp
+Version: 1.0.0
+Summary: Release management for c# applications at SNP&SEQ technology platform, Uppsala University
+Home-page: https://github.com/Molmed/release_ccharp
+Author: GitEdvard
+Author-email: UNKNOWN
+License: MIT
+Description: UNKNOWN
+Keywords: development deployment release
+Platform: UNKNOWN
+Classifier: Development Status :: 3 - Alpha
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Build Tools
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 2.7
