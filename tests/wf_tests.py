@@ -16,7 +16,6 @@ class WorkflowTests(unittest.TestCase):
         print obj['testing-repo']
         self.assertEqual(1,1)
 
-    @unittest.skip("")
     def test_create_cand(self):
         self.workflow.create_cand()
         self.assertEqual(1,2)
