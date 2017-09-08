@@ -9,7 +9,13 @@ Handles GitHub flow, user manual export and file copying needed at validation an
 
 The GitHub repo of the application must have the branch structure described in https://github.com/Molmed/release-tools.
 
-Input data, e.g. paths, confluence space key, are stored in the release_ccharp.config file. 
+Input data, e.g. paths, confluence space key, are stored in the release_ccharp.config file.
+
+It have to be .config files in location:
+``<root_path>/<repo-name>/buildconfig/release-tools.config``
+``<root_path>/<repo-name>/buildconfig/confluence-tools.config``
+
+The rest of the folder structure will be creating when running the workflow the first time.
 
 I have tried to write the code platform independent, although it has only been tested on C# applications. 
 
