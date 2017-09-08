@@ -1,4 +1,6 @@
 click
+PyPDF2
+reportlab
 
 [dev]
 

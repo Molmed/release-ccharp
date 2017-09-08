@@ -1,5 +1,8 @@
+MANIFEST.in
 release_ccharp/__init__.py
 release_ccharp/cli.py
+release_ccharp/release_ccharp.config
+release_ccharp/snpseq_paths.py
 release_ccharp/snpseq_workflow.py
 release_ccharp.egg-info/PKG-INFO
 release_ccharp.egg-info/SOURCES.txt
