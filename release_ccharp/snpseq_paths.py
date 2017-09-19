@@ -37,7 +37,7 @@ class SnpseqPaths:
         :return: 
         """
         version = str(workflow.get_latest_version())
-        latest_path = self.find_latest_download_dir(workflow=workflow)
+        latest_path = self.find_current_release_branch_dir(workflow=workflow)
         manual_base_name = "{}-user-manual".format(self.repo)
         manual_name = "{}-v{}.pdf".format(manual_base_name, version)
         return os.path.join(latest_path, manual_name)
@@ -56,3 +56,13 @@ class SnpseqPaths:
         if subdir_path is None:
             raise SnpseqReleaseException("Could not find the download catalog for latest version")
         return subdir_path
+
+    def find_current_release_branch_dir(self, workflow):
+        """
+        Find the download catalog for the latest candidate branch
+        :param workflow: 
+        :return: The path of the latest candidate branch
+        """
+        queue = workflow.get_queue()
+        branch = queue[0]
+        return os.path.join(self.candidate_path, branch)

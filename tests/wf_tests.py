@@ -16,6 +16,7 @@ class WorkflowTests(unittest.TestCase):
         print obj['testing-repo']
         self.assertEqual(1,1)
 
+    @unittest.skip("")
     def test_create_cand(self):
         self.workflow.create_cand()
         self.assertEqual(1,2)
@@ -58,3 +59,8 @@ class WorkflowTests(unittest.TestCase):
     def test_generate_manual(self):
         self.workflow.generate_user_manual()
         self.assertEqual(1,2)
+
+    def test_find_current_release_dir(self):
+        wf = self.workflow._create_workflow()
+        path = self.workflow.paths.find_current_release_branch_dir(workflow=wf)
+        self.assertEqual("xxx", path)
