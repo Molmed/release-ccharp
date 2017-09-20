@@ -60,7 +60,13 @@ class WorkflowTests(unittest.TestCase):
         self.workflow.generate_user_manual()
         self.assertEqual(1,2)
 
+    @unittest.skip("")
     def test_find_current_release_dir(self):
         wf = self.workflow._create_workflow()
         path = self.workflow.paths.find_current_release_branch_dir(workflow=wf)
         self.assertEqual("xxx", path)
+
+    def test_get_current_release_tag(self):
+        wf = self.workflow._create_workflow()
+        tag = self.workflow.paths._get_current_release_tag(wf)
+        self.assertEqual("xxx", tag)

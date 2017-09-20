@@ -36,7 +36,7 @@ class SnpseqPaths:
         i.e. the path to the download directory (not the doc path)
         :return: 
         """
-        version = str(workflow.get_latest_version())
+        version = str(self._get_current_release_tag(workflow))
         latest_path = self.find_current_release_branch_dir(workflow=workflow)
         manual_base_name = "{}-user-manual".format(self.repo)
         manual_name = "{}-v{}.pdf".format(manual_base_name, version)
@@ -66,3 +66,14 @@ class SnpseqPaths:
         queue = workflow.get_queue()
         branch = queue[0]
         return os.path.join(self.candidate_path, branch)
+
+    def _get_current_release_tag(self, workflow):
+        """
+        Get the version of the latest candidate branch
+        :param workflow: 
+        :return: Version of latest candidate branch
+        """
+        queue = workflow.get_queue()
+        branch = queue[0]
+        tag = Conventions.get_tag_from_branch(branch)
+        return tag
