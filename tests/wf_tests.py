@@ -27,6 +27,15 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(1,2)
 
     @unittest.skip("")
+    def test_generate_manual(self):
+        self.workflow.generate_user_manual()
+        self.assertEqual(1,2)
+
+    @unittest.skip("")
+    def test_copy_manual(self):
+        self.workflow.copy_previous_user_manual()
+
+    @unittest.skip("")
     def test_accept(self):
         self.workflow.accept()
         self.assertEqual(1,2)
@@ -56,11 +65,13 @@ class WorkflowTests(unittest.TestCase):
         self.assertEqual(1,2)
 
     @unittest.skip("")
-    def test_generate_manual(self):
-        self.workflow.generate_user_manual()
-        self.assertEqual(1,2)
-
     def test_find_current_release_dir(self):
         wf = self.workflow._create_workflow()
-        path = self.workflow.paths.find_current_release_branch_dir(workflow=wf)
+        path = self.workflow.paths.current_candidate_dir
         self.assertEqual("xxx", path)
+
+    @unittest.skip("")
+    def test_get_current_release_tag(self):
+        wf = self.workflow._create_workflow()
+        tag = self.workflow.paths._candidate_tag
+        self.assertEqual("xxx", tag)

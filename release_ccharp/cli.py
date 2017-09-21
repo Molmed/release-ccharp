@@ -11,7 +11,7 @@ def cli(ctx, whatif):
 
 @cli.command("create-cand")
 @click.argument("repo")
-@click.option("--major", is_flag=False)
+@click.option("--major", is_flag=True, default=False)
 @click.pass_context
 def create_cand(ctx, repo, major):
     workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo)
@@ -52,10 +52,16 @@ def download_release_history(ctx, repo):
 
 @cli.command("generate-user-manual")
 @click.argument("repo")
+@click.option("--copy-latest", is_flag=True, default=False)
 @click.pass_context
-def generate_user_manual(ctx, repo):
+def generate_user_manual(ctx, repo, copy_latest):
     workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo)
-    workflow.generate_user_manual()
+    if copy_latest:
+        print("Copy user manual from latest accepted directory")
+        workflow.copy_previous_user_manual()
+    else:
+        print("Generate user manual from confluence workspace")
+        workflow.generate_user_manual()
 
 
 def cli_main():
