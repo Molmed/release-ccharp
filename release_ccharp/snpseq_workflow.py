@@ -17,7 +17,7 @@ import os
 class SnpseqWorkflow:
     def __init__(self, whatif, repo):
         here = os.path.dirname(__file__)
-        path = os.path.join(here, 'release_ccharp.config')
+        path = os.path.join(here, 'repo.config')
         self.config = None
         with open(path, 'r') as f:
             self.config = yaml.load(f)

@@ -10,8 +10,9 @@ class WorkflowTests(unittest.TestCase):
         # pass
         self.workflow = SnpseqWorkflow(whatif=False, repo='testing-repo')
 
+    @unittest.skip("")
     def test_yaml(self):
-        with open(r'c:\gitroot\release-ccharp\release_ccharp\release_ccharp.config', 'r') as f:
+        with open(r'c:\gitroot\release-ccharp\release_ccharp\repo.config', 'r') as f:
             obj = yaml.load(f)
         print obj['testing-repo']
         self.assertEqual(1,1)

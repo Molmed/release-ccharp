@@ -1,13 +1,8 @@
 import os
 import re
+import yaml
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_ccharp.snpseq_workflow import *
-
-candidate_subpath = r"candidates"
-release_tools_subpath = r"buildconfig\release-tools.config"
-confluence_tools_subpath = r"buildconfig\confluence-tools.config"
-doc_subpath = r"doc"
-doc_metadata_subpath = r"doc\metadata"
 
 
 class SnpseqPaths:
@@ -15,6 +10,19 @@ class SnpseqPaths:
         self.config = config
         self.repo = repo
         self.workflow = None
+        sub_paths = self._load_subpaths()
+        self.release_tools_subpath = sub_paths['release_tools_subpath']
+        self.confluence_tools_subpath = sub_paths['confluence_tools_subpath']
+        self.candidate_subpath = sub_paths['candidate_subpath']
+        self.doc_subpath = sub_paths['doc_subpath']
+        self.doc_metadata_subpath = sub_paths['doc_metadata_subpath']
+
+    def _load_subpaths(self):
+        here = os.path.dirname(__file__)
+        path = os.path.join(here, 'paths.config')
+        with open(path, 'r') as f:
+            sub_paths = yaml.load(f)
+        return sub_paths
 
     @property
     def _repo_root(self):
@@ -34,15 +42,15 @@ class SnpseqPaths:
 
     @property
     def candidate_root_path(self):
-        return os.path.join(self._repo_root, candidate_subpath)
+        return os.path.join(self._repo_root, self.candidate_subpath)
 
     @property
     def release_tools_config(self):
-        return os.path.join(self._repo_root, release_tools_subpath)
+        return os.path.join(self._repo_root, self.release_tools_subpath)
 
     @property
     def confluence_tools_config(self):
-        return os.path.join(self._repo_root, confluence_tools_subpath)
+        return os.path.join(self._repo_root, self.confluence_tools_subpath)
 
     @property
     def user_manual_download_path(self):
