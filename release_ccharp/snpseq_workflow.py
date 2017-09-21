@@ -2,11 +2,13 @@ from release_tools.workflow import Workflow
 from release_tools.workflow import Conventions
 from release_tools.github import GithubProvider
 from release_ccharp.snpseq_paths import *
+from release_ccharp.exceptions import SnpseqReleaseException
 from subprocess import call
 from PyPDF2 import PdfFileWriter
 from PyPDF2 import PdfFileReader
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
+from shutil import copyfile
 import StringIO
 import yaml
 import os
@@ -57,7 +59,7 @@ class SnpseqWorkflow:
 
     def download_release_history(self):
         wf = self._create_workflow()
-        latest_path = self.paths.find_latest_download_dir(workflow=wf)
+        latest_path = self.paths.find_previous_download_dir(workflow=wf)
         path = os.path.join(latest_path, "release-history.txt")
         wf.download_release_history(path=path)
 
@@ -71,8 +73,14 @@ class SnpseqWorkflow:
                 "space-export",
                 space_key,
                 user_manual]
-        call(cmd)
+        if not self.whatif:
+            call(cmd)
 
-
-class SnpseqReleaseException(Exception):
-    pass
+    def copy_previous_user_manual(self):
+        workflow = self._create_workflow()
+        latest_manual = self.paths.user_manual_path_previous(workflow)
+        next_manual = self.paths.user_manual_download_path(workflow)
+        if not os.path.exists(latest_manual):
+            raise SnpseqReleaseException("Previous user manual could not be found: {}".format(latest_manual))
+        if not self.whatif:
+            copyfile(latest_manual, next_manual)

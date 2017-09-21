@@ -1,6 +1,7 @@
 import os
 import re
-from snpseq_workflow import *
+from release_ccharp.exceptions import SnpseqReleaseException
+from release_ccharp.snpseq_workflow import *
 
 candidate_subpath = r"candidates"
 release_tools_subpath = r"buildconfig\release-tools.config"
@@ -36,13 +37,20 @@ class SnpseqPaths:
         i.e. the path to the download directory (not the doc path)
         :return: 
         """
-        version = str(self._get_current_release_tag(workflow))
-        latest_path = self.find_current_release_branch_dir(workflow=workflow)
+        version = str(self._candidate_tag(workflow))
+        latest_path = self.find_current_candidate_dir(workflow=workflow)
         manual_base_name = "{}-user-manual".format(self.repo)
-        manual_name = "{}-v{}.pdf".format(manual_base_name, version)
+        manual_name = "{}-{}.pdf".format(manual_base_name, version)
         return os.path.join(latest_path, manual_name)
 
-    def find_latest_download_dir(self, workflow):
+    def user_manual_path_previous(self, workflow):
+        manual_base_name = "{}-user-manual".format(self.repo)
+        latest_version = workflow.get_latest_version()
+        manual_name = "{}-v{}.pdf".format(manual_base_name, latest_version)
+        latest_path = self.find_previous_download_dir(workflow)
+        return os.path.join(latest_path, manual_name)
+
+    def find_previous_download_dir(self, workflow):
         """
         Find the download catalog for the latest accepted branch
         :return: The path of latest accepted branch
@@ -57,7 +65,7 @@ class SnpseqPaths:
             raise SnpseqReleaseException("Could not find the download catalog for latest version")
         return subdir_path
 
-    def find_current_release_branch_dir(self, workflow):
+    def find_current_candidate_dir(self, workflow):
         """
         Find the download catalog for the latest candidate branch
         :param workflow: 
@@ -67,7 +75,7 @@ class SnpseqPaths:
         branch = queue[0]
         return os.path.join(self.candidate_path, branch)
 
-    def _get_current_release_tag(self, workflow):
+    def _candidate_tag(self, workflow):
         """
         Get the version of the latest candidate branch
         :param workflow: 

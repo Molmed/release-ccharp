@@ -1,0 +1,2 @@
+class SnpseqReleaseException(Exception):
+    pass
