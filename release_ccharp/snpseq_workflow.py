@@ -12,6 +12,7 @@ from shutil import copyfile
 import StringIO
 import yaml
 import os
+from release_ccharp.config import Config
 
 
 class SnpseqWorkflow:
@@ -20,7 +21,7 @@ class SnpseqWorkflow:
         self.config = conf.open_config(repo)
         self.whatif = whatif
         self.repo = repo
-        self.paths = SnpseqPaths(self.config, self.repo)
+        self.paths = SnpseqPathProperties(self.config, self.repo)
         self.workflow = self._create_workflow()
         self.paths.workflow = self.workflow
 

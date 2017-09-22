@@ -33,3 +33,13 @@ class MiscTests(unittest.TestCase):
         else:
             print "not matching"
         self.assertEqual(1,2)
+
+    def test_create_directory(self):
+        path = r'c:\tmp\newfolder\subpath'
+        print("Check path already defined...")
+        if not os.path.exists(path):
+            print("Create directory: {}".format(path))
+            os.makedirs(path)
+        else:
+            print "Path already exists"
+        self.assertEqual(1,2)
