@@ -17,7 +17,7 @@ class MiscTests(unittest.TestCase):
 
     @unittest.skip("")
     def test_find_directories(self):
-        download_path = self.workflow.config[self.workflow.repo]['download_path']
+        download_path = self.workflow.config['download_path']
         subentries = os.listdir(download_path)
         for entry in subentries:
             path_for_entry = os.path.join(download_path, entry)

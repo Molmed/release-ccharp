@@ -34,7 +34,7 @@ class SnpseqPaths:
 
     @property
     def _repo_root(self):
-        return os.path.join(self.config[self.repo]['root_path'], self.repo)
+        return os.path.join(self.config['root_path'], self.repo)
 
     @property
     def _candidate_tag(self):
