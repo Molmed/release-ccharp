@@ -1,5 +1,8 @@
 import click
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
+from release_ccharp.snpseq_paths import SnpseqPathProperties
+from release_ccharp.snpseq_paths import SnpseqPathActions
+from release_ccharp.config import Config
 
 
 @click.group()
@@ -63,6 +66,16 @@ def generate_user_manual(ctx, repo, copy_latest):
         print("Generate user manual from confluence workspace")
         workflow.generate_user_manual()
 
+
+@cli.command("generate-folder-tree")
+@click.argument("repo")
+@click.pass_context
+def generate_folder_tree(ctx, repo):
+    c = Config()
+    config = c.open_config(repo)
+    path_properites = SnpseqPathProperties(config, repo)
+    path_actions = SnpseqPathActions(whatif=ctx.obj['whatif'], snpseq_path_properties=path_properites)
+    path_actions.generate_folder_tree()
 
 def cli_main():
     cli(obj={})
