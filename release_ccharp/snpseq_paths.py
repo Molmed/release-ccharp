@@ -14,8 +14,16 @@ class SnpseqPaths:
         self.release_tools_subpath = sub_paths['release_tools_subpath']
         self.confluence_tools_subpath = sub_paths['confluence_tools_subpath']
         self.candidate_subpath = sub_paths['candidate_subpath']
+        self.devel_environment_subpath = sub_paths['devel_environment_subpath']
         self.doc_subpath = sub_paths['doc_subpath']
         self.doc_metadata_subpath = sub_paths['doc_metadata_subpath']
+        self.user_validations_subpath = sub_paths['user_validations_subpath']
+        self.user_validations_all_version_subpath = sub_paths['user_validations_all_version_subpath']
+        self.user_validations_next_hotfix_subpath = sub_paths ['user_validations_next_hotfix_subpath']
+        self.user_validations_next_release_subpath = sub_paths['user_validations_next_release_subpath']
+        self.user_validations_validation_files_subpath = sub_paths['user_validations_validation_files_subpath']
+        self.user_validations_sql_updates_subpath = sub_paths['user_validations_sql_updates_subpath']
+        self.user_validations_latest_subpath = sub_paths['user_validations_latest_subpath']
 
     def _load_subpaths(self):
         here = os.path.dirname(__file__)

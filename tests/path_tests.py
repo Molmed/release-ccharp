@@ -4,7 +4,6 @@ from release_ccharp.snpseq_workflow import SnpseqWorkflow
 
 class PathTests(unittest.TestCase):
 
-    @unittest.skip("")
     def setUp(self):
         self.workflow = SnpseqWorkflow(whatif=False, repo='testing-repo')
 
@@ -17,3 +16,7 @@ class PathTests(unittest.TestCase):
     def test_get_current_candidate_tag(self):
         tag = self.workflow.paths._candidate_tag
         self.assertEqual("xxx", tag)
+
+    def test_init_paths(self):
+        # instantiate workflow (and paths) in setUp
+        pass
