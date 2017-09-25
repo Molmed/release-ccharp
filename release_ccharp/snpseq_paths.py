@@ -1,24 +1,41 @@
 import os
 import re
+import yaml
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_ccharp.snpseq_workflow import *
 
-candidate_subpath = r"candidates"
-release_tools_subpath = r"buildconfig\release-tools.config"
-confluence_tools_subpath = r"buildconfig\confluence-tools.config"
-doc_subpath = r"doc"
-doc_metadata_subpath = r"doc\metadata"
 
-
-class SnpseqPaths:
+class SnpseqPathProperties:
     def __init__(self, config, repo):
         self.config = config
         self.repo = repo
         self.workflow = None
+        sub_paths = self._load_subpaths()
+        self.build_config_subpath = sub_paths['build_config_subpath']
+        self.release_tools_subpath = sub_paths['release_tools_subpath']
+        self.confluence_tools_subpath = sub_paths['confluence_tools_subpath']
+        self.candidate_subpath = sub_paths['candidate_subpath']
+        self.devel_environment_subpath = sub_paths['devel_environment_subpath']
+        self.doc_subpath = sub_paths['doc_subpath']
+        self.doc_metadata_subpath = sub_paths['doc_metadata_subpath']
+        self.user_validations_subpath = sub_paths['user_validations_subpath']
+        self.user_validations_all_version_subpath = sub_paths['user_validations_all_version_subpath']
+        self.user_validations_next_hotfix_subpath = sub_paths ['user_validations_next_hotfix_subpath']
+        self.user_validations_next_release_subpath = sub_paths['user_validations_next_release_subpath']
+        self.user_validations_validation_files_subpath = sub_paths['user_validations_validation_files_subpath']
+        self.user_validations_sql_updates_subpath = sub_paths['user_validations_sql_updates_subpath']
+        self.user_validations_latest_subpath = sub_paths['user_validations_latest_subpath']
+
+    def _load_subpaths(self):
+        here = os.path.dirname(__file__)
+        path = os.path.join(here, 'paths.config')
+        with open(path, 'r') as f:
+            sub_paths = yaml.load(f)
+        return sub_paths
 
     @property
     def _repo_root(self):
-        return os.path.join(self.config[self.repo]['root_path'], self.repo)
+        return os.path.join(self.config['root_path'], self.repo)
 
     @property
     def _candidate_tag(self):
@@ -34,15 +51,15 @@ class SnpseqPaths:
 
     @property
     def candidate_root_path(self):
-        return os.path.join(self._repo_root, candidate_subpath)
+        return os.path.join(self._repo_root, self.candidate_subpath)
 
     @property
     def release_tools_config(self):
-        return os.path.join(self._repo_root, release_tools_subpath)
+        return os.path.join(self._repo_root, self.release_tools_subpath)
 
     @property
     def confluence_tools_config(self):
-        return os.path.join(self._repo_root, confluence_tools_subpath)
+        return os.path.join(self._repo_root, self.confluence_tools_subpath)
 
     @property
     def user_manual_download_path(self):
@@ -91,3 +108,52 @@ class SnpseqPaths:
         queue = self.workflow.get_queue()
         branch = queue[0]
         return os.path.join(self.candidate_root_path, branch)
+
+
+class SnpseqPathActions:
+    def __init__(self, whatif, snpseq_path_properties):
+        self.snpseq_path_properties = snpseq_path_properties
+        self.whatif = whatif
+
+    def generate_folder_tree(self):
+        root_path = self.snpseq_path_properties._repo_root
+        # Generate path variables
+        build_config = os.path.join(root_path, self.snpseq_path_properties.build_config_subpath)
+        candidates = os.path.join(root_path, self.snpseq_path_properties.candidate_subpath)
+        devel_environment = os.path.join(root_path, self.snpseq_path_properties.devel_environment_subpath)
+        doc = os.path.join(root_path, self.snpseq_path_properties.doc_subpath)
+        doc_metadata = os.path.join(doc, self.snpseq_path_properties.doc_metadata_subpath)
+        user_validations = os.path.join(root_path, self.snpseq_path_properties.user_validations_subpath)
+        user_validations_latest = os.path.join(user_validations, self.snpseq_path_properties.user_validations_latest_subpath)
+        latest_validation_files = os.path.join(user_validations_latest, self.snpseq_path_properties.user_validations_subpath)
+        all_versions = os.path.join(user_validations, self.snpseq_path_properties.user_validations_all_version_subpath)
+        next_hotfix = os.path.join(all_versions, self.snpseq_path_properties.user_validations_next_hotfix_subpath)
+        next_release = os.path.join(all_versions, self.snpseq_path_properties.user_validations_next_release_subpath)
+        validation_files_next_hotfix = os.path.join(next_hotfix, self.snpseq_path_properties.user_validations_validation_files_subpath)
+        sql_updates_next_hotfix = os.path.join(next_hotfix, self.snpseq_path_properties.user_validations_sql_updates_subpath)
+        validation_files_next_release = os.path.join(next_release, self.snpseq_path_properties.user_validations_validation_files_subpath)
+        sql_updates_next_release = os.path.join(next_release, self.snpseq_path_properties.user_validations_sql_updates_subpath)
+        # Create paths
+        self.create_dirs(build_config)
+        self.create_dirs(candidates)
+        self.create_dirs(devel_environment)
+        self.create_dirs(doc)
+        self.create_dirs(doc_metadata)
+        self.create_dirs(user_validations)
+        self.create_dirs(user_validations_latest)
+        self.create_dirs(latest_validation_files)
+        self.create_dirs(all_versions)
+        self.create_dirs(next_hotfix)
+        self.create_dirs(next_release)
+        self.create_dirs(validation_files_next_hotfix)
+        self.create_dirs(sql_updates_next_hotfix)
+        self.create_dirs(validation_files_next_release)
+        self.create_dirs(sql_updates_next_release)
+
+    def create_dirs(self, path):
+        if not os.path.exists(path):
+            print("Create directory: {}".format(path))
+            if not self.whatif:
+                os.makedirs(path)
+        else:
+            print "Path already exists: {}".format(path)

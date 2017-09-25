@@ -1,7 +1,7 @@
 from release_tools.workflow import Workflow
 from release_tools.workflow import Conventions
 from release_tools.github import GithubProvider
-from release_ccharp.snpseq_paths import *
+from release_ccharp.snpseq_paths import SnpseqPathProperties
 from release_ccharp.exceptions import SnpseqReleaseException
 from subprocess import call
 from PyPDF2 import PdfFileWriter
@@ -12,34 +12,30 @@ from shutil import copyfile
 import StringIO
 import yaml
 import os
+from release_ccharp.config import Config
 
 
 class SnpseqWorkflow:
     def __init__(self, whatif, repo):
-        here = os.path.dirname(__file__)
-        path = os.path.join(here, 'release_ccharp.config')
-        self.config = None
-        with open(path, 'r') as f:
-            self.config = yaml.load(f)
+        conf = Config()
+        self.config = conf.open_config(repo)
         self.whatif = whatif
         self.repo = repo
-        self.paths = SnpseqPaths(self.config, self.repo)
+        self.paths = SnpseqPathProperties(self.config, self.repo)
         self.workflow = self._create_workflow()
         self.paths.workflow = self.workflow
 
-    def _open_config(self, config_file):
+    def _open_github_provider_config(self, config_file):
         with open(config_file) as f:
             contents = yaml.load(f)
         return contents['access_token'] if contents and "access_token" in contents else None
 
     def _create_workflow(self):
-        if not self.repo in self.config:
-            raise SnpseqReleaseException("This repo name is not present in the config file! '{}'".format(self.repo))
-        owner = self.config[self.repo]['owner']
+        owner = self.config['owner']
         repo = self.repo
         config_file = self.paths.release_tools_config
         whatif = self.whatif
-        access_token = self._open_config(config_file)
+        access_token = self._open_github_provider_config(config_file)
         provider = GithubProvider(owner, repo, access_token)
         return Workflow(provider, Conventions, whatif)
 
@@ -66,7 +62,7 @@ class SnpseqWorkflow:
         self.workflow.download_release_history(path=path)
 
     def generate_user_manual(self):
-        space_key = self.config[self.repo]["confluence_space_key"]
+        space_key = self.config["confluence_space_key"]
         user_manual = self.paths.user_manual_download_path
         cmd = ["confluence-tools",
                 "--config",
