@@ -1,21 +1,20 @@
+from subprocess import call
+from shutil import copyfile
+import yaml
+import os
 from release_tools.workflow import Workflow
 from release_tools.workflow import Conventions
 from release_tools.github import GithubProvider
 from release_ccharp.snpseq_paths import SnpseqPathProperties
 from release_ccharp.exceptions import SnpseqReleaseException
-from subprocess import call
-from PyPDF2 import PdfFileWriter
-from PyPDF2 import PdfFileReader
-from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import A4
-from shutil import copyfile
-import StringIO
-import yaml
-import os
 from release_ccharp.config import Config
+from release_ccharp.branches import BranchProvider
 
 
 class SnpseqWorkflow:
+    """
+    Initializes a release-tools workflow to act on the github provider
+    """
     def __init__(self, whatif, repo):
         conf = Config()
         self.config = conf.open_config(repo)
@@ -23,7 +22,7 @@ class SnpseqWorkflow:
         self.repo = repo
         self.paths = SnpseqPathProperties(self.config, self.repo)
         self.workflow = self._create_workflow()
-        self.paths.workflow = self.workflow
+        self.paths.branch_provider = BranchProvider(self.workflow)
 
     def _open_github_provider_config(self, config_file):
         with open(config_file) as f:
