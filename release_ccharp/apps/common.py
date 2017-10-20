@@ -3,6 +3,7 @@ import os
 import re
 import abc
 import xml.etree.ElementTree as ET
+import importlib
 from shutil import copyfile
 from subprocess import call
 from shutil import copytree
@@ -10,6 +11,7 @@ from contextlib import contextmanager
 from release_ccharp.utils import single
 from release_ccharp.utils import lazyprop
 from release_ccharp.exceptions import SnpseqReleaseException
+from release_ccharp.snpseq_workflow import SnpseqWorkflow
 
 
 class ApplicationBase(object):
@@ -165,3 +167,17 @@ class BinaryVersionUpdater:
         if not self.whatif:
             with open(self.assembly_file_path, 'w') as f:
                 f.write(updated)
+
+
+class ApplicationFactory:
+    def import_application(self, repo):
+        repo = repo.replace("-", "_")
+        module = "release_ccharp.apps.{}".format(repo)
+        module_obj = importlib.import_module(module)
+        return getattr(module_obj, "Application")
+
+    def get_instance(self, whatif, repo):
+        application = self.import_application(repo)
+        wf = SnpseqWorkflow(whatif, repo)
+        branch_provider = wf.paths.branch_provider
+        return application(wf, branch_provider, whatif)
