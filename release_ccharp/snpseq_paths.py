@@ -2,14 +2,14 @@ import os
 import re
 import yaml
 from release_ccharp.exceptions import SnpseqReleaseException
-from release_ccharp.snpseq_workflow import *
+from release_tools.workflow import Conventions
 
 
 class SnpseqPathProperties:
     def __init__(self, config, repo):
         self.config = config
         self.repo = repo
-        self.workflow = None
+        self.branch_provider = None
         sub_paths = self._load_subpaths()
         self.build_config_subpath = sub_paths['build_config_subpath']
         self.release_tools_subpath = sub_paths['release_tools_subpath']
@@ -44,9 +44,7 @@ class SnpseqPathProperties:
         :param workflow: 
         :return: Version of latest candidate branch
         """
-        queue = self.workflow.get_queue()
-        branch = queue[0]
-        tag = Conventions.get_tag_from_branch(branch)
+        tag = Conventions.get_tag_from_branch(self.branch_provider.candidate_branch)
         return tag
 
     @property
@@ -77,8 +75,7 @@ class SnpseqPathProperties:
     @property
     def user_manual_path_previous(self):
         manual_base_name = "{}-user-manual".format(self.repo)
-        latest_version = self.workflow.get_latest_version()
-        manual_name = "{}-v{}.pdf".format(manual_base_name, latest_version)
+        manual_name = "{}-v{}.pdf".format(manual_base_name, self.branch_provider.latest_version)
         latest_path = self.latest_accepted_candidate_dir
         return os.path.join(latest_path, manual_name)
 
@@ -88,11 +85,10 @@ class SnpseqPathProperties:
         Find the download catalog for the latest accepted branch
         :return: The path of latest accepted branch
         """
-        current_version = self.workflow.get_latest_version()
         subdirs = os.listdir(self.candidate_root_path)
         subdir_path = None
         for subdir in subdirs:
-            if re.match('(release|hotfix)-{}'.format(current_version), subdir):
+            if re.match('(release|hotfix)-{}'.format(self.branch_provider.latest_version), subdir):
                 subdir_path = os.path.join(self.candidate_root_path, subdir)
         if subdir_path is None:
             raise SnpseqReleaseException("Could not find the download catalog for latest version")
@@ -105,9 +101,7 @@ class SnpseqPathProperties:
         :param workflow: 
         :return: The path of the latest candidate branch
         """
-        queue = self.workflow.get_queue()
-        branch = queue[0]
-        return os.path.join(self.candidate_root_path, branch)
+        return os.path.join(self.candidate_root_path, self.branch_provider.candidate_branch)
 
 
 class SnpseqPathActions:

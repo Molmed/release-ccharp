@@ -3,6 +3,7 @@ from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.snpseq_paths import SnpseqPathProperties
 from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.config import Config
+from release_ccharp.apps.common import ApplicationFactory
 
 
 @click.group()
@@ -36,6 +37,14 @@ def download(ctx, repo):
     workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo)
     workflow.download()
 
+
+@cli.command("build")
+@click.argument("repo")
+@click.pass_context
+def build(ctx, repo):
+    factory = ApplicationFactory()
+    instance = factory.get_instance(whatif=ctx.obj['whatif'], repo=repo)
+    instance.build()
 
 @cli.command("accept")
 @click.argument("repo")
