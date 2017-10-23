@@ -1,5 +1,6 @@
 import unittest
 import os
+import re
 import yaml
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
 
