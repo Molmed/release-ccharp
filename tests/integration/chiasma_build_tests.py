@@ -2,6 +2,7 @@ from __future__ import print_function
 import unittest
 from release_ccharp.apps.chiasma import Application
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
+from release_ccharp.utility.os_service import OsService
 from release_ccharp.apps.dev_environment import TestEnvironmentProvider
 
 
@@ -18,7 +19,7 @@ class ChiasmaBuildTests(unittest.TestCase):
         wf.config = config
         wf.paths.config = config
         wf.paths.branch_provider = branch_provider
-        self.chiasma = Application(wf, branch_provider, whatif=False)
+        self.chiasma = Application(wf, branch_provider, OsService(), whatif=False)
 
     @unittest.skip("Requires folder structure setup")
     def test__check_build_not_already_run__with_validation_folder_already_existing__exception(self):

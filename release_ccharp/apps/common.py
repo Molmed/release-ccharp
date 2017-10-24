@@ -15,13 +15,13 @@ from release_ccharp.snpseq_workflow import SnpseqWorkflow
 
 
 class ApplicationBase(object):
-    def __init__(self, snpseq_workflow, branch_provider, whatif):
+    def __init__(self, snpseq_workflow, branch_provider, os_service, whatif):
         self.snpseq_workflow = snpseq_workflow
         self.config = snpseq_workflow.config
         self.path_properties = snpseq_workflow.paths
         self.branch_provider = branch_provider
         self.whatif = whatif
-        self.app_paths = AppPaths(self.config, self.path_properties)
+        self.app_paths = AppPaths(self.config, self.path_properties, os_service)
         self.builder = AppBuilder(self.app_paths)
 
     @contextmanager
@@ -80,14 +80,16 @@ class AppBuilder:
 
 
 class AppPaths:
-    def __init__(self, config, path_properties):
+    def __init__(self, config, path_properties, os_service):
         self.config = config
         self.path_properties = path_properties
+        self.os_service = os_service
 
     def find_download_directory_name(self):
         candidate_dir = self.path_properties.current_candidate_dir
         pattern = "{}-{}".format(self.config["owner"], self.config["git_repo_name"])
-        dir_lst = [o for o in os.listdir(candidate_dir) if os.path.isdir(os.path.join(candidate_dir, o))]
+        oss = self.os_service
+        dir_lst = [o for o in oss.listdir(candidate_dir) if oss.isdir(os.path.join(candidate_dir, o))]
         for d in dir_lst:
             if pattern in d:
                 return d
@@ -115,8 +117,8 @@ class AppPaths:
     def move_candidates(self):
         release_subdir = os.path.join(self.config["git_repo_name"], r'bin\release')
         release_dir = os.path.join(self.download_dir, release_subdir)
-        copytree(release_dir, self.validation_dir)
-        copytree(release_dir, self.production_dir)
+        self.os_service.copytree(release_dir, self.validation_dir)
+        self.os_service.copytree(release_dir, self.production_dir)
 
 
 class BinaryVersionUpdater:

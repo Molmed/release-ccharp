@@ -1,8 +1,9 @@
 from __future__ import print_function
 import unittest
+from pyfakefs import fake_filesystem
 from release_ccharp.apps.chiasma import Application
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
-from release_ccharp.apps.dev_environment import TestEnvironmentProvider
+from tests.unit.utility.fake_os_service import FakeOsService
 
 
 class ChiasmaBuildTests(unittest.TestCase):
@@ -18,7 +19,9 @@ class ChiasmaBuildTests(unittest.TestCase):
         wf.config = config
         wf.paths.config = config
         wf.paths.branch_provider = branch_provider
-        self.chiasma = Application(wf, branch_provider, whatif=False)
+        filesystem = fake_filesystem.FakeFilesystem()
+        os_service = FakeOsService(filesystem)
+        self.chiasma = Application(wf, branch_provider, os_service, whatif=False)
 
     def test__get_version(self):
         version = self.chiasma.branch_provider.candidate_version
