@@ -3,6 +3,7 @@ import os
 from release_ccharp.snpseq_paths import SnpseqPathProperties
 from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
+from release_ccharp.utility.os_service import OsService
 
 
 class TestEnvironmentProvider:
@@ -12,7 +13,8 @@ class TestEnvironmentProvider:
     def generate(self, config):
         # Prepare
         path_properites = SnpseqPathProperties(config, config["git_repo_name"])
-        path_actions = SnpseqPathActions(whatif=False, snpseq_path_properties=path_properites)
+        path_actions = SnpseqPathActions(whatif=False, snpseq_path_properties=path_properites,
+                                         os_service=OsService())
         wf = SnpseqWorkflow(whatif=False, repo=config["git_repo_name"])
         wf.config = config
         branch = "master"
