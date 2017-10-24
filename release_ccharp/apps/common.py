@@ -2,26 +2,25 @@ from __future__ import print_function
 import os
 import re
 import abc
-import xml.etree.ElementTree as ET
 import importlib
-from shutil import copyfile
 from subprocess import call
-from shutil import copytree
 from contextlib import contextmanager
 from release_ccharp.utils import single
 from release_ccharp.utils import lazyprop
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
+from release_ccharp.utility.os_service import OsService
 
 
 class ApplicationBase(object):
-    def __init__(self, snpseq_workflow, branch_provider, whatif):
+    def __init__(self, snpseq_workflow, branch_provider, os_service, whatif):
         self.snpseq_workflow = snpseq_workflow
         self.config = snpseq_workflow.config
         self.path_properties = snpseq_workflow.paths
         self.branch_provider = branch_provider
         self.whatif = whatif
-        self.app_paths = AppPaths(self.config, self.path_properties)
+        self.os_service = os_service
+        self.app_paths = AppPaths(self.config, self.path_properties, os_service)
         self.builder = AppBuilder(self.app_paths)
 
     @contextmanager
@@ -30,10 +29,10 @@ class ApplicationBase(object):
         self.log("Updating xml file: {}".format(path))
         if backup_origfile and not os.path.exists(orig_file_path):
             self.log("Saving backup of original file: {}".format(orig_file_path))
-            copyfile(path, orig_file_path)
-        tree = ET.parse(path)
+            self.os_service.copyfile(path, orig_file_path)
+        tree = self.os_service.et_parse(path)
         yield tree.getroot()
-        tree.write(path)
+        self.os_service.et_write(tree, path)
 
     def log(self, msg):
         if self.whatif:
@@ -53,6 +52,10 @@ class StandardVSConfigXML:
     def update(self, key, value):
         node = single([n for n in self.setting_list if n.get('name') == key])
         node.find('value').text = value
+
+    def get(self, key):
+        node = single([n for n in self.setting_list if n.get('name') == key])
+        return node.find('value').text
 
 
 class AppBuilder:
@@ -80,14 +83,16 @@ class AppBuilder:
 
 
 class AppPaths:
-    def __init__(self, config, path_properties):
+    def __init__(self, config, path_properties, os_service):
         self.config = config
         self.path_properties = path_properties
+        self.os_service = os_service
 
     def find_download_directory_name(self):
         candidate_dir = self.path_properties.current_candidate_dir
         pattern = "{}-{}".format(self.config["owner"], self.config["git_repo_name"])
-        dir_lst = [o for o in os.listdir(candidate_dir) if os.path.isdir(os.path.join(candidate_dir, o))]
+        oss = self.os_service
+        dir_lst = [o for o in oss.listdir(candidate_dir) if oss.isdir(os.path.join(candidate_dir, o))]
         for d in dir_lst:
             if pattern in d:
                 return d
@@ -115,33 +120,34 @@ class AppPaths:
     def move_candidates(self):
         release_subdir = os.path.join(self.config["git_repo_name"], r'bin\release')
         release_dir = os.path.join(self.download_dir, release_subdir)
-        copytree(release_dir, self.validation_dir)
-        copytree(release_dir, self.production_dir)
+        self.os_service.copytree(release_dir, self.validation_dir)
+        self.os_service.copytree(release_dir, self.production_dir)
 
 
 class BinaryVersionUpdater:
-    def __init__(self, whatif, config, path_properties, branch_provider, app_paths):
+    def __init__(self, whatif, config, path_properties, branch_provider, app_paths, os_service):
         self.config = config
         self.whatif = whatif
         self.path_properties = path_properties
         self.branch_provider = branch_provider
         self.app_paths = app_paths
+        self.os_service = os_service
 
     @lazyprop
     def assembly_file_path(self):
         assembly_subpath = os.path.join(self.config["git_repo_name"], r'properties\assemblyinfo.cs')
         assembly_file_path = os.path.join(
             self.app_paths.download_dir, assembly_subpath)
-        if not os.path.exists(assembly_file_path):
+        if not self.os_service.exists(assembly_file_path):
             raise SnpseqReleaseException(
                 "The assembly info file could not be found {}".format(assembly_file_path))
         return assembly_file_path
 
     def _save_assembly_backup(self):
         orig_file_path = "{}.orig".format(self.assembly_file_path)
-        if not os.path.exists(orig_file_path):
+        if not self.os_service.exists(orig_file_path):
             print("Saving backup of original file: {}".format(orig_file_path))
-            copyfile(self.assembly_file_path, orig_file_path)
+            self.os_service.copyfile(self.assembly_file_path, orig_file_path)
 
     def get_assembly_replace_strings(self, content, new_version):
         match = re.search("assembly: AssemblyVersion\(\".+\"\)", content)
@@ -154,7 +160,7 @@ class BinaryVersionUpdater:
     def update_binary_version(self):
         print("Updating assembly info file...")
         self._save_assembly_backup()
-        with open(self.assembly_file_path, 'r') as f:
+        with self.os_service.open(self.assembly_file_path, 'r') as f:
             content = f.read()
         version = self.branch_provider.candidate_version
         current, new = self.get_assembly_replace_strings(content, version)
@@ -165,7 +171,7 @@ class BinaryVersionUpdater:
         print(new)
         updated = content.replace(current, new)
         if not self.whatif:
-            with open(self.assembly_file_path, 'w') as f:
+            with self.os_service.open(self.assembly_file_path, 'w') as f:
                 f.write(updated)
 
 
@@ -180,4 +186,4 @@ class ApplicationFactory:
         application = self.import_application(repo)
         wf = SnpseqWorkflow(whatif, repo)
         branch_provider = wf.paths.branch_provider
-        return application(wf, branch_provider, whatif)
+        return application(wf, branch_provider, OsService(), whatif)

@@ -105,9 +105,10 @@ class SnpseqPathProperties:
 
 
 class SnpseqPathActions:
-    def __init__(self, whatif, snpseq_path_properties):
+    def __init__(self, whatif, snpseq_path_properties, os_service):
         self.snpseq_path_properties = snpseq_path_properties
         self.whatif = whatif
+        self.os_service = os_service
 
     def generate_folder_tree(self):
         root_path = self.snpseq_path_properties._repo_root
@@ -145,9 +146,9 @@ class SnpseqPathActions:
         self.create_dirs(sql_updates_next_release)
 
     def create_dirs(self, path):
-        if not os.path.exists(path):
+        if not self.os_service.exists(path):
             print("Create directory: {}".format(path))
             if not self.whatif:
-                os.makedirs(path)
+                self.os_service.makedirs(path)
         else:
             print "Path already exists: {}".format(path)

@@ -1,8 +1,8 @@
 import unittest
-from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.snpseq_paths import SnpseqPathProperties
 from release_ccharp.config import Config
+from release_ccharp.utility.os_service import OsService
 
 
 class PathTests(unittest.TestCase):
@@ -31,6 +31,6 @@ class PathTests(unittest.TestCase):
         self.assertEqual("xxx", root_path)
 
     def test_generate_paths(self):
-        generator = SnpseqPathActions(False, self.path_properties)
+        generator = SnpseqPathActions(False, self.path_properties, OsService())
         generator.generate_folder_tree()
         self.assertEqual(1,2)

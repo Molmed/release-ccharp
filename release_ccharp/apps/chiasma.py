@@ -14,11 +14,11 @@ class Application(ApplicationBase):
     It needs snpseq-workflow because the latest and candidate version
     is fetch through the github provider (in the workflow)
     """
-    def __init__(self, snpseq_workflow, branch_provider, whatif):
-        super(Application, self).__init__(snpseq_workflow, branch_provider, whatif)
+    def __init__(self, snpseq_workflow, branch_provider, os_service, whatif):
+        super(Application, self).__init__(snpseq_workflow, branch_provider, os_service, whatif)
         self.binary_version_updater = BinaryVersionUpdater(
             whatif=False, config=self.config, path_properties=self.path_properties,
-            branch_provider=branch_provider, app_paths=self.app_paths)
+            branch_provider=branch_provider, app_paths=self.app_paths, os_service=os_service)
 
     def build(self):
         self.check_build_not_already_run()
@@ -54,10 +54,12 @@ class Application(ApplicationBase):
             config.update("DebugMode", "False")
             config.update("DatabaseName", db_name)
         lab_config_dir = os.path.join(directory, "Config_lab")
-        path_actions = SnpseqPathActions(whatif=self.whatif, snpseq_path_properties=self.path_properties)
+        path_actions = SnpseqPathActions(whatif=self.whatif,
+                                         snpseq_path_properties=self.path_properties,
+                                         os_service=self.os_service)
         path_actions.create_dirs(lab_config_dir)
         lab_config_file_path = os.path.join(lab_config_dir, self.app_paths.config_file_name)
-        copyfile(config_file_path, lab_config_file_path)
+        self.os_service.copyfile(config_file_path, lab_config_file_path)
         with self.open_xml(lab_config_file_path, backup_origfile=False) as xml:
             config = StandardVSConfigXML(xml, "Molmed.Chiasma")
             config.update("ApplicationMode", "LAB")

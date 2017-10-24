@@ -27,7 +27,7 @@ setup(
     # You can just specify the packages manually here if your project is
     # simple. Or you can use find_packages().
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),
-    install_requires=['click', 'PyPDF2', 'reportlab'],
+    install_requires=['click', 'pyfakefs'],
 
     # $ pip install -e .[dev,test]
     extras_require={
