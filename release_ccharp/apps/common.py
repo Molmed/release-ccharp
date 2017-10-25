@@ -5,6 +5,7 @@ import abc
 import importlib
 from subprocess import call
 from contextlib import contextmanager
+from win32com.client import Dispatch
 from release_ccharp.utils import single
 from release_ccharp.utils import lazyprop
 from release_ccharp.exceptions import SnpseqReleaseException
@@ -59,30 +60,28 @@ class StandardVSConfigXML:
 
 
 class WindowsCommands:
-    def __init__(self, app_paths):
-        self.app_paths = app_paths
-
-    def find_solution_file(self):
-        download_dir = self.app_paths.download_dir
-        lst = [o for o in os.listdir(download_dir) if os.path.isfile(os.path.join(download_dir, o))]
-        for file in lst:
-            if file.endswith(".sln"):
-                return file
-        raise SnpseqReleaseException("The solution file could not be found, directory {}".format(download_dir))
-
-    def build_solution(self):
+    def build_solution(self, solution_file_path):
         build_path = r'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe'
-        solution_file = self.find_solution_file()
-        print("build on solution file: {}".format(solution_file))
-        target = os.path.join(self.app_paths.download_dir, solution_file)
-        cmd = [build_path, target,
+        print("build on solution file: {}".format(solution_file_path))
+        cmd = [build_path, solution_file_path,
                r'/p:WarningLevel=0',
                r'/verbosity:minimal',
                r'/p:Configuration=Release']
         call(cmd)
 
+    def create_shortcut(self, save_path, target_path):
+        shell = Dispatch('WScript.Shell')
+        shortcut = shell.CreateShortCut(save_path)
+        shortcut.TargetPath = target_path
+        shortcut.save()
+
 
 class AppPaths:
+    """
+    Handles directories which is located under a specific candidate
+    Also include path actions
+    """
+    # TODO: move to snpseq_paths?
     def __init__(self, config, path_properties, os_service):
         self.config = config
         self.path_properties = path_properties

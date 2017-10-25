@@ -103,6 +103,11 @@ class SnpseqPathProperties:
         """
         return os.path.join(self.candidate_root_path, self.branch_provider.candidate_branch)
 
+    @property
+    def user_validation_latest(self):
+        user_validation_dir = os.path.join(self._repo_root, self.user_validations_subpath)
+        return os.path.join(user_validation_dir, self.user_validations_latest_subpath)
+
 
 class SnpseqPathActions:
     def __init__(self, whatif, snpseq_path_properties, os_service):

@@ -126,7 +126,6 @@ row3"""
         self.assertEqual(expected, contents)
 
 
-
 class FakeBranchProvider:
     def __init__(self):
         self.candidate_version = "1.0.0"

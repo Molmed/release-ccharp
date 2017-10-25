@@ -29,7 +29,17 @@ class ChiasmaBuilder:
                 "They need to be removed before continuing"))
 
     def build_solution(self):
-        self.chiasma.windows_commands.build_solution()
+        solution_file = self._find_solution_file()
+        solution_file_path = os.path.join(self.chiasma.app_paths.download_dir, solution_file)
+        self.chiasma.windows_commands.build_solution(solution_file_path)
+
+    def _find_solution_file(self):
+        download_dir = self.chiasma.app_paths.download_dir
+        lst = [o for o in os.listdir(download_dir) if os.path.isfile(os.path.join(download_dir, o))]
+        for file in lst:
+            if file.endswith(".sln"):
+                return file
+        raise SnpseqReleaseException("The solution file could not be found, directory {}".format(download_dir))
 
     def move_candidates(self):
         self.chiasma.app_paths.move_candidates()
