@@ -29,7 +29,7 @@ class ChiasmaBuilder:
                 "They need to be removed before continuing"))
 
     def build_solution(self):
-        self.chiasma.compile_runner.build_solution()
+        self.chiasma.windows_commands.build_solution()
 
     def move_candidates(self):
         self.chiasma.app_paths.move_candidates()

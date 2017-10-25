@@ -13,7 +13,7 @@ from release_ccharp.utility.os_service import OsService
 
 
 class ApplicationBase(object):
-    def __init__(self, snpseq_workflow, branch_provider, os_service, whatif):
+    def __init__(self, snpseq_workflow, branch_provider, os_service, windows_commands, whatif):
         self.snpseq_workflow = snpseq_workflow
         self.config = snpseq_workflow.config
         self.path_properties = snpseq_workflow.paths
@@ -21,7 +21,7 @@ class ApplicationBase(object):
         self.whatif = whatif
         self.os_service = os_service
         self.app_paths = AppPaths(self.config, self.path_properties, os_service)
-        self.compile_runner = AppBuilder(self.app_paths)
+        self.windows_commands = windows_commands
 
     @contextmanager
     def open_xml(self, path, backup_origfile=True):
@@ -58,7 +58,7 @@ class StandardVSConfigXML:
         return node.find('value').text
 
 
-class AppBuilder:
+class WindowsCommands:
     def __init__(self, app_paths):
         self.app_paths = app_paths
 
@@ -186,4 +186,4 @@ class ApplicationFactory:
         application = self.import_application(repo)
         wf = SnpseqWorkflow(whatif, repo)
         branch_provider = wf.paths.branch_provider
-        return application(wf, branch_provider, OsService(), whatif)
+        return application(wf, branch_provider, OsService(), WindowsCommands(), whatif)
