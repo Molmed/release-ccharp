@@ -8,6 +8,7 @@ from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.apps.common import StandardVSConfigXML
 from tests.unit.utility.fake_os_service import FakeOsService
 from tests.unit.utility.config import CHIASMA_CONFIG
+from tests.unit.utility.fake_windows_commands import FakeWindowsCommands
 
 
 class ChiasmaBuildTests(unittest.TestCase):
@@ -32,7 +33,8 @@ class ChiasmaBuildTests(unittest.TestCase):
         # Instantiate chiasma class (Application)
         os_service = FakeOsService(self.filesystem)
         self.os_module = os_service.os_module
-        self.chiasma = Application(wf, branch_provider, os_service, whatif=False)
+        self.chiasma = Application(wf, branch_provider, os_service,
+                                   FakeWindowsCommands(self.filesystem), whatif=False)
 
     def test__get_version(self):
         version = self.chiasma.branch_provider.candidate_version

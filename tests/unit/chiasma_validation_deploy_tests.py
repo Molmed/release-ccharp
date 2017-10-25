@@ -5,6 +5,7 @@ from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.apps.chiasma import Application
 from tests.unit.utility.fake_os_service import FakeOsService
+from tests.unit.utility.fake_windows_commands import FakeWindowsCommands
 
 
 class ChiasmaValidationDeployTests(unittest.TestCase):
@@ -22,7 +23,8 @@ class ChiasmaValidationDeployTests(unittest.TestCase):
         self.filesystem = fake_filesystem.FakeFilesystem()
         os_service = FakeOsService(self.filesystem)
         self.os_module = os_service.os_module
-        self.chiasma = Application(wf, branch_provider, os_service, whatif=False)
+        self.chiasma = Application(wf, branch_provider, os_service,
+                                   FakeWindowsCommands(self.filesystem), whatif=False)
 
         path_actions = SnpseqPathActions(False, self.chiasma.path_properties, os_service)
         path_actions.create_dirs(r'c:\xxx\chiasma\candidates\new-candidate\validation')
