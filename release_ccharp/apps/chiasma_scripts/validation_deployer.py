@@ -15,3 +15,6 @@ class ChiasmaValidationDeployer:
         save_path = os.path.join(self.chiasma.path_properties.user_validation_latest, 'Chiasma.lnk')
         self.chiasma.windows_commands.create_shortcut(save_path, shortcut_target)
 
+    def extract_shortcut_target(self, shortcut_path):
+        return self.chiasma.windows_commands.extract_shortcut_target(shortcut_path)
+

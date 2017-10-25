@@ -75,6 +75,10 @@ class WindowsCommands:
         shortcut.TargetPath = target_path
         shortcut.save()
 
+    def extract_shortcut_target(self, shortcut_path):
+        shell = Dispatch('WScript.Shell')
+        return shell.CreateShortCut(shortcut_path).TargetPath
+
 
 class AppPaths:
     """

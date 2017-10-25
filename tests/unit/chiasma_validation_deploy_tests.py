@@ -55,7 +55,7 @@ class ChiasmaValidationDeployTests(unittest.TestCase):
         shortcut_target = self.chiasma.validation_deployer.extract_shortcut_target(dest_shortcut_path)
 
         #Assert
-        self.assertEqual(r'c:\xxx\chiasma\candidates\new-candidate\validation\chiasma.exe', shortcut_target)
+        self.assertEqual(r'c:\xxx\chiasma\candidates\new-candidate\validation\Chiasma.exe', shortcut_target)
 
 
 class FakeBranchProvider:
