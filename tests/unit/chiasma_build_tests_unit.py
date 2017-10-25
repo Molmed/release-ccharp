@@ -61,13 +61,13 @@ line 3"""
 
     def test_transform_config__with_validation_directory__orig_file_backed_up(self):
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
-        self.chiasma._transform_config(validation_dir)
+        self.chiasma.chiasma_builder._transform_config(validation_dir)
         backuped_file = r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config.orig'
         self.assertTrue(self.os_module.path.exists(backuped_file))
 
     def test_transform_config__with_validation_directory__backed_up_config_one_changed_entry_ok(self):
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
-        self.chiasma._transform_config(validation_dir)
+        self.chiasma.chiasma_builder._transform_config(validation_dir)
         config_file_path = r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config.orig'
         with self.chiasma.open_xml(config_file_path, backup_origfile=False) as xml:
             config = StandardVSConfigXML(xml, "Molmed.Chiasma")
@@ -75,13 +75,13 @@ line 3"""
 
     def test_transform_config__with_validation_directory__lab_config_exists(self):
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
-        self.chiasma._transform_config(validation_dir)
+        self.chiasma.chiasma_builder._transform_config(validation_dir)
         lab_config_file_path = r'c:\xxx\chiasma\candidates\validation\config_lab\chiasma.exe.config'
         self.assertTrue(self.os_module.path.exists(lab_config_file_path))
 
     def test_transform_config__with_validation_directory__xml_update_ok_in_office_config(self):
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
-        self.chiasma._transform_config(validation_dir)
+        self.chiasma.chiasma_builder._transform_config(validation_dir)
         config_file_path = r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config'
         with self.chiasma.open_xml(config_file_path, backup_origfile=False) as xml:
             config = StandardVSConfigXML(xml, "Molmed.Chiasma")
@@ -96,7 +96,7 @@ line 3"""
 
     def test_transform_config__with_validation_directory__lab_config_update_ok(self):
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
-        self.chiasma._transform_config(validation_dir)
+        self.chiasma.chiasma_builder._transform_config(validation_dir)
         config_file_path = r'c:\xxx\chiasma\candidates\validation\config_lab\chiasma.exe.config'
         with self.chiasma.open_xml(config_file_path, backup_origfile=False) as xml:
             config = StandardVSConfigXML(xml, "Molmed.Chiasma")
@@ -119,7 +119,7 @@ row3"""
         file_path = (r'c:\xxx\chiasma\candidates\new-candidate\GitEdvard-chiasma-123\chiasma'
                      r'\properties\AssemblyInfo.cs')
         self.filesystem.CreateFile(file_path, contents=contents)
-        self.chiasma.update_binary_version()
+        self.chiasma.chiasma_builder.update_binary_version()
         file_module = FakeFileOpen(self.filesystem)
         with file_module(file_path) as f:
             contents = "".join([line for line in f])

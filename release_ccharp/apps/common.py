@@ -21,7 +21,7 @@ class ApplicationBase(object):
         self.whatif = whatif
         self.os_service = os_service
         self.app_paths = AppPaths(self.config, self.path_properties, os_service)
-        self.builder = AppBuilder(self.app_paths)
+        self.compile_runner = AppBuilder(self.app_paths)
 
     @contextmanager
     def open_xml(self, path, backup_origfile=True):
