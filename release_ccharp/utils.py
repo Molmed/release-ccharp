@@ -32,5 +32,15 @@ def single_or_default(seq):
         return seq[0]
 
 
+def create_dirs(os_service, path, whatif=False, log=True):
+    if not os_service.exists(path):
+        if log:
+            print("Create directory: {}".format(path))
+        if not whatif:
+            os_service.makedirs(path)
+    elif log:
+        print "Path already exists: {}".format(path)
+
+
 class UnexpectedLengthError(ValueError):
     pass

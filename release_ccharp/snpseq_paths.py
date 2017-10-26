@@ -3,6 +3,7 @@ import re
 import yaml
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_tools.workflow import Conventions
+from release_ccharp.utils import create_dirs
 
 
 class SnpseqPathProperties:
@@ -151,9 +152,4 @@ class SnpseqPathActions:
         self.create_dirs(sql_updates_next_release)
 
     def create_dirs(self, path):
-        if not self.os_service.exists(path):
-            print("Create directory: {}".format(path))
-            if not self.whatif:
-                self.os_service.makedirs(path)
-        else:
-            print "Path already exists: {}".format(path)
+        create_dirs(self.os_service, path, self.whatif, self.whatif)

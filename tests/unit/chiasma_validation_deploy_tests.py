@@ -2,8 +2,8 @@ import unittest
 from unittest import skip
 from pyfakefs import fake_filesystem
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
-from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.apps.chiasma import Application
+from release_ccharp.utils import create_dirs
 from tests.unit.utility.fake_os_service import FakeOsService
 from tests.unit.utility.fake_windows_commands import FakeWindowsCommands
 
@@ -26,9 +26,8 @@ class ChiasmaValidationDeployTests(unittest.TestCase):
         self.chiasma = Application(wf, branch_provider, os_service,
                                    FakeWindowsCommands(self.filesystem), whatif=False)
 
-        path_actions = SnpseqPathActions(False, self.chiasma.path_properties, os_service)
-        path_actions.create_dirs(r'c:\xxx\chiasma\candidates\new-candidate\validation')
-        path_actions.create_dirs(r'c:\xxx\chiasma\uservalidations\latest')
+        create_dirs(os_service, r'c:\xxx\chiasma\candidates\release-1.0.0\validation')
+        create_dirs(os_service, r'c:\xxx\chiasma\uservalidations\latest\validationfiles')
 
     def test_create_shortcut__with_latest_empty__something_is_copied_to_latest(self):
         self.chiasma.validation_deployer.create_shortcut()

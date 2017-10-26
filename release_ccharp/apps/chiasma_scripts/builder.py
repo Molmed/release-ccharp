@@ -2,9 +2,8 @@ from __future__ import print_function
 import os
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_ccharp.snpseq_paths import SnpseqPathActions
-from release_ccharp.apps.common import BinaryVersionUpdater
 from release_ccharp.apps.common import StandardVSConfigXML
-from release_ccharp.apps.common import ApplicationBase
+from release_ccharp.utils import create_dirs
 
 
 class ChiasmaBuilder:
@@ -55,10 +54,8 @@ class ChiasmaBuilder:
             config.update("DebugMode", "False")
             config.update("DatabaseName", db_name)
         lab_config_dir = os.path.join(directory, "Config_lab")
-        path_actions = SnpseqPathActions(whatif=self.chiasma.whatif,
-                                         snpseq_path_properties=self.chiasma.path_properties,
-                                         os_service=self.chiasma.os_service)
-        path_actions.create_dirs(lab_config_dir)
+        create_dirs(self.chiasma.os_service, lab_config_dir, self.chiasma.whatif,
+                    self.chiasma.whatif)
         lab_config_file_path = os.path.join(lab_config_dir, self.chiasma.app_paths.config_file_name)
         self.chiasma.os_service.copyfile(config_file_path, lab_config_file_path)
         with self.chiasma.open_xml(lab_config_file_path, backup_origfile=False) as xml:
