@@ -45,7 +45,7 @@ class ChiasmaValidationDeployTests(unittest.TestCase):
 
     def test_create_shortcut__with_target_exists_in_candidates__extract_shortcut_target_works(self):
         # Arrange
-        fake_target_path = r'c:\xxx\chiasma\candidates\new-candidate\validation\chiasma.exe'
+        fake_target_path = r'c:\xxx\chiasma\candidates\release-1.0.0\validation\chiasma.exe'
         self.filesystem.CreateFile(fake_target_path)
         dest_shortcut_path = r'c:\xxx\chiasma\uservalidations\latest\chiasma.lnk'
 
@@ -54,11 +54,37 @@ class ChiasmaValidationDeployTests(unittest.TestCase):
         shortcut_target = self.chiasma.validation_deployer.extract_shortcut_target(dest_shortcut_path)
 
         #Assert
-        self.assertEqual(r'c:\xxx\chiasma\candidates\new-candidate\validation\Chiasma.exe', shortcut_target)
+        self.assertEqual(r'c:\xxx\chiasma\candidates\release-1.0.0\validation\Chiasma.exe', shortcut_target)
+
+    def test_copy_from_next__with_latest_dir_empty__copied_files_exists_in_latest(self):
+        # Arrange
+        validation_file = r'c:\xxx\chiasma\uservalidations\allversions\_next_release\validation_file.txt'
+        self.filesystem.CreateFile(validation_file)
+
+        # Act
+        self.chiasma.validation_deployer.copy_validation_files()
+
+        # Assert
+        copied_file = r'c:\xxx\chiasma\uservalidations\latest\validationfiles\validation_file.txt'
+        self.assertTrue(self.os_module.path.exists(copied_file))
+
+    def test_copy_from_next__with_hotfix_candidate__files_copied_from_next_hotfix(self):
+        # Arrange
+        validation_file = r'c:\xxx\chiasma\uservalidations\allversions\_next_hotfix\validation_file.txt'
+        self.filesystem.CreateFile(validation_file)
+        self.chiasma.branch_provider.candidate_branch = "hotfix-1.0.1"
+
+        # Act
+        self.chiasma.validation_deployer.copy_validation_files()
+
+        # Assert
+        copied_file = r'c:\xxx\chiasma\uservalidations\latest\validationfiles\validation_file.txt'
+        self.assertTrue(self.os_module.path.exists(copied_file))
+
 
 
 class FakeBranchProvider:
     def __init__(self):
         self.candidate_version = "1.0.0"
         self.latest_version = "latest-version"
-        self.candidate_branch = "new-candidate"
+        self.candidate_branch = "release-1.0.0"

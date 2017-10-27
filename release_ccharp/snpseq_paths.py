@@ -105,9 +105,39 @@ class SnpseqPathProperties:
         return os.path.join(self.candidate_root_path, self.branch_provider.candidate_branch)
 
     @property
-    def user_validation_latest(self):
-        user_validation_dir = os.path.join(self._repo_root, self.user_validations_subpath)
-        return os.path.join(user_validation_dir, self.user_validations_latest_subpath)
+    def _user_validations(self):
+        return os.path.join(self._repo_root, self.user_validations_subpath)
+
+    @property
+    def _all_versions(self):
+        return os.path.join(self._user_validations, self.user_validations_all_version_subpath)
+
+    @property
+    def user_validations_latest(self):
+        return os.path.join(self._user_validations, self.user_validations_latest_subpath)
+
+    @property
+    def user_validations_next_release(self):
+        return os.path.join(self._all_versions, self.user_validations_next_release_subpath)
+
+    @property
+    def user_validations_next_hotfix(self):
+        return os.path.join(self._all_versions, self.user_validations_next_hotfix_subpath)
+
+    @property
+    def user_validations_next_dir(self):
+        if "release" in self.branch_provider.candidate_branch:
+            return self.user_validations_next_release
+        else:
+            return self.user_validations_next_hotfix
+
+    @property
+    def latest_validation_files(self):
+        return os.path.join(self.user_validations_latest, self.user_validations_validation_files_subpath)
+
+    @property
+    def validation_archive_dir(self):
+        return os.path.join(self._all_versions, self.branch_provider.candidate_version)
 
 
 class SnpseqPathActions:

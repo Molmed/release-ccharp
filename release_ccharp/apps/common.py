@@ -82,10 +82,10 @@ class WindowsCommands:
 
 class AppPaths:
     """
-    Handles directories which is located under a specific candidate
-    Also include path actions
+    Handles directories which is located under a specific candidate (properties and path actions).
+    This directory structure may differ between applications, and some
+    properties and methods may therefore only be applicable to some of the apps.
     """
-    # TODO: move to snpseq_paths?
     def __init__(self, config, path_properties, os_service):
         self.config = config
         self.path_properties = path_properties
