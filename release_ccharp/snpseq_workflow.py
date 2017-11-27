@@ -31,11 +31,11 @@ class SnpseqWorkflow:
 
     def _create_workflow(self):
         owner = self.config['owner']
-        repo = self.repo
+        githubrepo = self.config['git_repo_name']
         config_file = self.paths.release_tools_config
         whatif = self.whatif
         access_token = self._open_github_provider_config(config_file)
-        provider = GithubProvider(owner, repo, access_token)
+        provider = GithubProvider(owner, githubrepo, access_token)
         return Workflow(provider, Conventions, whatif)
 
     def create_cand(self, major_inc=False):
