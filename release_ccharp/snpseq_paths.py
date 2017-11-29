@@ -120,7 +120,7 @@ class SnpseqPathActions:
         doc_metadata = os.path.join(doc, self.snpseq_path_properties.doc_metadata_subpath)
         user_validations = os.path.join(root_path, self.snpseq_path_properties.user_validations_subpath)
         user_validations_latest = os.path.join(user_validations, self.snpseq_path_properties.user_validations_latest_subpath)
-        latest_validation_files = os.path.join(user_validations_latest, self.snpseq_path_properties.user_validations_subpath)
+        latest_validation_files = os.path.join(user_validations_latest, self.snpseq_path_properties.user_validations_validation_files_subpath)
         all_versions = os.path.join(user_validations, self.snpseq_path_properties.user_validations_all_version_subpath)
         next_hotfix = os.path.join(all_versions, self.snpseq_path_properties.user_validations_next_hotfix_subpath)
         next_release = os.path.join(all_versions, self.snpseq_path_properties.user_validations_next_release_subpath)
