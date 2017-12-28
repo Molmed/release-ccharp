@@ -3,6 +3,7 @@ import re
 import yaml
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_tools.workflow import Conventions
+from release_ccharp.utils import create_dirs
 
 
 class SnpseqPathProperties:
@@ -48,7 +49,7 @@ class SnpseqPathProperties:
         return tag
 
     @property
-    def candidate_root_path(self):
+    def root_candidates(self):
         return os.path.join(self._repo_root, self.candidate_subpath)
 
     @property
@@ -85,11 +86,11 @@ class SnpseqPathProperties:
         Find the download catalog for the latest accepted branch
         :return: The path of latest accepted branch
         """
-        subdirs = os.listdir(self.candidate_root_path)
+        subdirs = os.listdir(self.root_candidates)
         subdir_path = None
         for subdir in subdirs:
             if re.match('(release|hotfix)-{}'.format(self.branch_provider.latest_version), subdir):
-                subdir_path = os.path.join(self.candidate_root_path, subdir)
+                subdir_path = os.path.join(self.root_candidates, subdir)
         if subdir_path is None:
             raise SnpseqReleaseException("Could not find the download catalog for latest version")
         return subdir_path
@@ -101,7 +102,61 @@ class SnpseqPathProperties:
         :param workflow: 
         :return: The path of the latest candidate branch
         """
-        return os.path.join(self.candidate_root_path, self.branch_provider.candidate_branch)
+        return os.path.join(self.root_candidates, self.branch_provider.candidate_branch)
+
+    @property
+    def _user_validations(self):
+        return os.path.join(self._repo_root, self.user_validations_subpath)
+
+    @property
+    def all_versions(self):
+        return os.path.join(self._user_validations, self.user_validations_all_version_subpath)
+
+    @property
+    def user_validations_latest(self):
+        return os.path.join(self._user_validations, self.user_validations_latest_subpath)
+
+    @property
+    def user_validations_next_release(self):
+        return os.path.join(self.all_versions, self.user_validations_next_release_subpath)
+
+    @property
+    def user_validations_next_hotfix(self):
+        return os.path.join(self.all_versions, self.user_validations_next_hotfix_subpath)
+
+    @property
+    def user_validations_next_dir(self):
+        if "release" in self.branch_provider.candidate_branch:
+            return self.user_validations_next_release
+        else:
+            return self.user_validations_next_hotfix
+
+    @property
+    def next_validation_files(self):
+        """
+        Directory name always 'ValidationFiles', and may be located either in
+        _next_release or _next_hotfix
+        :return:
+        """
+        return os.path.join(self.user_validations_next_dir, self.user_validations_validation_files_subpath)
+
+    @property
+    def next_sql_updates(self):
+        """
+        Directory name always 'SQLUpdates', and may be located either in
+        _next_release or _next_hotfix
+        :return:
+        """
+        return os.path.join(self.user_validations_next_dir, self.user_validations_sql_updates_subpath)
+
+    @property
+    def latest_validation_files(self):
+        return os.path.join(self.user_validations_latest, self.user_validations_validation_files_subpath)
+
+    @property
+    def archive_dir_validation_files(self):
+        archive_version_dir = os.path.join(self.all_versions, str(self.branch_provider.candidate_version))
+        return os.path.join(archive_version_dir, self.user_validations_validation_files_subpath)
 
 
 class SnpseqPathActions:
@@ -146,9 +201,9 @@ class SnpseqPathActions:
         self.create_dirs(sql_updates_next_release)
 
     def create_dirs(self, path):
-        if not self.os_service.exists(path):
-            print("Create directory: {}".format(path))
-            if not self.whatif:
-                self.os_service.makedirs(path)
-        else:
-            print "Path already exists: {}".format(path)
+        create_dirs(self.os_service, path, self.whatif, self.whatif)
+
+    def find_version_from_candidate_path(self, candidate_path):
+        res = re.match(r'.*(release|hotfix)-(\d+)\.(\d+)\.(\d+).*', candidate_path)
+        version = '{}.{}.{}'.format(res.group(2), res.group(3), res.group(4))
+        return version

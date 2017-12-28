@@ -5,6 +5,7 @@ import abc
 import importlib
 from subprocess import call
 from contextlib import contextmanager
+from win32com.client import Dispatch
 from release_ccharp.utils import single
 from release_ccharp.utils import lazyprop
 from release_ccharp.exceptions import SnpseqReleaseException
@@ -13,7 +14,7 @@ from release_ccharp.utility.os_service import OsService
 
 
 class ApplicationBase(object):
-    def __init__(self, snpseq_workflow, branch_provider, os_service, whatif):
+    def __init__(self, snpseq_workflow, branch_provider, os_service, windows_commands, whatif):
         self.snpseq_workflow = snpseq_workflow
         self.config = snpseq_workflow.config
         self.path_properties = snpseq_workflow.paths
@@ -21,7 +22,7 @@ class ApplicationBase(object):
         self.whatif = whatif
         self.os_service = os_service
         self.app_paths = AppPaths(self.config, self.path_properties, os_service)
-        self.builder = AppBuilder(self.app_paths)
+        self.windows_commands = windows_commands
 
     @contextmanager
     def open_xml(self, path, backup_origfile=True):
@@ -58,31 +59,33 @@ class StandardVSConfigXML:
         return node.find('value').text
 
 
-class AppBuilder:
-    def __init__(self, app_paths):
-        self.app_paths = app_paths
-
-    def find_solution_file(self):
-        download_dir = self.app_paths.download_dir
-        lst = [o for o in os.listdir(download_dir) if os.path.isfile(os.path.join(download_dir, o))]
-        for file in lst:
-            if file.endswith(".sln"):
-                return file
-        raise SnpseqReleaseException("The solution file could not be found, directory {}".format(download_dir))
-
-    def build_solution(self):
+class WindowsCommands:
+    def build_solution(self, solution_file_path):
         build_path = r'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe'
-        solution_file = self.find_solution_file()
-        print("build on solution file: {}".format(solution_file))
-        target = os.path.join(self.app_paths.download_dir, solution_file)
-        cmd = [build_path, target,
+        print("build on solution file: {}".format(solution_file_path))
+        cmd = [build_path, solution_file_path,
                r'/p:WarningLevel=0',
                r'/verbosity:minimal',
                r'/p:Configuration=Release']
         call(cmd)
 
+    def create_shortcut(self, save_path, target_path):
+        shell = Dispatch('WScript.Shell')
+        shortcut = shell.CreateShortCut(save_path)
+        shortcut.TargetPath = target_path
+        shortcut.save()
+
+    def extract_shortcut_target(self, shortcut_path):
+        shell = Dispatch('WScript.Shell')
+        return shell.CreateShortCut(shortcut_path).TargetPath
+
 
 class AppPaths:
+    """
+    Handles directories which is located under a specific candidate (properties and path actions).
+    This directory structure may differ between applications, and some
+    properties and methods may therefore only be applicable to some of the apps.
+    """
     def __init__(self, config, path_properties, os_service):
         self.config = config
         self.path_properties = path_properties
@@ -186,4 +189,4 @@ class ApplicationFactory:
         application = self.import_application(repo)
         wf = SnpseqWorkflow(whatif, repo)
         branch_provider = wf.paths.branch_provider
-        return application(wf, branch_provider, OsService(), whatif)
+        return application(wf, branch_provider, OsService(), WindowsCommands(), whatif)

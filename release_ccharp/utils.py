@@ -1,4 +1,5 @@
 import types
+import os
 
 # http://stackoverflow.com/a/3013910/282024
 def lazyprop(fn):
@@ -31,6 +32,52 @@ def single_or_default(seq):
     else:
         return seq[0]
 
+
+def create_dirs(os_service, path, whatif=False, log=True):
+    if not os_service.exists(path):
+        if log:
+            print("Create directory: {}".format(path))
+        if not whatif:
+            os_service.makedirs(path)
+    elif log:
+        print "Path already exists: {}".format(path)
+
+
+def copytree_preserve_existing(os_service, src, dst):
+    """
+    Copy entire file tree from src to dst. If a file with the same name already exists 
+    in dst, don't overwrite it. If a directory already exists in dst, it's contents will be 
+    preserved, but there might be new files added into it. 
+    :param os_service: From this framework (real or fake)
+    :param src: Source directory. The top directory is not copied, only it's contents
+    :param dst: Destination directory. If it doesn't exists, it will be created.
+    :return: 
+    """
+    oss = os_service
+    if not oss.exists(dst):
+        oss.makedirs(dst)
+    for d in oss.listdir(src):
+        dest_sub_path = os.path.join(dst, d)
+        source_sub_path = os.path.join(src, d)
+        if oss.isdir(source_sub_path):
+            copytree_preserve_existing(oss, source_sub_path, dest_sub_path)
+        elif not oss.exists(dest_sub_path):
+            oss.copyfile(source_sub_path, dest_sub_path)
+
+def delete_directory_contents(os_service, folder):
+    """
+    Removes files and subdirectories in path, but do not remove the top directory
+    :param os_service: From this framework (real or fake)
+    :param folder:
+    :return:
+    """
+    oss = os_service
+    for folder_content in oss.listdir(folder):
+        path = os.path.join(folder, folder_content)
+        if oss.isfile(path):
+            oss.remove_file(path)
+        elif oss.isdir(path):
+            oss.rmtree(path)
 
 class UnexpectedLengthError(ValueError):
     pass

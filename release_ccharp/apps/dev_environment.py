@@ -18,7 +18,7 @@ class TestEnvironmentProvider:
         wf = SnpseqWorkflow(whatif=False, repo=config["git_repo_name"])
         wf.config = config
         branch = "master"
-        cand_path = os.path.join(path_properites.candidate_root_path, self.candidate_folder)
+        cand_path = os.path.join(path_properites.root_candidates, self.candidate_folder)
 
         # Actions
         path_actions.generate_folder_tree()
