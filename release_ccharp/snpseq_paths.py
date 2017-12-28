@@ -49,7 +49,7 @@ class SnpseqPathProperties:
         return tag
 
     @property
-    def candidate_root_path(self):
+    def root_candidates(self):
         return os.path.join(self._repo_root, self.candidate_subpath)
 
     @property
@@ -86,11 +86,11 @@ class SnpseqPathProperties:
         Find the download catalog for the latest accepted branch
         :return: The path of latest accepted branch
         """
-        subdirs = os.listdir(self.candidate_root_path)
+        subdirs = os.listdir(self.root_candidates)
         subdir_path = None
         for subdir in subdirs:
             if re.match('(release|hotfix)-{}'.format(self.branch_provider.latest_version), subdir):
-                subdir_path = os.path.join(self.candidate_root_path, subdir)
+                subdir_path = os.path.join(self.root_candidates, subdir)
         if subdir_path is None:
             raise SnpseqReleaseException("Could not find the download catalog for latest version")
         return subdir_path
@@ -102,7 +102,7 @@ class SnpseqPathProperties:
         :param workflow: 
         :return: The path of the latest candidate branch
         """
-        return os.path.join(self.candidate_root_path, self.branch_provider.candidate_branch)
+        return os.path.join(self.root_candidates, self.branch_provider.candidate_branch)
 
     @property
     def _user_validations(self):
@@ -154,7 +154,7 @@ class SnpseqPathProperties:
         return os.path.join(self.user_validations_latest, self.user_validations_validation_files_subpath)
 
     @property
-    def validation_archive_dir(self):
+    def archive_dir_validation_files(self):
         archive_version_dir = os.path.join(self.all_versions, str(self.branch_provider.candidate_version))
         return os.path.join(archive_version_dir, self.user_validations_validation_files_subpath)
 

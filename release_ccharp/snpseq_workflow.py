@@ -45,7 +45,7 @@ class SnpseqWorkflow:
         self.workflow.create_hotfix()
 
     def download(self):
-        self.workflow.download_next_in_queue(path=self.paths.candidate_root_path, force=False)
+        self.workflow.download_next_in_queue(path=self.paths.root_candidates, force=False)
 
     def accept(self):
         self.workflow.accept_release_candidate(force=False)

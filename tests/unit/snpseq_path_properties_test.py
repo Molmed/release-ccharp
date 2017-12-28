@@ -13,7 +13,7 @@ class SnpseqPathPropertiesTests(unittest.TestCase):
         self.path_properties.branch_provider = FakeBranchProvider()
 
     def test_validation_archive__with_branch_provider_as_below__path_is_right(self):
-        path = self.path_properties.validation_archive_dir
+        path = self.path_properties.archive_dir_validation_files
         self.assertEqual(r'c:\xxx\chiasma\UserValidations\AllVersions\1.0.0\ValidationFiles', path)
 
     def test_user_validations_latest(self):

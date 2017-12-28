@@ -45,7 +45,7 @@ class ChiasmaValidationDeployer:
         In case of going back to an interrupted validation (for a hotfix during the testperiod)
         :return:
         """
-        src = self.chiasma.path_properties.validation_archive_dir
+        src = self.chiasma.path_properties.archive_dir_validation_files
         dst = self.chiasma.path_properties.latest_validation_files
         copytree_preserve_existing(self.os_service, src, dst)
         delete_directory_contents(self.os_service, src)
@@ -75,6 +75,6 @@ class ChiasmaValidationDeployer:
     def copy_validation_files(self):
         if not self._is_candidate_in_latest:
             self._move_to_archive()
-        if self.os_service.exists(self.chiasma.path_properties.validation_archive_dir):
+        if self.os_service.exists(self.chiasma.path_properties.archive_dir_validation_files):
             self._back_move_from_archive()
         self._copy_to_latest()

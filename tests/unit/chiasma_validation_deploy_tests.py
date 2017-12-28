@@ -247,7 +247,7 @@ class FileSystemBuilder:
         self.filesystem = filesystem
 
     def add_shortcut(self, candidate_dir='release-1.0.0'):
-        cand_path = os.path.join(self.chiasma.path_properties.candidate_root_path, candidate_dir)
+        cand_path = os.path.join(self.chiasma.path_properties.root_candidates, candidate_dir)
         current_shortcut_target = os.path.join(cand_path, r'buildpath\chiasma.exe')
         shortcut_save_path = os.path.join(self.chiasma.path_properties.user_validations_latest, r'chiasma.lnk')
         self.chiasma.windows_commands.create_shortcut(shortcut_save_path, current_shortcut_target)
@@ -270,7 +270,7 @@ class FileSystemBuilder:
         :param filename:
         :return:
         """
-        path = os.path.join(self.chiasma.path_properties.validation_archive_dir, filename)
+        path = os.path.join(self.chiasma.path_properties.archive_dir_validation_files, filename)
         self.filesystem.CreateFile(path, contents=contents)
 
     def get_contents(self, path):
