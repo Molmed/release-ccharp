@@ -64,6 +64,20 @@ def copytree_preserve_existing(os_service, src, dst):
         elif not oss.exists(dest_sub_path):
             oss.copyfile(source_sub_path, dest_sub_path)
 
+def delete_directory_contents(os_service, folder):
+    """
+    Removes files and subdirectories in path, but do not remove the top directory
+    :param os_service: From this framework (real or fake)
+    :param folder:
+    :return:
+    """
+    oss = os_service
+    for folder_content in oss.listdir(folder):
+        path = os.path.join(folder, folder_content)
+        if oss.isfile(path):
+            oss.remove_file(path)
+        elif oss.isdir(path):
+            oss.rmtree(path)
 
 class UnexpectedLengthError(ValueError):
     pass

@@ -109,7 +109,7 @@ class SnpseqPathProperties:
         return os.path.join(self._repo_root, self.user_validations_subpath)
 
     @property
-    def _all_versions(self):
+    def all_versions(self):
         return os.path.join(self._user_validations, self.user_validations_all_version_subpath)
 
     @property
@@ -118,11 +118,11 @@ class SnpseqPathProperties:
 
     @property
     def user_validations_next_release(self):
-        return os.path.join(self._all_versions, self.user_validations_next_release_subpath)
+        return os.path.join(self.all_versions, self.user_validations_next_release_subpath)
 
     @property
     def user_validations_next_hotfix(self):
-        return os.path.join(self._all_versions, self.user_validations_next_hotfix_subpath)
+        return os.path.join(self.all_versions, self.user_validations_next_hotfix_subpath)
 
     @property
     def user_validations_next_dir(self):
@@ -132,12 +132,31 @@ class SnpseqPathProperties:
             return self.user_validations_next_hotfix
 
     @property
+    def next_validation_files(self):
+        """
+        Directory name always 'ValidationFiles', and may be located either in
+        _next_release or _next_hotfix
+        :return:
+        """
+        return os.path.join(self.user_validations_next_dir, self.user_validations_validation_files_subpath)
+
+    @property
+    def next_sql_updates(self):
+        """
+        Directory name always 'SQLUpdates', and may be located either in
+        _next_release or _next_hotfix
+        :return:
+        """
+        return os.path.join(self.user_validations_next_dir, self.user_validations_sql_updates_subpath)
+
+    @property
     def latest_validation_files(self):
         return os.path.join(self.user_validations_latest, self.user_validations_validation_files_subpath)
 
     @property
     def validation_archive_dir(self):
-        return os.path.join(self._all_versions, self.branch_provider.candidate_version)
+        archive_version_dir = os.path.join(self.all_versions, str(self.branch_provider.candidate_version))
+        return os.path.join(archive_version_dir, self.user_validations_validation_files_subpath)
 
 
 class SnpseqPathActions:
@@ -183,3 +202,8 @@ class SnpseqPathActions:
 
     def create_dirs(self, path):
         create_dirs(self.os_service, path, self.whatif, self.whatif)
+
+    def find_version_from_candidate_path(self, candidate_path):
+        res = re.match(r'.*(release|hotfix)-(\d+)\.(\d+)\.(\d+).*', candidate_path)
+        version = '{}.{}.{}'.format(res.group(2), res.group(3), res.group(4))
+        return version

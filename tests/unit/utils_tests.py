@@ -1,6 +1,7 @@
 import unittest
 from pyfakefs import fake_filesystem
 from release_ccharp.utils import copytree_preserve_existing
+from release_ccharp.utils import delete_directory_contents
 from release_ccharp.utils import create_dirs
 from tests.unit.utility.fake_os_service import FakeOsService
 
@@ -60,3 +61,30 @@ class TestCopyTree(unittest.TestCase):
             contents = f.read()
 
         self.assertEqual('original text', contents)
+
+
+class TestDeleteDirectoryContents(unittest.TestCase):
+    def setUp(self):
+        self.filesystem = fake_filesystem.FakeFilesystem()
+        self.os_service = FakeOsService(self.filesystem)
+        self.file1 = r'c:\path1\file1.txt'
+        self.file2 = r'c:\path1\path2\file2.txt'
+        self.another_folder = r'c:\anotherfolder'
+        self.filesystem.CreateFile(self.file1)
+        self.filesystem.CreateFile(self.file2)
+        create_dirs(self.os_service, self.another_folder)
+
+    def test_doing_nothing__file1_exists(self):
+        self.assertTrue(self.os_service.exists(self.file1))
+
+    def test_remove_path1__file1_is_gone(self):
+        delete_directory_contents(self.os_service, r'c:\path1')
+        self.assertFalse(self.os_service.exists(self.file1))
+
+    def test_remove_path1__file2_is_gone(self):
+        delete_directory_contents(self.os_service, r'c:\path1')
+        self.assertFalse(self.os_service.exists(self.file2))
+
+    def test_remove_path1__anotherfolder_exists(self):
+        delete_directory_contents(self.os_service, r'c:\path1')
+        self.assertTrue(self.os_service.exists(self.another_folder))

@@ -18,6 +18,9 @@ class FakeOsService:
     def isdir(self, path):
         return self.os_module.path.isdir(path)
 
+    def isfile(self, path):
+        return self.os_module.path.isfile(path)
+
     def copytree(self, src, dst):
         self.shutil_module.copytree(src, dst)
 
@@ -59,3 +62,9 @@ class FakeOsService:
         file_module.read = read
         file_module.write = write
         yield file_module
+
+    def remove_file(self, path):
+        self.os_module.unlink(path)
+
+    def rmtree(self, path):
+        self.shutil_module.rmtree(path)

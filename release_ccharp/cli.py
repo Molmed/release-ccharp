@@ -47,6 +47,16 @@ def build(ctx, repo):
     instance = factory.get_instance(whatif=ctx.obj['whatif'], repo=repo)
     instance.build()
 
+
+@cli.command("deploy-validation")
+@click.argument("repo")
+@click.pass_context
+def build(ctx, repo):
+    factory = ApplicationFactory()
+    instance = factory.get_instance(whatif=ctx.obj['whatif'], repo=repo)
+    instance.deploy_validation()
+
+
 @cli.command("accept")
 @click.argument("repo")
 @click.pass_context
