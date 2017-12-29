@@ -51,7 +51,8 @@ class AppPaths:
         return "{}.exe.config".format(self.config["exe_file_name_base"])
 
     def move_candidates(self):
-        release_subdir = os.path.join(self.config["git_repo_name"], r'bin\release')
+        bin = os.path.join(self.config["project_root_dir"], 'bin')
+        release_subdir = os.path.join(bin, 'release')
         release_dir = os.path.join(self.download_dir, release_subdir)
         self.os_service.copytree(release_dir, self.validation_dir)
         self.os_service.copytree(release_dir, self.production_dir)
@@ -123,6 +124,7 @@ class Deployer:
         user_manual = self.path_properties.user_manual_download_path
         if not self.os_service.exists(user_manual):
             raise FileDoesNotExistsException(user_manual)
+
 
 class FileDoesNotExistsException(Exception):
     pass

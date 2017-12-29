@@ -12,6 +12,7 @@ class AppPathTests(unittest.TestCase):
             "root_path": r'c:\xxx',
             "git_repo_name": "chiasma",
             "exe_file_name_base": "Chiasma",
+            "project_root_dir": "Chiasma",
             "confluence_space_key": "CHI",
             "owner": "GitEdvard"
         }
