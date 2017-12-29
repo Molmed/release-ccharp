@@ -20,10 +20,12 @@ class ChiasmaValidationDeployer:
 
     @lazyprop
     def shortcut_path(self):
-        return os.path.join(self.chiasma.path_properties.user_validations_latest, 'Chiasma.lnk')
+        filename = '{}.lnk'.format(self.chiasma.config['exe_file_name_base'])
+        return os.path.join(self.chiasma.path_properties.user_validations_latest, filename)
 
     def create_shortcut(self):
-        shortcut_target = os.path.join(self.chiasma.app_paths.validation_dir, 'Chiasma.exe')
+        exe_filename = '{}.exe'.format(self.chiasma.config['exe_file_name_base'])
+        shortcut_target = os.path.join(self.chiasma.app_paths.validation_dir, exe_filename)
         self.chiasma.windows_commands.create_shortcut(self.shortcut_path, shortcut_target)
 
     def copy_validation_files(self):

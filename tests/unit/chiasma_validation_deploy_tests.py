@@ -14,6 +14,7 @@ class ChiasmaValidationDeployTests(unittest.TestCase):
         config = {
             "root_path": r'c:\xxx',
             "git_repo_name": "chiasma",
+            "exe_file_name_base": "Chiasma",
             "owner": "GitEdvard"
         }
         branch_provider = FakeBranchProvider()

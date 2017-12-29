@@ -6,6 +6,7 @@ from pyfakefs.fake_filesystem import FakeFileOpen
 from release_ccharp.apps.chiasma import Application
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.apps.common.single_file_read_write import StandardVSConfigXML
+from release_ccharp.snpseq_paths import SnpseqPathActions
 from tests.unit.utility.fake_os_service import FakeOsService
 from tests.unit.utility.config import CHIASMA_CONFIG
 from tests.unit.utility.fake_windows_commands import FakeWindowsCommands
@@ -16,6 +17,7 @@ class ChiasmaBuildTests(unittest.TestCase):
         config = {
             "root_path": r'c:\xxx',
             "git_repo_name": "chiasma",
+            "exe_file_name_base": "Chiasma",
             "confluence_space_key": "CHI",
             "owner": "GitEdvard"
         }
@@ -35,6 +37,11 @@ class ChiasmaBuildTests(unittest.TestCase):
         self.os_module = os_service.os_module
         self.chiasma = Application(wf, branch_provider, os_service,
                                    FakeWindowsCommands(self.filesystem), whatif=False)
+        path_actions = SnpseqPathActions(
+            whatif=False, snpseq_path_properties=self.chiasma.path_properties,
+            os_service=os_service
+        )
+        path_actions.generate_folder_tree()
 
     def test__get_version(self):
         version = self.chiasma.branch_provider.candidate_version

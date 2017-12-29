@@ -48,7 +48,7 @@ class AppPaths:
 
     @lazyprop
     def config_file_name(self):
-        return "{}.exe.config".format(self.config["git_repo_name"])
+        return "{}.exe.config".format(self.config["exe_file_name_base"])
 
     def move_candidates(self):
         release_subdir = os.path.join(self.config["git_repo_name"], r'bin\release')

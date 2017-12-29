@@ -3,10 +3,11 @@ import os
 
 
 class ChiasmaDeployer:
-    def __init__(self, path_properties, app_path, os_service):
+    def __init__(self, path_properties, app_path, os_service, config):
         self.path_properties = path_properties
         self.app_paths = app_path
         self.os_service = os_service
+        self.config = config
 
     def run(self):
         self.check_source_files_exists()
@@ -14,7 +15,8 @@ class ChiasmaDeployer:
     def check_source_files_exists(self):
         print('Check that source files exists ...')
 
-        exe = os.path.join(self.app_paths.production_dir, 'Chiasma.exe')
+        filename = '{}.exe'.format(self.config['exe_file_name_base'])
+        exe = os.path.join(self.app_paths.production_dir, filename)
         config = os.path.join(self.app_paths.production_dir, self.app_paths.config_file_name)
         config_lab = os.path.join(
             self.app_paths.production_config_lab_dir, self.app_paths.config_file_name)

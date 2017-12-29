@@ -11,6 +11,7 @@ class AppPathTests(unittest.TestCase):
         config = {
             "root_path": r'c:\xxx',
             "git_repo_name": "chiasma",
+            "exe_file_name_base": "Chiasma",
             "confluence_space_key": "CHI",
             "owner": "GitEdvard"
         }
@@ -43,7 +44,7 @@ class AppPathTests(unittest.TestCase):
 
     def test_config_file_name__with_creation_by_convention__returns_correctly(self):
         name = self.app_paths.config_file_name
-        self.assertEqual("chiasma.exe.config", name)
+        self.assertEqual("Chiasma.exe.config", name)
 
     def test_move_candidates__with_one_file_added_in_bin_release__file_found_in_validation(self):
         self.app_paths.move_candidates()

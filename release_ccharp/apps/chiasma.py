@@ -22,7 +22,8 @@ class Application(ApplicationBase):
         self.chiasma_builder = ChiasmaBuilder(self)
         validation_deployer = ValidationDeployer(self.path_properties, self.os_service)
         self.validation_deployer = ChiasmaValidationDeployer(self, validation_deployer)
-        self.deployer = ChiasmaDeployer(self.path_properties, self.app_paths, os_service)
+        self.deployer = ChiasmaDeployer(
+            self.path_properties, self.app_paths, os_service, snpseq_workflow.config)
 
     def build(self):
         self.chiasma_builder.run()
