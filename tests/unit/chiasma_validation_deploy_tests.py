@@ -232,8 +232,6 @@ class ChiasmaValidationDeployTests(unittest.TestCase):
         self.assertEqual(2, len(dir_objects))
 
 
-
-
 class FakeBranchProvider:
     def __init__(self):
         self.candidate_version = "1.0.0"
@@ -278,4 +276,3 @@ class FileSystemBuilder:
         with self.chiasma.os_service.open(path, 'r') as f:
             c = f.read()
         return c
-

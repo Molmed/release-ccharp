@@ -16,6 +16,7 @@ class SnpseqPathProperties:
         self.release_tools_subpath = sub_paths['release_tools_subpath']
         self.confluence_tools_subpath = sub_paths['confluence_tools_subpath']
         self.candidate_subpath = sub_paths['candidate_subpath']
+        self.config_lab_subpath = sub_paths['config_lab_subpath']
         self.devel_environment_subpath = sub_paths['devel_environment_subpath']
         self.doc_subpath = sub_paths['doc_subpath']
         self.doc_metadata_subpath = sub_paths['doc_metadata_subpath']
@@ -99,7 +100,6 @@ class SnpseqPathProperties:
     def current_candidate_dir(self):
         """
         Find the download catalog for the latest candidate branch
-        :param workflow: 
         :return: The path of the latest candidate branch
         """
         return os.path.join(self.root_candidates, self.branch_provider.candidate_branch)

@@ -51,7 +51,7 @@ def build(ctx, repo):
 @cli.command("deploy-validation")
 @click.argument("repo")
 @click.pass_context
-def build(ctx, repo):
+def deploy_validation(ctx, repo):
     factory = ApplicationFactory()
     instance = factory.get_instance(whatif=ctx.obj['whatif'], repo=repo)
     instance.deploy_validation()
@@ -63,6 +63,15 @@ def build(ctx, repo):
 def accept(ctx, repo):
     workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo)
     workflow.accept()
+
+
+@cli.command("deploy")
+@click.argument("repo")
+@click.pass_context
+def deploy(ctx, repo):
+    factory = ApplicationFactory()
+    instance = factory.get_instance(whatif=ctx.obj['whatif'], repo=repo)
+    instance.deploy()
 
 
 @cli.command("download-release-history")

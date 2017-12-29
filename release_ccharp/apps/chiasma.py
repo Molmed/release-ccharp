@@ -4,6 +4,7 @@ from release_ccharp.apps.common.base import ApplicationBase
 from release_ccharp.apps.common.directory_handling import ValidationDeployer
 from release_ccharp.apps.chiasma_scripts.builder import ChiasmaBuilder
 from release_ccharp.apps.chiasma_scripts.validation_deployer import ChiasmaValidationDeployer
+from release_ccharp.apps.chiasma_scripts.deployer import ChiasmaDeployer
 
 
 class Application(ApplicationBase):
@@ -21,9 +22,13 @@ class Application(ApplicationBase):
         self.chiasma_builder = ChiasmaBuilder(self)
         validation_deployer = ValidationDeployer(self.path_properties, self.os_service)
         self.validation_deployer = ChiasmaValidationDeployer(self, validation_deployer)
+        self.deployer = ChiasmaDeployer(self.path_properties, self.app_paths, os_service)
 
     def build(self):
         self.chiasma_builder.run()
 
     def deploy_validation(self):
         self.validation_deployer.run()
+
+    def deploy(self):
+        self.deployer.run()

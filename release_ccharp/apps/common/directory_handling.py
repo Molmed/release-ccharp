@@ -43,6 +43,10 @@ class AppPaths:
         return os.path.join(cand_dir, "production")
 
     @lazyprop
+    def production_config_lab_dir(self):
+        return os.path.join(self.production_dir, self.path_properties.config_lab_subpath)
+
+    @lazyprop
     def config_file_name(self):
         return "{}.exe.config".format(self.config["git_repo_name"])
 

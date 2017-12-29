@@ -44,6 +44,10 @@ class ApplicationBase(object):
     def deploy_validation(self):
         pass
 
+    @abc.abstractmethod
+    def deploy(self):
+        pass
+
 
 class WindowsCommands:
     def build_solution(self, solution_file_path):
