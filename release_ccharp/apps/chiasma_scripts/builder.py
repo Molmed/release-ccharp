@@ -1,8 +1,7 @@
 from __future__ import print_function
 import os
 from release_ccharp.exceptions import SnpseqReleaseException
-from release_ccharp.snpseq_paths import SnpseqPathActions
-from release_ccharp.apps.common import StandardVSConfigXML
+from release_ccharp.apps.common.single_file_read_write import StandardVSConfigXML
 from release_ccharp.utils import create_dirs
 
 

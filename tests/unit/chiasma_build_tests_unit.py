@@ -5,7 +5,7 @@ from pyfakefs import fake_filesystem
 from pyfakefs.fake_filesystem import FakeFileOpen
 from release_ccharp.apps.chiasma import Application
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
-from release_ccharp.apps.common import StandardVSConfigXML
+from release_ccharp.apps.common.single_file_read_write import StandardVSConfigXML
 from tests.unit.utility.fake_os_service import FakeOsService
 from tests.unit.utility.config import CHIASMA_CONFIG
 from tests.unit.utility.fake_windows_commands import FakeWindowsCommands

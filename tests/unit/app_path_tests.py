@@ -1,7 +1,7 @@
 from __future__ import print_function
 import unittest
 from pyfakefs import fake_filesystem
-from release_ccharp.apps.common import AppPaths
+from release_ccharp.apps.common.directory_handling import AppPaths
 from release_ccharp.snpseq_paths import SnpseqPathProperties
 from tests.unit.utility.fake_os_service import FakeOsService
 

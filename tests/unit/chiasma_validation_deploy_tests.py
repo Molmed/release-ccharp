@@ -5,7 +5,6 @@ from pyfakefs import fake_filesystem
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.apps.chiasma import Application
-from release_ccharp.utils import create_dirs
 from tests.unit.utility.fake_os_service import FakeOsService
 from tests.unit.utility.fake_windows_commands import FakeWindowsCommands
 
@@ -57,7 +56,8 @@ class ChiasmaValidationDeployTests(unittest.TestCase):
 
         # Act
         self.chiasma.validation_deployer.create_shortcut()
-        shortcut_target = self.chiasma.validation_deployer.extract_shortcut_target(dest_shortcut_path)
+        shortcut_target = self.chiasma.validation_deployer.shortcut_examiner.\
+            _extract_shortcut_target(dest_shortcut_path)
 
         #Assert
         self.assertEqual(r'c:\xxx\chiasma\candidates\release-1.0.0\validation\Chiasma.exe', shortcut_target)

@@ -1,6 +1,6 @@
 from __future__ import print_function
 import unittest
-from release_ccharp.apps.common import ApplicationFactory
+from release_ccharp.apps.common.base import ApplicationFactory
 
 
 class ApplicationFactoryTests(unittest.TestCase):

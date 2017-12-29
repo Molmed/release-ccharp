@@ -1,7 +1,7 @@
 from __future__ import print_function
 import unittest
 from release_ccharp.apps.chiasma import Application
-from release_ccharp.apps.common import WindowsCommands
+from release_ccharp.apps.common_xxx import WindowsCommands
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.utility.os_service import OsService
 from release_ccharp.apps.dev_environment import TestEnvironmentProvider
