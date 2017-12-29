@@ -9,7 +9,7 @@ class ChiasmaValidationDeployTests(ChiasmaBaseTests):
         self.file_builder = FileSystemBuilder(self.chiasma, self.filesystem)
 
     def test_create_shortcut__with_latest_empty__something_is_copied_to_latest(self):
-        self.chiasma.validation_deployer.create_shortcut()
+        self.chiasma.validation_deployer.path_actions.create_shortcut_to_exe()
         self.assertTrue(self.os_module.path.exists(r'c:\xxx\chiasma\uservalidations\latest\chiasma.lnk'))
 
     def test_create_shortcut__with_shortcut_exists_in_target__copy_without_error(self):
@@ -17,7 +17,7 @@ class ChiasmaValidationDeployTests(ChiasmaBaseTests):
         self.filesystem.CreateFile(fake_destination_link)
 
         # Act
-        self.chiasma.validation_deployer.create_shortcut()
+        self.chiasma.validation_deployer.path_actions.create_shortcut_to_exe()
 
         # Assert
         self.assertTrue(self.os_module.path.exists(r'c:\xxx\chiasma\uservalidations\latest\chiasma.lnk'))
@@ -29,7 +29,7 @@ class ChiasmaValidationDeployTests(ChiasmaBaseTests):
         dest_shortcut_path = r'c:\xxx\chiasma\uservalidations\latest\chiasma.lnk'
 
         # Act
-        self.chiasma.validation_deployer.create_shortcut()
+        self.chiasma.validation_deployer.run()
         shortcut_target = self.chiasma.validation_deployer.shortcut_examiner.\
             _extract_shortcut_target(dest_shortcut_path)
 

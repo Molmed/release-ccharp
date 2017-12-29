@@ -1,13 +1,10 @@
 from __future__ import print_function
-import os
 
 
 class ChiasmaDeployer:
-    def __init__(self, path_properties, app_path, os_service, config):
+    def __init__(self, path_properties, common_deployer):
         self.path_properties = path_properties
-        self.app_paths = app_path
-        self.os_service = os_service
-        self.config = config
+        self.common_deployer = common_deployer
 
     def run(self):
         self.check_source_files_exists()
@@ -15,23 +12,9 @@ class ChiasmaDeployer:
     def check_source_files_exists(self):
         print('Check that source files exists ...')
 
-        exe_filename = '{}.exe'.format(self.config['exe_file_name_base'])
-        exe = os.path.join(self.app_paths.production_dir, exe_filename)
-        config = os.path.join(self.app_paths.production_dir, self.app_paths.config_file_name)
-        config_lab = os.path.join(
-            self.app_paths.production_config_lab_dir, self.app_paths.config_file_name)
-        user_manual = self.path_properties.user_manual_download_path
+        self.common_deployer.check_exe_file_exists()
+        self.common_deployer.check_config_file_exists()
+        self.common_deployer.check_config_lab_file_exists()
+        self.common_deployer.check_user_manual_exists()
 
-        if not self.os_service.exists(exe):
-            raise FileDoesNotExistsException(exe)
-        if not self.os_service.exists(config):
-            raise FileDoesNotExistsException(config)
-        if not self.os_service.exists(config_lab):
-            raise FileDoesNotExistsException(config_lab)
-        if not self.os_service.exists(user_manual):
-            raise FileDoesNotExistsException(user_manual)
         print('ok')
-
-
-class FileDoesNotExistsException(Exception):
-    pass

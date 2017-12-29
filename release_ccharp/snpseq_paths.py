@@ -4,6 +4,7 @@ import yaml
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_tools.workflow import Conventions
 from release_ccharp.utils import create_dirs
+from release_ccharp.utils import lazyprop
 
 
 class SnpseqPathProperties:
@@ -158,31 +159,38 @@ class SnpseqPathProperties:
         archive_version_dir = os.path.join(self.all_versions, str(self.branch_provider.candidate_version))
         return os.path.join(archive_version_dir, self.user_validations_validation_files_subpath)
 
+    @lazyprop
+    def shortcut_path(self):
+        filename = '{}.lnk'.format(self.config['exe_file_name_base'])
+        return os.path.join(self.user_validations_latest, filename)
+
 
 class SnpseqPathActions:
-    def __init__(self, whatif, snpseq_path_properties, os_service):
-        self.snpseq_path_properties = snpseq_path_properties
+    def __init__(self, whatif, path_properties, os_service, app_paths=None, windows_commands=None):
+        self.path_properties = path_properties
         self.whatif = whatif
         self.os_service = os_service
+        self.app_paths = app_paths
+        self.windows_commands = windows_commands
 
     def generate_folder_tree(self):
-        root_path = self.snpseq_path_properties._repo_root
+        root_path = self.path_properties._repo_root
         # Generate path variables
-        build_config = os.path.join(root_path, self.snpseq_path_properties.build_config_subpath)
-        candidates = os.path.join(root_path, self.snpseq_path_properties.candidate_subpath)
-        devel_environment = os.path.join(root_path, self.snpseq_path_properties.devel_environment_subpath)
-        doc = os.path.join(root_path, self.snpseq_path_properties.doc_subpath)
-        doc_metadata = os.path.join(doc, self.snpseq_path_properties.doc_metadata_subpath)
-        user_validations = os.path.join(root_path, self.snpseq_path_properties.user_validations_subpath)
-        user_validations_latest = os.path.join(user_validations, self.snpseq_path_properties.user_validations_latest_subpath)
-        latest_validation_files = os.path.join(user_validations_latest, self.snpseq_path_properties.user_validations_validation_files_subpath)
-        all_versions = os.path.join(user_validations, self.snpseq_path_properties.user_validations_all_version_subpath)
-        next_hotfix = os.path.join(all_versions, self.snpseq_path_properties.user_validations_next_hotfix_subpath)
-        next_release = os.path.join(all_versions, self.snpseq_path_properties.user_validations_next_release_subpath)
-        validation_files_next_hotfix = os.path.join(next_hotfix, self.snpseq_path_properties.user_validations_validation_files_subpath)
-        sql_updates_next_hotfix = os.path.join(next_hotfix, self.snpseq_path_properties.user_validations_sql_updates_subpath)
-        validation_files_next_release = os.path.join(next_release, self.snpseq_path_properties.user_validations_validation_files_subpath)
-        sql_updates_next_release = os.path.join(next_release, self.snpseq_path_properties.user_validations_sql_updates_subpath)
+        build_config = os.path.join(root_path, self.path_properties.build_config_subpath)
+        candidates = os.path.join(root_path, self.path_properties.candidate_subpath)
+        devel_environment = os.path.join(root_path, self.path_properties.devel_environment_subpath)
+        doc = os.path.join(root_path, self.path_properties.doc_subpath)
+        doc_metadata = os.path.join(doc, self.path_properties.doc_metadata_subpath)
+        user_validations = os.path.join(root_path, self.path_properties.user_validations_subpath)
+        user_validations_latest = os.path.join(user_validations, self.path_properties.user_validations_latest_subpath)
+        latest_validation_files = os.path.join(user_validations_latest, self.path_properties.user_validations_validation_files_subpath)
+        all_versions = os.path.join(user_validations, self.path_properties.user_validations_all_version_subpath)
+        next_hotfix = os.path.join(all_versions, self.path_properties.user_validations_next_hotfix_subpath)
+        next_release = os.path.join(all_versions, self.path_properties.user_validations_next_release_subpath)
+        validation_files_next_hotfix = os.path.join(next_hotfix, self.path_properties.user_validations_validation_files_subpath)
+        sql_updates_next_hotfix = os.path.join(next_hotfix, self.path_properties.user_validations_sql_updates_subpath)
+        validation_files_next_release = os.path.join(next_release, self.path_properties.user_validations_validation_files_subpath)
+        sql_updates_next_release = os.path.join(next_release, self.path_properties.user_validations_sql_updates_subpath)
         # Create paths
         self.create_dirs(build_config)
         self.create_dirs(candidates)
@@ -207,3 +215,10 @@ class SnpseqPathActions:
         res = re.match(r'.*(release|hotfix)-(\d+)\.(\d+)\.(\d+).*', candidate_path)
         version = '{}.{}.{}'.format(res.group(2), res.group(3), res.group(4))
         return version
+
+    def create_shortcut_to_exe(self):
+        exe_filename = '{}.exe'.format(self.path_properties.config['exe_file_name_base'])
+        shortcut_target = os.path.join(self.app_paths.validation_dir, exe_filename)
+        self.windows_commands.create_shortcut(
+            self.path_properties.shortcut_path, shortcut_target)
+

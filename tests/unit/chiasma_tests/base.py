@@ -28,7 +28,7 @@ class ChiasmaBaseTests(unittest.TestCase):
                                    FakeWindowsCommands(self.filesystem), whatif=False)
 
         path_actions = SnpseqPathActions(
-            whatif=False, snpseq_path_properties=self.chiasma.path_properties,
+            whatif=False, path_properties=self.chiasma.path_properties,
             os_service=os_service
         )
         path_actions.generate_folder_tree()

@@ -62,7 +62,7 @@ class ValidationDeployer:
         self.path_properties = path_properties
         self.os_service = os_service
         self.path_actions = SnpseqPathActions(
-            whatif=False, snpseq_path_properties=self.path_properties,
+            whatif=False, path_properties=self.path_properties,
             os_service=self.os_service)
 
     def move_to_archive(self, version_in_latest):
@@ -93,3 +93,36 @@ class ValidationDeployer:
 
     def extract_version_from_path(self, path):
         return self.path_actions.find_version_from_candidate_path(path)
+
+
+class Deployer:
+    def __init__(self, path_properties, os_service, config, app_paths):
+        self.path_properties = path_properties
+        self.os_service = os_service
+        self.config = config
+        self.app_paths = app_paths
+
+    def check_exe_file_exists(self):
+        exe_filename = '{}.exe'.format(self.config['exe_file_name_base'])
+        exe = os.path.join(self.app_paths.production_dir, exe_filename)
+        if not self.os_service.exists(exe):
+            raise FileDoesNotExistsException(exe)
+
+    def check_config_file_exists(self):
+        config = os.path.join(self.app_paths.production_dir, self.app_paths.config_file_name)
+        if not self.os_service.exists(config):
+            raise FileDoesNotExistsException(config)
+
+    def check_config_lab_file_exists(self):
+        config_lab = os.path.join(
+            self.app_paths.production_config_lab_dir, self.app_paths.config_file_name)
+        if not self.os_service.exists(config_lab):
+            raise FileDoesNotExistsException(config_lab)
+
+    def check_user_manual_exists(self):
+        user_manual = self.path_properties.user_manual_download_path
+        if not self.os_service.exists(user_manual):
+            raise FileDoesNotExistsException(user_manual)
+
+class FileDoesNotExistsException(Exception):
+    pass

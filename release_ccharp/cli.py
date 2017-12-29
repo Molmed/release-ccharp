@@ -104,7 +104,7 @@ def generate_folder_tree(ctx, repo):
     config = c.open_config(repo)
     path_properites = SnpseqPathProperties(config, repo)
     path_actions = SnpseqPathActions(whatif=ctx.obj['whatif'],
-                                     snpseq_path_properties=path_properites,
+                                     path_properties=path_properites,
                                      os_service=OsService())
     path_actions.generate_folder_tree()
 

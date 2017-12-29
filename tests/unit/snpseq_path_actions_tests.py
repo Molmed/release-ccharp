@@ -16,7 +16,7 @@ class SnpseqPathActionsTests(unittest.TestCase):
         filesystem = fake_filesystem.FakeFilesystem()
         self.path_properties = SnpseqPathProperties(config, "chiasma")
         self.path_properties.branch_provider = FakeBranchProvider()
-        self.path_actions = SnpseqPathActions(whatif=False, snpseq_path_properties=self.path_properties,
+        self.path_actions = SnpseqPathActions(whatif=False, path_properties=self.path_properties,
                                               os_service=FakeOsService(filesystem))
 
     def test_find_version_from_candidate_path__with_release_candidate__returns_ok(self):

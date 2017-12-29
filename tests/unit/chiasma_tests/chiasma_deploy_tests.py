@@ -1,6 +1,6 @@
 import os
 from unittest import skip
-from release_ccharp.apps.chiasma_scripts.deployer import FileDoesNotExistsException
+from release_ccharp.apps.common.directory_handling import FileDoesNotExistsException
 from tests.unit.chiasma_tests.base import ChiasmaBaseTests
 
 
