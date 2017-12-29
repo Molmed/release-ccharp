@@ -1,47 +1,16 @@
 from __future__ import print_function
-import unittest
 from unittest import skip
-from pyfakefs import fake_filesystem
 from pyfakefs.fake_filesystem import FakeFileOpen
-from release_ccharp.apps.chiasma import Application
-from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.apps.common.single_file_read_write import StandardVSConfigXML
-from release_ccharp.snpseq_paths import SnpseqPathActions
-from tests.unit.utility.fake_os_service import FakeOsService
 from tests.unit.utility.config import CHIASMA_CONFIG
-from tests.unit.utility.fake_windows_commands import FakeWindowsCommands
+from tests.unit.chiasma_tests.base import ChiasmaBaseTests
 
 
-class ChiasmaBuildTests(unittest.TestCase):
+class ChiasmaBuildTests(ChiasmaBaseTests):
     def setUp(self):
-        config = {
-            "root_path": r'c:\xxx',
-            "git_repo_name": "chiasma",
-            "exe_file_name_base": "Chiasma",
-            "confluence_space_key": "CHI",
-            "owner": "GitEdvard"
-        }
-        branch_provider = FakeBranchProvider()
-        wf = SnpseqWorkflow(whatif=False, repo="chiasma")
-        wf.config = config
-        wf.paths.config = config
-        wf.paths.branch_provider = branch_provider
-
-        # Initiate the fake-file system
-        self.filesystem = fake_filesystem.FakeFilesystem()
+        self.base_setup()
         chiasma_config_path = (r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config')
         self.filesystem.CreateFile(chiasma_config_path, contents=CHIASMA_CONFIG)
-
-        # Instantiate chiasma class (Application)
-        os_service = FakeOsService(self.filesystem)
-        self.os_module = os_service.os_module
-        self.chiasma = Application(wf, branch_provider, os_service,
-                                   FakeWindowsCommands(self.filesystem), whatif=False)
-        path_actions = SnpseqPathActions(
-            whatif=False, snpseq_path_properties=self.chiasma.path_properties,
-            os_service=os_service
-        )
-        path_actions.generate_folder_tree()
 
     def test__get_version(self):
         version = self.chiasma.branch_provider.candidate_version
@@ -125,7 +94,7 @@ row3"""
         expected = """row 1
 [assembly: AssemblyVersion("1.0.0")]
 row3"""
-        file_path = (r'c:\xxx\chiasma\candidates\new-candidate\GitEdvard-chiasma-123\chiasma'
+        file_path = (r'c:\xxx\chiasma\candidates\release-1.0.0\GitEdvard-chiasma-123\chiasma'
                      r'\properties\AssemblyInfo.cs')
         self.filesystem.CreateFile(file_path, contents=contents)
         self.chiasma.chiasma_builder.update_binary_version()
@@ -133,10 +102,3 @@ row3"""
         with file_module(file_path) as f:
             contents = "".join([line for line in f])
         self.assertEqual(expected, contents)
-
-
-class FakeBranchProvider:
-    def __init__(self):
-        self.candidate_version = "1.0.0"
-        self.latest_version = "latest-version"
-        self.candidate_branch = "new-candidate"

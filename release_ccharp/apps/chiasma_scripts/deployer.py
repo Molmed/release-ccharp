@@ -15,8 +15,8 @@ class ChiasmaDeployer:
     def check_source_files_exists(self):
         print('Check that source files exists ...')
 
-        filename = '{}.exe'.format(self.config['exe_file_name_base'])
-        exe = os.path.join(self.app_paths.production_dir, filename)
+        exe_filename = '{}.exe'.format(self.config['exe_file_name_base'])
+        exe = os.path.join(self.app_paths.production_dir, exe_filename)
         config = os.path.join(self.app_paths.production_dir, self.app_paths.config_file_name)
         config_lab = os.path.join(
             self.app_paths.production_config_lab_dir, self.app_paths.config_file_name)
@@ -30,7 +30,6 @@ class ChiasmaDeployer:
             raise FileDoesNotExistsException(config_lab)
         if not self.os_service.exists(user_manual):
             raise FileDoesNotExistsException(user_manual)
-
         print('ok')
 
 
