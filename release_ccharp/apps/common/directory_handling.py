@@ -1,9 +1,56 @@
 from __future__ import print_function
 import os
-from abc import abstractmethod
+from release_ccharp.utils import lazyprop
 from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.utils import copytree_preserve_existing
 from release_ccharp.utils import delete_directory_contents
+
+
+class AppPaths:
+    """
+    Handles directories which is located under a specific candidate (properties and path actions).
+    This directory structure may differ between applications, and some
+    properties and methods may therefore only be applicable to some of the apps.
+    """
+    def __init__(self, config, path_properties, os_service):
+        self.config = config
+        self.path_properties = path_properties
+        self.os_service = os_service
+
+    def find_download_directory_name(self):
+        candidate_dir = self.path_properties.current_candidate_dir
+        pattern = "{}-{}".format(self.config["owner"], self.config["git_repo_name"])
+        oss = self.os_service
+        dir_lst = [o for o in oss.listdir(candidate_dir) if oss.isdir(os.path.join(candidate_dir, o))]
+        for d in dir_lst:
+            if pattern in d:
+                return d
+        return None
+
+    @lazyprop
+    def download_dir(self):
+        return os.path.join(self.path_properties.current_candidate_dir,
+                            self.find_download_directory_name())
+
+    @lazyprop
+    def validation_dir(self):
+        cand_dir = self.path_properties.current_candidate_dir
+        return os.path.join(cand_dir, "validation")
+
+    @lazyprop
+    def production_dir(self):
+        cand_dir = self.path_properties.current_candidate_dir
+        return os.path.join(cand_dir, "production")
+
+    @lazyprop
+    def config_file_name(self):
+        return "{}.exe.config".format(self.config["git_repo_name"])
+
+    def move_candidates(self):
+        release_subdir = os.path.join(self.config["git_repo_name"], r'bin\release')
+        release_dir = os.path.join(self.download_dir, release_subdir)
+        self.os_service.copytree(release_dir, self.validation_dir)
+        self.os_service.copytree(release_dir, self.production_dir)
 
 
 class ValidationDeployer:
@@ -42,39 +89,3 @@ class ValidationDeployer:
 
     def extract_version_from_path(self, path):
         return self.path_actions.find_version_from_candidate_path(path)
-
-
-class LatestVersionExaminer:
-    @abstractmethod
-    def version_in_latest(self):
-        pass
-
-    @abstractmethod
-    def is_candidate_in_latest(self):
-        pass
-
-
-class ShortcutExaminer(LatestVersionExaminer):
-    def __init__(self, branch_provider, os_service, windows_commands,
-                 common_deployer, shortcut_path):
-        self.branch_provider = branch_provider
-        self.os_service = os_service
-        self.windows_commands = windows_commands
-        self.common_deployer = common_deployer
-        self.shortcut_path = shortcut_path
-
-    @property
-    def version_in_latest(self):
-        shortcut_target = self._extract_shortcut_target(self.shortcut_path)
-        return self.common_deployer.extract_version_from_path(shortcut_target)
-
-    def _extract_shortcut_target(self, shortcut_path):
-        return self.windows_commands.extract_shortcut_target(shortcut_path)
-
-    @property
-    def is_candidate_in_latest(self):
-        version_to_validate = self.branch_provider.candidate_version
-        if self.os_service.exists(self.shortcut_path):
-            return self.version_in_latest == version_to_validate
-        else:
-            return True

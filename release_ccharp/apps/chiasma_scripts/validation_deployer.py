@@ -1,7 +1,7 @@
 from __future__ import print_function
 import os
 from release_ccharp.utils import lazyprop
-from release_ccharp.apps.file_handling import ShortcutExaminer
+from release_ccharp.apps.common.single_file_read_write import ShortcutExaminer
 
 
 class ChiasmaValidationDeployer:

@@ -1,7 +1,7 @@
 from __future__ import print_function
-from release_ccharp.apps.common import BinaryVersionUpdater
-from release_ccharp.apps.common import ApplicationBase
-from release_ccharp.apps.file_handling import ValidationDeployer
+from release_ccharp.apps.common.single_file_read_write import BinaryVersionUpdater
+from release_ccharp.apps.common.base import ApplicationBase
+from release_ccharp.apps.common.directory_handling import ValidationDeployer
 from release_ccharp.apps.chiasma_scripts.builder import ChiasmaBuilder
 from release_ccharp.apps.chiasma_scripts.validation_deployer import ChiasmaValidationDeployer
 

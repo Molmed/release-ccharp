@@ -3,7 +3,7 @@ from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.snpseq_paths import SnpseqPathProperties
 from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.config import Config
-from release_ccharp.apps.common import ApplicationFactory
+from release_ccharp.apps.common_xxx import ApplicationFactory
 from release_ccharp.utility.os_service import OsService
 
 
