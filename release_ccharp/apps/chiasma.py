@@ -1,6 +1,7 @@
 from __future__ import print_function
 from release_ccharp.apps.common import BinaryVersionUpdater
 from release_ccharp.apps.common import ApplicationBase
+from release_ccharp.apps.file_handling import ValidationDeployer
 from release_ccharp.apps.chiasma_scripts.builder import ChiasmaBuilder
 from release_ccharp.apps.chiasma_scripts.validation_deployer import ChiasmaValidationDeployer
 
@@ -18,7 +19,8 @@ class Application(ApplicationBase):
             whatif=False, config=self.config, path_properties=self.path_properties,
             branch_provider=branch_provider, app_paths=self.app_paths, os_service=os_service)
         self.chiasma_builder = ChiasmaBuilder(self)
-        self.validation_deployer = ChiasmaValidationDeployer(self)
+        validation_deployer = ValidationDeployer(self.path_properties, self.os_service)
+        self.validation_deployer = ChiasmaValidationDeployer(self, validation_deployer)
 
     def build(self):
         self.chiasma_builder.run()

@@ -43,6 +43,10 @@ class ApplicationBase(object):
     def build(self):
         pass
 
+    @abc.abstractmethod
+    def deploy_validation(self):
+        pass
+
 
 class StandardVSConfigXML:
     def __init__(self, tree_root, app_namespace):
