@@ -207,6 +207,7 @@ class SnpseqPathActions:
         self.create_dirs(sql_updates_next_hotfix)
         self.create_dirs(validation_files_next_release)
         self.create_dirs(sql_updates_next_release)
+        self.create_dirs(self.path_properties.config['deploy_root_path'])
 
     def create_dirs(self, path):
         create_dirs(self.os_service, path, self.whatif, self.whatif)

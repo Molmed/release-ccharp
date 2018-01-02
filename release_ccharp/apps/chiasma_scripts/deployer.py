@@ -1,4 +1,5 @@
 from __future__ import print_function
+from release_ccharp.utils import copytree_replace_existing
 
 
 class ChiasmaDeployer:
@@ -8,6 +9,7 @@ class ChiasmaDeployer:
 
     def run(self):
         self.check_source_files_exists()
+        self.common_deployer.move_deploy_files()
 
     def check_source_files_exists(self):
         print('Check that source files exists ...')

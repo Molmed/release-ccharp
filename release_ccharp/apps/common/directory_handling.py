@@ -3,6 +3,7 @@ import os
 from release_ccharp.utils import lazyprop
 from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.utils import copytree_preserve_existing
+from release_ccharp.utils import copytree_replace_existing
 from release_ccharp.utils import delete_directory_contents
 
 
@@ -124,6 +125,11 @@ class Deployer:
         user_manual = self.path_properties.user_manual_download_path
         if not self.os_service.exists(user_manual):
             raise FileDoesNotExistsException(user_manual)
+
+    def move_deploy_files(self):
+        src = self.app_paths.production_dir
+        dst = self.app_paths.config['deploy_root_path']
+        copytree_replace_existing(self.os_service, src, dst)
 
 
 class FileDoesNotExistsException(Exception):

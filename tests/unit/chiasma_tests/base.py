@@ -15,7 +15,8 @@ class ChiasmaBaseTests(unittest.TestCase):
             "git_repo_name": "chiasma",
             "exe_file_name_base": "Chiasma",
             "project_root_dir" : "Chiasma",
-            "owner": "GitEdvard"
+            "owner": "GitEdvard",
+            "deploy_root_path": r'c:\xxx\deploy'
         }
         branch_provider = FakeBranchProvider()
         wf = SnpseqWorkflow(whatif=False, repo="chiasma")
