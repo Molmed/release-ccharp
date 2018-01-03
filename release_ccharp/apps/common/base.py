@@ -79,7 +79,7 @@ class ApplicationFactory:
 
     def get_instance(self, whatif, repo):
         application = self.import_application(repo)
-        wf = SnpseqWorkflow(whatif, repo)
+        wf = SnpseqWorkflow(whatif, repo, OsService())
         branch_provider = wf.paths.branch_provider
         return application(wf, branch_provider, OsService(), WindowsCommands(), whatif)
 

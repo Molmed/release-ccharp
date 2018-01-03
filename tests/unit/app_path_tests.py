@@ -21,7 +21,7 @@ class AppPathTests(unittest.TestCase):
                        r'\release\chiasma.exe')
         filesystem.CreateFile(chiasma_exe)
         branch_provider = FakeBranchProvider()
-        path_properties = SnpseqPathProperties(config, "chiasma")
+        path_properties = SnpseqPathProperties(config, "chiasma", None)
         path_properties.branch_provider = branch_provider
         os_service = FakeOsService(filesystem)
         self.os_module = os_service.os_module

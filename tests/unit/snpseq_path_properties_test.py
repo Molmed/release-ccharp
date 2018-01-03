@@ -9,7 +9,7 @@ class SnpseqPathPropertiesTests(unittest.TestCase):
             "git_repo_name": "chiasma",
             "owner": "GitEdvard"
         }
-        self.path_properties = SnpseqPathProperties(config, "chiasma")
+        self.path_properties = SnpseqPathProperties(config, "chiasma", None)
         self.path_properties.branch_provider = FakeBranchProvider()
 
     def test_validation_archive__with_branch_provider_as_below__path_is_right(self):

@@ -8,9 +8,10 @@ from release_ccharp.utils import lazyprop
 
 
 class SnpseqPathProperties:
-    def __init__(self, config, repo):
+    def __init__(self, config, repo, os_service):
         self.config = config
         self.repo = repo
+        self.os_service = os_service
         self.branch_provider = None
         sub_paths = self._load_subpaths()
         self.build_config_subpath = sub_paths['build_config_subpath']
@@ -91,7 +92,7 @@ class SnpseqPathProperties:
         Find the download catalog for the latest accepted branch
         :return: The path of latest accepted branch
         """
-        subdirs = os.listdir(self.root_candidates)
+        subdirs = self.os_service.listdir(self.root_candidates)
         subdir_path = None
         for subdir in subdirs:
             if re.match('(release|hotfix)-{}'.format(self.branch_provider.latest_version), subdir):
@@ -163,7 +164,7 @@ class SnpseqPathProperties:
         return os.path.join(archive_version_dir, self.user_validations_validation_files_subpath)
 
     @property
-    def docs(self):
+    def doc(self):
         return os.path.join(self._repo_root, self.doc_subpath)
 
     @lazyprop

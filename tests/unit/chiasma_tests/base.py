@@ -4,6 +4,7 @@ from pyfakefs import fake_filesystem
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.apps.chiasma import Application
+from release_ccharp.utils import create_dirs
 from tests.unit.utility.fake_os_service import FakeOsService
 from tests.unit.utility.fake_windows_commands import FakeWindowsCommands
 
@@ -19,13 +20,13 @@ class ChiasmaBaseTests(unittest.TestCase):
             "deploy_root_path": r'c:\xxx\deploy'
         }
         branch_provider = FakeBranchProvider()
-        wf = SnpseqWorkflow(whatif=False, repo="chiasma")
-        wf.config = config
-        wf.paths.config = config
-        wf.paths.branch_provider = branch_provider
         self.filesystem = fake_filesystem.FakeFilesystem()
         os_service = FakeOsService(self.filesystem)
         self.os_module = os_service.os_module
+        wf = SnpseqWorkflow(whatif=False, repo="chiasma", os_service=os_service)
+        wf.config = config
+        wf.paths.config = config
+        wf.paths.branch_provider = branch_provider
         self.chiasma = Application(wf, branch_provider, os_service,
                                    FakeWindowsCommands(self.filesystem), whatif=False)
 
@@ -34,6 +35,7 @@ class ChiasmaBaseTests(unittest.TestCase):
             os_service=os_service
         )
         path_actions.generate_folder_tree()
+        create_dirs(os_service, self.chiasma.path_properties.current_candidate_dir, False, False)
 
 
 class FakeBranchProvider:

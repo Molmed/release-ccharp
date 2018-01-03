@@ -3,11 +3,12 @@ import os
 import re
 import yaml
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
+from release_ccharp.utility.os_service import OsService
 
 
 class MiscTests(unittest.TestCase):
     def setUp(self):
-        self.workflow = SnpseqWorkflow(whatif=False, repo='testing-repo')
+        self.workflow = SnpseqWorkflow(whatif=False, repo='testing-repo', os_service=OsService())
 
     @unittest.skip("")
     def test_yaml(self):

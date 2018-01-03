@@ -2,7 +2,7 @@ import unittest
 from unittest import skip
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.apps.chiasma import Application
-from release_ccharp.apps.common_xxx import WindowsCommands
+from release_ccharp.apps.common.base import WindowsCommands
 from release_ccharp.utility.os_service import OsService
 
 
@@ -11,11 +11,13 @@ class ChiasmaValidationDeployTests(unittest.TestCase):
         config = {
             "root_path": r'c:\tmp',
             "git_repo_name": "chiasma",
+            "exe_file_name_base": "Chiasma",
+            "project_root_dir" : "Chiasma",
             "confluence_space_key": "CHI",
             "owner": "GitEdvard"
         }
         branch_provider = FakeBranchProvider()
-        wf = SnpseqWorkflow(whatif=False, repo="chiasma")
+        wf = SnpseqWorkflow(whatif=False, repo="chiasma", os_service=OsService())
         wf.config = config
         wf.paths.config = config
         wf.paths.branch_provider = branch_provider

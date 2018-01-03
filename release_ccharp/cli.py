@@ -19,7 +19,7 @@ def cli(ctx, whatif):
 @click.option("--major", is_flag=True, default=False)
 @click.pass_context
 def create_cand(ctx, repo, major):
-    workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo)
+    workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo, os_service=OsService())
     workflow.create_cand(major_inc=major)
 
 
@@ -27,7 +27,7 @@ def create_cand(ctx, repo, major):
 @click.argument("repo")
 @click.pass_context
 def create_hotfix(ctx, repo):
-    workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo)
+    workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo, os_service=OsService())
     workflow.create_hotfix()
 
 
@@ -35,7 +35,7 @@ def create_hotfix(ctx, repo):
 @click.argument("repo")
 @click.pass_context
 def download(ctx, repo):
-    workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo)
+    workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo, os_service=OsService())
     workflow.download()
 
 
@@ -61,7 +61,7 @@ def deploy_validation(ctx, repo):
 @click.argument("repo")
 @click.pass_context
 def accept(ctx, repo):
-    workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo)
+    workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo, os_service=OsService())
     workflow.accept()
 
 
@@ -87,7 +87,7 @@ def download_release_history(ctx, repo):
 @click.option("--copy-latest", is_flag=True, default=False)
 @click.pass_context
 def generate_user_manual(ctx, repo, copy_latest):
-    workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo)
+    workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo, os_service=OsService())
     if copy_latest:
         print("Copy user manual from latest accepted directory")
         workflow.copy_previous_user_manual()
@@ -102,7 +102,7 @@ def generate_user_manual(ctx, repo, copy_latest):
 def generate_folder_tree(ctx, repo):
     c = Config()
     config = c.open_config(repo)
-    path_properites = SnpseqPathProperties(config, repo)
+    path_properites = SnpseqPathProperties(config, repo, OsService())
     path_actions = SnpseqPathActions(whatif=ctx.obj['whatif'],
                                      path_properties=path_properites,
                                      os_service=OsService())

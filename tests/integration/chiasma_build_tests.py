@@ -1,7 +1,7 @@
 from __future__ import print_function
 import unittest
 from release_ccharp.apps.chiasma import Application
-from release_ccharp.apps.common_xxx import WindowsCommands
+from release_ccharp.apps.common.base import WindowsCommands
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.utility.os_service import OsService
 from release_ccharp.apps.dev_environment import TestEnvironmentProvider
@@ -16,7 +16,7 @@ class ChiasmaBuildTests(unittest.TestCase):
             "owner": "GitEdvard"
         }
         branch_provider = FakeBranchProvider()
-        wf = SnpseqWorkflow(whatif=False, repo="chiasma")
+        wf = SnpseqWorkflow(whatif=False, repo="chiasma", os_service=OsService())
         wf.config = config
         wf.paths.config = config
         wf.paths.branch_provider = branch_provider

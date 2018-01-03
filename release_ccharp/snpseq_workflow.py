@@ -9,18 +9,19 @@ from release_ccharp.snpseq_paths import SnpseqPathProperties
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_ccharp.config import Config
 from release_ccharp.branches import BranchProvider
+from release_ccharp.apps.common.directory_handling import Deployer
 
 
 class SnpseqWorkflow:
     """
     Initializes a release-tools workflow to act on the github provider
     """
-    def __init__(self, whatif, repo):
+    def __init__(self, whatif, repo, os_service):
         conf = Config()
         self.config = conf.open_config(repo)
         self.whatif = whatif
         self.repo = repo
-        self.paths = SnpseqPathProperties(self.config, self.repo)
+        self.paths = SnpseqPathProperties(self.config, self.repo, os_service)
         self.workflow = self._create_workflow()
         self.paths.branch_provider = BranchProvider(self.workflow)
 

@@ -14,7 +14,7 @@ class SnpseqPathActionsTests(unittest.TestCase):
             "owner": "GitEdvard"
         }
         filesystem = fake_filesystem.FakeFilesystem()
-        self.path_properties = SnpseqPathProperties(config, "chiasma")
+        self.path_properties = SnpseqPathProperties(config, "chiasma", None)
         self.path_properties.branch_provider = FakeBranchProvider()
         self.path_actions = SnpseqPathActions(whatif=False, path_properties=self.path_properties,
                                               os_service=FakeOsService(filesystem))
