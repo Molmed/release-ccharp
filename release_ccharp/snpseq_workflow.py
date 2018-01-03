@@ -9,7 +9,6 @@ from release_ccharp.snpseq_paths import SnpseqPathProperties
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_ccharp.config import Config
 from release_ccharp.branches import BranchProvider
-from release_ccharp.apps.common.directory_handling import Deployer
 
 
 class SnpseqWorkflow:

@@ -63,7 +63,7 @@ class ChiasmaDeployTests(ChiasmaBaseTests):
         # Arrange
         self.add_required_files()
         # Act
-        self.chiasma.deployer.common_deployer.move_deploy_files()
+        self.chiasma.deployer.file_deployer.move_deploy_files()
         # Assert
         exe_path = r'c:\xxx\deploy\chiasma.exe'
         standard_config = r'c:\xxx\deploy\chiasma.exe.config'
@@ -76,7 +76,7 @@ class ChiasmaDeployTests(ChiasmaBaseTests):
         # Arrange
         self.add_required_files()
         # Act
-        self.chiasma.deployer.common_deployer.move_user_manual()
+        self.chiasma.deployer.file_deployer.move_user_manual()
         # Assert
         user_manaul_path = r'c:\xxx\chiasma\doc\chiasma-user-manual-v1.0.0.pdf'
         self.assertTrue(self.os_module.path.exists(user_manaul_path))
@@ -86,10 +86,11 @@ class ChiasmaDeployTests(ChiasmaBaseTests):
         self.add_required_files()
         self.file_builder.add_file_in_latest_candidate_dir(r'release-history.txt')
         # Act
-        self.chiasma.deployer.common_deployer.copy_release_history()
+        self.chiasma.deployer.file_deployer.copy_release_history()
         # Assert
         release_history = r'c:\xxx\chiasma\doc\release-history.txt'
         self.assertTrue(self.os_module.path.exists(release_history))
+
 
 
 class FileSystemBuilder:
@@ -113,3 +114,8 @@ class FileSystemBuilder:
         path = os.path.join(self.chiasma.path_properties.latest_accepted_candidate_dir, filename)
         print('add file into: {}'.format(path))
         self.filesystem.CreateFile(path)
+
+    def add_validation_file_in_latest(self, filename='validationfile.txt', contents=''):
+        path = os.path.join(self.chiasma.path_properties.latest_validation_files, filename)
+        self.filesystem.CreateFile(path, contents=contents)
+

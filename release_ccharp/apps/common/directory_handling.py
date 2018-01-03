@@ -59,22 +59,19 @@ class AppPaths:
         self.os_service.copytree(release_dir, self.production_dir)
 
 
-class ValidationDeployer:
-    def __init__(self, path_properties, os_service):
+class FileDeployer:
+    def __init__(self, path_properties, os_service, config, app_paths):
         self.path_properties = path_properties
         self.os_service = os_service
+        self.config = config
+        self.app_paths = app_paths
         self.path_actions = SnpseqPathActions(
             whatif=False, path_properties=self.path_properties,
             os_service=self.os_service)
 
-    def move_to_archive(self, version_in_latest):
-        """
-        If interrupting an ongoing test for a hotfix, move existing files to archive
-        Archive catalog is fetched from shortcut in latest, not the candidate branch
-        :return:
-        """
+    def move_to_archive(self, version):
         validation_dir = self.path_properties.user_validations_latest
-        target_dir = os.path.join(self.path_properties.all_versions, version_in_latest)
+        target_dir = os.path.join(self.path_properties.all_versions, version)
         copytree_preserve_existing(self.os_service, validation_dir, target_dir)
         delete_directory_contents(self.os_service, validation_dir)
 
@@ -95,14 +92,6 @@ class ValidationDeployer:
 
     def extract_version_from_path(self, path):
         return self.path_actions.find_version_from_candidate_path(path)
-
-
-class Deployer:
-    def __init__(self, path_properties, os_service, config, app_paths):
-        self.path_properties = path_properties
-        self.os_service = os_service
-        self.config = config
-        self.app_paths = app_paths
 
     def check_exe_file_exists(self):
         exe_filename = '{}.exe'.format(self.config['exe_file_name_base'])
