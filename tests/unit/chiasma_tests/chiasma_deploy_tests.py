@@ -63,7 +63,7 @@ class ChiasmaDeployTests(ChiasmaBaseTests):
         # Arrange
         self.add_required_files()
         # Act
-        self.chiasma.deployer.run()
+        self.chiasma.deployer.common_deployer.move_deploy_files()
         # Assert
         exe_path = r'c:\xxx\deploy\chiasma.exe'
         standard_config = r'c:\xxx\deploy\chiasma.exe.config'
@@ -71,6 +71,16 @@ class ChiasmaDeployTests(ChiasmaBaseTests):
         self.assertTrue(self.os_module.path.exists(exe_path))
         self.assertTrue(self.os_module.path.exists(standard_config))
         self.assertTrue(self.os_module.path.exists(lab_config))
+
+    def test_move_user_manual__user_manual_existent__user_manual_moved_to_docs(self):
+        # Arrange
+        self.add_required_files()
+        # Act
+        self.chiasma.deployer.common_deployer.move_user_manual()
+        # Assert
+        user_manaul_path = r'c:\xxx\chiasma\doc\chiasma-user-manual-v1.0.0.pdf'
+        self.assertTrue(self.os_module.path.exists(user_manaul_path))
+
 
 
 

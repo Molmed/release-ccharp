@@ -10,6 +10,7 @@ class ChiasmaDeployer:
     def run(self):
         self.check_source_files_exists()
         self.common_deployer.move_deploy_files()
+        self.common_deployer.move_user_manual()
 
     def check_source_files_exists(self):
         print('Check that source files exists ...')

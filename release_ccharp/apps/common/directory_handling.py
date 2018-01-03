@@ -131,6 +131,11 @@ class Deployer:
         dst = self.app_paths.config['deploy_root_path']
         copytree_replace_existing(self.os_service, src, dst)
 
+    def move_user_manual(self):
+        src = self.path_properties.user_manual_download_path
+        dst = os.path.join(self.path_properties.docs, self.path_properties.user_manual_name)
+        self.os_service.copyfile(src, dst)
+
 
 class FileDoesNotExistsException(Exception):
     pass

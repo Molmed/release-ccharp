@@ -69,11 +69,14 @@ class SnpseqPathProperties:
         i.e. the path to the download directory (not the doc path)
         :return: 
         """
-        version = str(self._candidate_tag)
         latest_path = self.current_candidate_dir
+        return os.path.join(latest_path, self.user_manual_name)
+
+    @property
+    def user_manual_name(self):
+        version = str(self._candidate_tag)
         manual_base_name = "{}-user-manual".format(self.repo)
-        manual_name = "{}-{}.pdf".format(manual_base_name, version)
-        return os.path.join(latest_path, manual_name)
+        return "{}-{}.pdf".format(manual_base_name, version)
 
     @property
     def user_manual_path_previous(self):
@@ -158,6 +161,10 @@ class SnpseqPathProperties:
     def archive_dir_validation_files(self):
         archive_version_dir = os.path.join(self.all_versions, str(self.branch_provider.candidate_version))
         return os.path.join(archive_version_dir, self.user_validations_validation_files_subpath)
+
+    @property
+    def docs(self):
+        return os.path.join(self._repo_root, self.doc_subpath)
 
     @lazyprop
     def shortcut_path(self):
