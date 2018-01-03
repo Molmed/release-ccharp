@@ -33,7 +33,8 @@ class BinaryVersionUpdater:
 
     @lazyprop
     def assembly_file_path(self):
-        assembly_subpath = os.path.join(self.config["git_repo_name"], r'properties\assemblyinfo.cs')
+        properties = os.path.join(self.config["project_root_dir"], 'properties')
+        assembly_subpath = os.path.join(properties, 'assemblyinfo.cs')
         assembly_file_path = os.path.join(
             self.app_paths.download_dir, assembly_subpath)
         if not self.os_service.exists(assembly_file_path):

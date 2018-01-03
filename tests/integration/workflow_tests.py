@@ -1,11 +1,12 @@
 import unittest
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
+from release_ccharp.utility.os_service import OsService
 
 
 class WorkflowTests(unittest.TestCase):
     def setUp(self):
         # pass
-        self.workflow = SnpseqWorkflow(whatif=False, repo='testing-repo')
+        self.workflow = SnpseqWorkflow(whatif=False, repo='testing-repo', os_service=OsService())
 
     @unittest.skip("")
     def test_create_cand(self):

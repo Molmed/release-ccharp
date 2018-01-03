@@ -15,12 +15,12 @@ class SnpseqWorkflow:
     """
     Initializes a release-tools workflow to act on the github provider
     """
-    def __init__(self, whatif, repo):
+    def __init__(self, whatif, repo, os_service):
         conf = Config()
         self.config = conf.open_config(repo)
         self.whatif = whatif
         self.repo = repo
-        self.paths = SnpseqPathProperties(self.config, self.repo)
+        self.paths = SnpseqPathProperties(self.config, self.repo, os_service)
         self.workflow = self._create_workflow()
         self.paths.branch_provider = BranchProvider(self.workflow)
 
@@ -56,9 +56,7 @@ class SnpseqWorkflow:
         updated on GitHub        
         :return: 
         """
-        latest_path = self.paths.latest_accepted_candidate_dir
-        path = os.path.join(latest_path, "release-history.txt")
-        self.workflow.download_release_history(path=path)
+        self.workflow.download_release_history(path=self.paths.latest_accepted_release_history)
 
     def generate_user_manual(self):
         space_key = self.config["confluence_space_key"]
@@ -79,3 +77,34 @@ class SnpseqWorkflow:
             raise SnpseqReleaseException("Previous user manual could not be found: {}".format(latest_manual))
         if not self.whatif:
             copyfile(latest_manual, next_manual)
+
+    def status(self):
+        branches = self.workflow.provider.get_branches()
+        branch_names = [branch["name"] for branch in branches]
+
+        queue = self.workflow.get_queue()
+
+        latest_version = self.workflow.get_latest_version()
+        next_version = self.workflow.get_candidate_version()
+        hotfix_version = self.workflow.get_hotfix_version()
+        print "Latest version: {}".format(latest_version)
+        print "  - Next release version would be: {}".format(next_version)
+        print "  - Next hotfix version would be: {}".format(hotfix_version)
+
+        # TODO: Report all release tags too
+
+        print ""
+        print "Branches:"
+        for branch in branch_names:
+            print "  {}{}".format(branch, " *" if (branch in queue) else "")
+
+        print ""
+        print "Queue:"
+        # TODO: Use cache for api calls when possible
+        for branch in queue:
+            pull_requests = len(self.workflow.provider.get_pull_requests(branch))
+            print "  {} (PRs={})".format(branch, pull_requests)
+
+        # TODO: Compare relevant branches
+        print ""
+

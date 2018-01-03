@@ -38,11 +38,19 @@ class ApplicationBase(object):
 
     @abc.abstractmethod
     def build(self):
-        pass
+        print('Starting build')
 
     @abc.abstractmethod
     def deploy_validation(self):
-        pass
+        print('Starting deploy validation')
+
+    @abc.abstractmethod
+    def deploy(self):
+        print('Starting deploy')
+
+    @abc.abstractmethod
+    def download_release_history(self):
+        print('Starting download release history')
 
 
 class WindowsCommands:
@@ -75,7 +83,7 @@ class ApplicationFactory:
 
     def get_instance(self, whatif, repo):
         application = self.import_application(repo)
-        wf = SnpseqWorkflow(whatif, repo)
+        wf = SnpseqWorkflow(whatif, repo, OsService())
         branch_provider = wf.paths.branch_provider
         return application(wf, branch_provider, OsService(), WindowsCommands(), whatif)
 
