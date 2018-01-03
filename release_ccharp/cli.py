@@ -79,7 +79,7 @@ def deploy(ctx, repo):
 @click.pass_context
 def download_release_history(ctx, repo):
     factory = ApplicationFactory()
-    instance = factory.get_instance(whatif=ctx.ob['whatif'], repo=repo)
+    instance = factory.get_instance(whatif=ctx.obj['whatif'], repo=repo)
     instance.download_release_history()
 
 

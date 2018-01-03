@@ -35,7 +35,9 @@ class ChiasmaDeployer:
         This method have to be called before the candidate version is accepted.
         :return:
         """
-        self.file_deployer.move_latest_to_archive(self.branch_provider.candidate_version)
-        self.file_deployer.move_sql_scripts_to_archive(self.branch_provider.candidate_version)
+        print('Move validation files and sql script to archive...')
+        self.file_deployer.move_latest_to_archive(str(self.branch_provider.candidate_version))
+        self.file_deployer.move_sql_scripts_to_archive(str(self.branch_provider.candidate_version))
         self.path_actions.create_shortcut_to_exe()
         delete_directory_contents(self.os_service, self.path_properties.next_validation_files)
+        print('ok')

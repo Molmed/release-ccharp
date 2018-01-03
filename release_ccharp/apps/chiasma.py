@@ -31,14 +31,18 @@ class Application(ApplicationBase):
             self.path_properties, file_deployer, path_actions, os_service, branch_provider)
 
     def build(self):
+        super(Application, self).build()
         self.chiasma_builder.run()
 
     def deploy_validation(self):
+        super(Application, self).deploy_validation()
         self.validation_deployer.run()
 
     def deploy(self):
+        super(Application, self).deploy()
         self.deployer.run()
 
     def download_release_history(self):
+        super(Application, self).download_release_history()
         self.snpseq_workflow.download_release_history()
         self.deployer.copy_release_history()

@@ -122,20 +122,26 @@ class FileDeployer:
             raise FileDoesNotExistsException(user_manual)
 
     def move_deploy_files(self):
+        print('Copy files to deploy catalog...')
         src = self.app_paths.production_dir
         dst = self.app_paths.config['deploy_root_path']
         copytree_replace_existing(self.os_service, src, dst)
+        print('ok')
 
     def move_user_manual(self):
+        print('Copy user manual to doc catalog...')
         src = self.path_properties.user_manual_download_path
         dst = os.path.join(self.path_properties.doc, self.path_properties.user_manual_name)
         self.os_service.copyfile(src, dst)
+        print('ok')
 
     def copy_release_history(self):
+        print('Copy release history to doc catalog...')
         src_release_history = self.path_properties.latest_accepted_release_history
         release_history_base_name = os.path.basename(src_release_history)
         dst = os.path.join(self.path_properties.doc, release_history_base_name)
         self.os_service.copyfile(src_release_history, dst)
+        print('ok')
 
 
 class FileDoesNotExistsException(Exception):

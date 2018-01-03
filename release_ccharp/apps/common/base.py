@@ -38,19 +38,19 @@ class ApplicationBase(object):
 
     @abc.abstractmethod
     def build(self):
-        pass
+        print('Starting build')
 
     @abc.abstractmethod
     def deploy_validation(self):
-        pass
+        print('Starting deploy validation')
 
     @abc.abstractmethod
     def deploy(self):
-        pass
+        print('Starting deploy')
 
     @abc.abstractmethod
     def download_release_history(self):
-        pass
+        print('Starting download release history')
 
 
 class WindowsCommands:
