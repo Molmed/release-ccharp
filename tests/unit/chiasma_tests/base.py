@@ -36,10 +36,13 @@ class ChiasmaBaseTests(unittest.TestCase):
         )
         path_actions.generate_folder_tree()
         create_dirs(os_service, self.chiasma.path_properties.current_candidate_dir, False, False)
+        latest_candidate = 'release-{}'.format(branch_provider.latest_version)
+        latest_dir = os.path.join(self.chiasma.path_properties.root_candidates, latest_candidate)
+        create_dirs(os_service, latest_dir, False, False)
 
 
 class FakeBranchProvider:
     def __init__(self):
         self.candidate_version = "1.0.0"
-        self.latest_version = "latest-version"
+        self.latest_version = "0.0.9"
         self.candidate_branch = "release-1.0.0"

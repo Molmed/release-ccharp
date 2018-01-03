@@ -81,7 +81,15 @@ class ChiasmaDeployTests(ChiasmaBaseTests):
         user_manaul_path = r'c:\xxx\chiasma\doc\chiasma-user-manual-v1.0.0.pdf'
         self.assertTrue(self.os_module.path.exists(user_manaul_path))
 
-
+    def test_move_release_history__release_history_exists__release_history_moved(self):
+        # Arrange
+        self.add_required_files()
+        self.file_builder.add_file_in_latest_candidate_dir(r'release-history.txt')
+        # Act
+        self.chiasma.deployer.common_deployer.copy_release_history()
+        # Assert
+        release_history = r'c:\xxx\chiasma\doc\release-history.txt'
+        self.assertTrue(self.os_module.path.exists(release_history))
 
 
 class FileSystemBuilder:
@@ -99,4 +107,9 @@ class FileSystemBuilder:
 
     def add_file_in_current_candidate_dir(self, filename='file.txt'):
         path = os.path.join(self.chiasma.path_properties.current_candidate_dir, filename)
+        self.filesystem.CreateFile(path)
+
+    def add_file_in_latest_candidate_dir(self, filename='file.txt'):
+        path = os.path.join(self.chiasma.path_properties.latest_accepted_candidate_dir, filename)
+        print('add file into: {}'.format(path))
         self.filesystem.CreateFile(path)

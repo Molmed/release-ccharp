@@ -102,6 +102,11 @@ class SnpseqPathProperties:
         return subdir_path
 
     @property
+    def latest_accepted_release_history(self):
+        latest_path = self.latest_accepted_candidate_dir
+        return os.path.join(latest_path, "release-history.txt")
+
+    @property
     def current_candidate_dir(self):
         """
         Find the download catalog for the latest candidate branch

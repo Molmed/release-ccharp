@@ -78,8 +78,9 @@ def deploy(ctx, repo):
 @click.argument("repo")
 @click.pass_context
 def download_release_history(ctx, repo):
-    workflow = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo)
-    workflow.download_release_history()
+    factory = ApplicationFactory()
+    instance = factory.get_instance(whatif=ctx.ob['whatif'], repo=repo)
+    instance.download_release_history()
 
 
 @cli.command("generate-user-manual")

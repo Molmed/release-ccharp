@@ -133,8 +133,14 @@ class Deployer:
 
     def move_user_manual(self):
         src = self.path_properties.user_manual_download_path
-        dst = os.path.join(self.path_properties.docs, self.path_properties.user_manual_name)
+        dst = os.path.join(self.path_properties.doc, self.path_properties.user_manual_name)
         self.os_service.copyfile(src, dst)
+
+    def copy_release_history(self):
+        src_release_history = self.path_properties.latest_accepted_release_history
+        release_history_base_name = os.path.basename(src_release_history)
+        dst = os.path.join(self.path_properties.doc, release_history_base_name)
+        self.os_service.copyfile(src_release_history, dst)
 
 
 class FileDoesNotExistsException(Exception):

@@ -39,3 +39,7 @@ class Application(ApplicationBase):
 
     def deploy(self):
         self.deployer.run()
+
+    def download_release_history(self):
+        self.snpseq_workflow.download_release_history()
+        self.deployer.copy_release_history()

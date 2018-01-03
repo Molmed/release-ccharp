@@ -57,9 +57,7 @@ class SnpseqWorkflow:
         updated on GitHub        
         :return: 
         """
-        latest_path = self.paths.latest_accepted_candidate_dir
-        path = os.path.join(latest_path, "release-history.txt")
-        self.workflow.download_release_history(path=path)
+        self.workflow.download_release_history(path=self.paths.latest_accepted_release_history)
 
     def generate_user_manual(self):
         space_key = self.config["confluence_space_key"]

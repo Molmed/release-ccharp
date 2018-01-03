@@ -21,3 +21,6 @@ class ChiasmaDeployer:
         self.common_deployer.check_user_manual_exists()
 
         print('ok')
+
+    def copy_release_history(self):
+        self.common_deployer.copy_release_history()

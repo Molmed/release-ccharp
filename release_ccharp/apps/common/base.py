@@ -48,6 +48,10 @@ class ApplicationBase(object):
     def deploy(self):
         pass
 
+    @abc.abstractmethod
+    def download_release_history(self):
+        pass
+
 
 class WindowsCommands:
     def build_solution(self, solution_file_path):
