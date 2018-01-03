@@ -77,3 +77,34 @@ class SnpseqWorkflow:
             raise SnpseqReleaseException("Previous user manual could not be found: {}".format(latest_manual))
         if not self.whatif:
             copyfile(latest_manual, next_manual)
+
+    def status(self):
+        branches = self.workflow.provider.get_branches()
+        branch_names = [branch["name"] for branch in branches]
+
+        queue = self.workflow.get_queue()
+
+        latest_version = self.workflow.get_latest_version()
+        next_version = self.workflow.get_candidate_version()
+        hotfix_version = self.workflow.get_hotfix_version()
+        print "Latest version: {}".format(latest_version)
+        print "  - Next release version would be: {}".format(next_version)
+        print "  - Next hotfix version would be: {}".format(hotfix_version)
+
+        # TODO: Report all release tags too
+
+        print ""
+        print "Branches:"
+        for branch in branch_names:
+            print "  {}{}".format(branch, " *" if (branch in queue) else "")
+
+        print ""
+        print "Queue:"
+        # TODO: Use cache for api calls when possible
+        for branch in queue:
+            pull_requests = len(self.workflow.provider.get_pull_requests(branch))
+            print "  {} (PRs={})".format(branch, pull_requests)
+
+        # TODO: Compare relevant branches
+        print ""
+

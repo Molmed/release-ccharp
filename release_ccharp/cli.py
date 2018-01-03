@@ -109,6 +109,13 @@ def generate_folder_tree(ctx, repo):
                                      os_service=OsService())
     path_actions.generate_folder_tree()
 
+@cli.command("status")
+@click.argument("repo")
+@click.pass_context
+def status(ctx, repo):
+    wf = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo, os_service=OsService())
+    wf.status()
+
 def cli_main():
     cli(obj={})
 
