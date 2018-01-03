@@ -27,7 +27,8 @@ class Application(ApplicationBase):
             whatif, self.path_properties, os_service, self.app_paths, self.windows_commands)
         self.validation_deployer = ChiasmaValidationDeployer(
             self, file_deployer, path_actions)
-        self.deployer = ChiasmaDeployer(self.path_properties, file_deployer)
+        self.deployer = ChiasmaDeployer(
+            self.path_properties, file_deployer, path_actions, os_service, branch_provider)
 
     def build(self):
         self.chiasma_builder.run()

@@ -69,11 +69,17 @@ class FileDeployer:
             whatif=False, path_properties=self.path_properties,
             os_service=self.os_service)
 
-    def move_to_archive(self, version):
+    def move_latest_to_archive(self, version):
         validation_dir = self.path_properties.user_validations_latest
         target_dir = os.path.join(self.path_properties.all_versions, version)
         copytree_preserve_existing(self.os_service, validation_dir, target_dir)
         delete_directory_contents(self.os_service, validation_dir)
+
+    def move_sql_scripts_to_archive(self, version):
+        src = self.path_properties.next_sql_updates
+        dst = self.path_properties.archive_sql_updates
+        copytree_preserve_existing(self.os_service, src, dst)
+        delete_directory_contents(self.os_service, src)
 
     def copy_to_latest(self):
         source_dir = self.path_properties.next_validation_files

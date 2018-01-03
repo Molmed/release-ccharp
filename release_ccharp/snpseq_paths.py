@@ -160,6 +160,17 @@ class SnpseqPathProperties:
         return os.path.join(self.user_validations_next_dir, self.user_validations_sql_updates_subpath)
 
     @property
+    def archive_sql_updates(self):
+        """
+        Archive matching the current candidate
+        ...\AllVersions\<candidate version>\SQLUpdates
+        :return:
+        """
+        archive_version_dir = os.path.join(self.all_versions, str(self.branch_provider.candidate_version))
+        return os.path.join(archive_version_dir, self.user_validations_sql_updates_subpath)
+
+
+    @property
     def latest_validation_files(self):
         return os.path.join(self.user_validations_latest, self.user_validations_validation_files_subpath)
 

@@ -20,7 +20,7 @@ class ChiasmaValidationDeployer:
 
     def copy_validation_files(self):
         if not self.shortcut_examiner.is_candidate_in_latest:
-            self.file_deployer.move_to_archive(self.shortcut_examiner.version_in_latest)
+            self.file_deployer.move_latest_to_archive(self.shortcut_examiner.version_in_latest)
         if self.os_service.exists(self.chiasma.path_properties.archive_dir_validation_files):
             self.file_deployer.back_move_from_archive()
         self.file_deployer.copy_to_latest()
