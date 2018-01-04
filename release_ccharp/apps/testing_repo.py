@@ -18,9 +18,9 @@ class Application(ApplicationBase):
         self.binary_version_updater = BinaryVersionUpdater(
             whatif=False, config=self.config, path_properties=self.path_properties,
             branch_provider=branch_provider, app_paths=self.app_paths, os_service=os_service)
-        self.chiasma_builder = ChiasmaBuilder(self)
         file_deployer = FileDeployer(
             self.path_properties, self.os_service, snpseq_workflow.config, self.app_paths)
+        self.chiasma_builder = ChiasmaBuilder(self, file_deployer)
         path_actions = SnpseqPathActions(
             whatif, self.path_properties, os_service, self.app_paths, self.windows_commands)
         self.validation_deployer = ChiasmaValidationDeployer(

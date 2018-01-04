@@ -6,8 +6,9 @@ from release_ccharp.utils import create_dirs
 
 
 class ChiasmaBuilder:
-    def __init__(self, chiasma):
+    def __init__(self, chiasma, file_deployer):
         self.chiasma = chiasma
+        self.file_deployer = file_deployer
 
     def run(self):
         self.check_build_not_already_run()
@@ -20,11 +21,7 @@ class ChiasmaBuilder:
         self.chiasma.binary_version_updater.update_binary_version()
 
     def check_build_not_already_run(self):
-        if os.path.exists(self.chiasma.app_paths.production_dir) or \
-                os.path.exists(self.chiasma.app_paths.validation_dir):
-            raise SnpseqReleaseException(
-                ("Production or validation catalog already exists. " 
-                "They need to be removed before continuing"))
+        self.file_deployer.check_build_not_already_run()
 
     def build_solution(self):
         solution_file = self._find_solution_file()

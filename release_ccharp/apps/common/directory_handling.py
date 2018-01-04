@@ -1,5 +1,6 @@
 from __future__ import print_function
 import os
+from release_ccharp.exceptions import SnpseqReleaseException
 from release_ccharp.utils import lazyprop
 from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.utils import copytree_preserve_existing
@@ -142,6 +143,13 @@ class FileDeployer:
         dst = os.path.join(self.path_properties.doc, release_history_base_name)
         self.os_service.copyfile(src_release_history, dst)
         print('ok')
+
+    def check_not_already_run(self):
+        if self.os_service.exists(self.app_paths.production_dir) or \
+                self.os_service.exists(self.app_paths.validation_dir):
+            raise SnpseqReleaseException(
+                ("Production or validation catalog already exists. " 
+                "They need to be removed before continuing"))
 
 
 class FileDoesNotExistsException(Exception):
