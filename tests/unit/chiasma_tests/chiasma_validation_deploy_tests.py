@@ -5,7 +5,7 @@ from tests.unit.chiasma_tests.base import ChiasmaBaseTests
 
 class ChiasmaValidationDeployTests(ChiasmaBaseTests):
     def setUp(self):
-        self.base_setup()
+        self.setup_chiasma()
         self.file_builder = FileSystemBuilder(self.chiasma, self.filesystem)
 
     def test_create_shortcut__with_latest_empty__something_is_copied_to_latest(self):

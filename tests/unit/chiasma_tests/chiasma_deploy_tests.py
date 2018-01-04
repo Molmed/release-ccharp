@@ -6,7 +6,7 @@ from tests.unit.chiasma_tests.base import ChiasmaBaseTests
 
 class ChiasmaDeployTests(ChiasmaBaseTests):
     def setUp(self):
-        self.base_setup()
+        self.setup_chiasma()
         self.file_builder = FileSystemBuilder(self.chiasma, self.filesystem)
 
     def add_required_files(self):

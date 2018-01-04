@@ -8,7 +8,7 @@ from tests.unit.chiasma_tests.base import ChiasmaBaseTests
 
 class ChiasmaBuildTests(ChiasmaBaseTests):
     def setUp(self):
-        self.base_setup()
+        self.setup_chiasma()
         chiasma_config_path = (r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config')
         self.filesystem.CreateFile(chiasma_config_path, contents=CHIASMA_CONFIG)
 
