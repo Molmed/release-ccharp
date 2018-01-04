@@ -1,6 +1,7 @@
 import unittest
 from unittest import skip
 import os
+import StringIO
 from pyfakefs import fake_filesystem
 from release_ccharp.utils import copytree_preserve_existing
 from release_ccharp.utils import copytree_replace_existing
@@ -382,6 +383,43 @@ class TestTestIterator(unittest.TestCase):
         lst = list(it)
 
         self.assertEqual(5, len(lst))
+
+
+class TestStreamHandling(unittest.TestCase):
+    def setUp(self):
+        self.filesystem = fake_filesystem.FakeFilesystem()
+        self.os_service = FakeOsService(self.filesystem)
+        self.source = r'c:\src'
+        create_dirs(self.os_service, self.source)
+
+
+    def test_stringio__call_read__returns_string(self):
+        buffer = StringIO.StringIO()
+        buffer.write('hej')
+        buffer.seek(0)
+        c = buffer.read()
+        self.assertEqual('hej', c)
+
+    def test_stringio__call_read_n_one_time__returns_first_n_chars(self):
+        buffer = StringIO.StringIO()
+        buffer.write('hej')
+        buffer.seek(0)
+        c = buffer.read(2)
+        self.assertEqual('he', c)
+
+    def test_stringio__call_read_n_two_times__returns_second_chunk_of_chars(self):
+        buffer = StringIO.StringIO()
+        buffer.write('hej')
+        buffer.seek(0)
+        c = buffer.read(2)
+        c = buffer.read(2)
+        self.assertEqual('j', c)
+
+    def test_fake_os_service_open__with_fake_file_with_contents__contents_is_read(self):
+        self.filesystem.CreateFile(r'c:\src\file.txt', contents='contents')
+        with self.os_service.open(r'c:\src\file.txt', 'r') as f:
+            c = f.read()
+        self.assertEqual('contents', c)
 
 
 class FileSystemBuilder():

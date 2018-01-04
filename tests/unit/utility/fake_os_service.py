@@ -1,3 +1,4 @@
+import StringIO
 from pyfakefs.fake_filesystem import FakeOsModule
 from pyfakefs.fake_filesystem_shutil import FakeShutilModule
 from pyfakefs.fake_filesystem import FakeFileOpen
@@ -50,9 +51,15 @@ class FakeOsService:
     def open(self, path, mode):
         file_module = FakeFileOpen(self.filesystem)
 
-        def read():
+        if 'r' in mode:
             with file_module(path) as file_object:
-                return "".join([line for line in file_object])
+                c = "".join([line for line in file_object])
+            mybuffer = StringIO.StringIO()
+            mybuffer.write(c)
+            mybuffer.seek(0)
+
+        def read(n=-1):
+            return mybuffer.read(n)
 
         def write(text):
             if self.exists(path):
