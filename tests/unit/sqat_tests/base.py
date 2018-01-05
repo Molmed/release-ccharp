@@ -10,7 +10,7 @@ class SqatBaseTests(BaseTests):
         config = {
             "root_path": r'c:\xxx',
             "git_repo_name": "sqat",
-            "exe_file_name_base": "SNP Quality Analysis Tool",
+            "exe_file_name_base": "sqat",
             "project_root_dir" : "SQAT3Client",
             "owner": "GitEdvard",
             "deploy_root_path": r'c:\xxx\deploy'

@@ -1,9 +1,11 @@
 from __future__ import print_function
 import os
+from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.apps.common.base import ApplicationBase
 from release_ccharp.apps.common.directory_handling import FileDeployer
 from release_ccharp.apps.common.single_file_read_write import BinaryVersionUpdater
 from release_ccharp.apps.sqat_scripts.builder import SqatBuilder
+from release_ccharp.apps.sqat_scripts.validation_deployer import SqatValidationDeployer
 
 
 class Application(ApplicationBase):
@@ -19,6 +21,9 @@ class Application(ApplicationBase):
         file_deployer = FileDeployer(self.path_properties, os_service, self.config, self.app_paths)
         self.builder = SqatBuilder(self, os_service, self.app_paths, file_deployer,
                                    binary_version_updater, windows_commands)
+        path_actions = SnpseqPathActions(
+            whatif, self.path_properties, os_service, self.app_paths, self.windows_commands)
+        self.validation_deployer = SqatValidationDeployer(self, file_deployer, path_actions)
 
     def build(self):
         super(Application, self).build()
@@ -26,6 +31,7 @@ class Application(ApplicationBase):
 
     def deploy_validation(self):
         super(Application, self).deploy_validation()
+        self.validation_deployer.run()
 
     def deploy(self):
         super(Application, self).deploy()
