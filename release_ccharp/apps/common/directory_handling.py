@@ -25,14 +25,16 @@ class AppPaths:
         oss = self.os_service
         dir_lst = [o for o in oss.listdir(candidate_dir) if oss.isdir(os.path.join(candidate_dir, o))]
         for d in dir_lst:
-            if pattern in d:
+            if pattern.lower() in d.lower():
                 return d
-        return None
+        raise SnpseqReleaseException(
+            'download directory could not be found under candidate path \n {}'.format(candidate_dir))
 
     @lazyprop
     def download_dir(self):
+        download_directory_name = self.find_download_directory_name()
         return os.path.join(self.path_properties.current_candidate_dir,
-                            self.find_download_directory_name())
+                            download_directory_name)
 
     @lazyprop
     def validation_dir(self):
@@ -52,10 +54,9 @@ class AppPaths:
     def config_file_name(self):
         return "{}.exe.config".format(self.config["exe_file_name_base"])
 
-    def move_candidates(self):
-        bin = os.path.join(self.config["project_root_dir"], 'bin')
-        release_subdir = os.path.join(bin, 'release')
-        release_dir = os.path.join(self.download_dir, release_subdir)
+    def move_candidates(self, project_root_directory):
+        bin_dir = os.path.join(project_root_directory, 'bin')
+        release_dir = os.path.join(bin_dir, 'release')
         self.os_service.copytree(release_dir, self.validation_dir)
         self.os_service.copytree(release_dir, self.production_dir)
 

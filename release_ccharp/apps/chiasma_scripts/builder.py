@@ -6,10 +6,11 @@ from release_ccharp.utils import create_dirs
 
 
 class ChiasmaBuilder:
-    def __init__(self, chiasma, file_deployer, app_paths):
+    def __init__(self, chiasma, file_deployer, app_paths, config):
         self.chiasma = chiasma
         self.file_deployer = file_deployer
         self.app_paths = app_paths
+        self.config = config
 
     def run(self):
         self.check_build_not_already_run()
@@ -39,7 +40,9 @@ class ChiasmaBuilder:
         raise SnpseqReleaseException("The solution file could not be found, directory {}".format(download_dir))
 
     def move_candidates(self):
-        self.chiasma.app_paths.move_candidates()
+        project_root_path = os.path.join(self.app_paths.download_dir,
+                                         self.config['project_root_dir'])
+        self.chiasma.app_paths.move_candidates(project_root_path)
 
     def _transform_config(self, directory):
         config_file_path = os.path.join(directory, self.chiasma.app_paths.config_file_name)

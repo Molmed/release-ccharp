@@ -31,7 +31,6 @@ class BaseTests(unittest.TestCase):
         latest_candidate = 'release-{}'.format(branch_provider.latest_version)
         latest_dir = os.path.join(path_properties.root_candidates, latest_candidate)
         create_dirs(os_service, latest_dir, False, False)
-        print('workflow config: {}'.format(path_properties.release_tools_config))
         filesystem.CreateFile(path_properties.release_tools_config, contents='none')
 
 

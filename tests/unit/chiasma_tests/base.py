@@ -14,5 +14,6 @@ class ChiasmaBaseTests(BaseTests):
             "deploy_root_path": r'c:\xxx\deploy'
         }
         wf, branch_provider, os_service = self.base_setup(config, 'chiasma')
+        self.os_service = os_service
         self.chiasma = Application(wf, branch_provider, os_service,
                                    FakeWindowsCommands(self.filesystem), whatif=False)
