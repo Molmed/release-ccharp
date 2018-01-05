@@ -6,6 +6,7 @@ from release_ccharp.apps.common.directory_handling import FileDeployer
 from release_ccharp.apps.common.single_file_read_write import BinaryVersionUpdater
 from release_ccharp.apps.sqat_scripts.builder import SqatBuilder
 from release_ccharp.apps.sqat_scripts.validation_deployer import SqatValidationDeployer
+from release_ccharp.apps.sqat_scripts.deployer import SqatDeployer
 
 
 class Application(ApplicationBase):
@@ -24,6 +25,8 @@ class Application(ApplicationBase):
         path_actions = SnpseqPathActions(
             whatif, self.path_properties, os_service, self.app_paths, self.windows_commands)
         self.validation_deployer = SqatValidationDeployer(self, file_deployer, path_actions)
+        self.deployer = SqatDeployer(self.path_properties, file_deployer, path_actions,
+                                     self.os_service, self.branch_provider)
 
     def build(self):
         super(Application, self).build()
@@ -35,6 +38,7 @@ class Application(ApplicationBase):
 
     def deploy(self):
         super(Application, self).deploy()
+        self.deployer.run()
 
     def download_release_history(self):
         super(Application, self).download_release_history()

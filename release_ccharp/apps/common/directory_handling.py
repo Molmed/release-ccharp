@@ -118,6 +118,11 @@ class FileDeployer:
         if not self.os_service.exists(exe):
             raise FileDoesNotExistsException(exe)
 
+    def check_file_in_production_exists(self, file_name):
+        file_path = os.path.join(self.app_paths.production_dir, file_name)
+        if not self.os_service.exists(file_path):
+            raise FileDoesNotExistsException(file_path)
+
     def check_config_file_exists(self):
         config = os.path.join(self.app_paths.production_dir, self.app_paths.config_file_name)
         if not self.os_service.exists(config):
