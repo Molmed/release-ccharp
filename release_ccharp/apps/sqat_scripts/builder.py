@@ -1,7 +1,10 @@
 from __future__ import print_function
 import os
 from release_ccharp.exceptions import SnpseqReleaseException
+from release_ccharp.exceptions import SnpseqXmlEntryNotFoundException
+from release_ccharp.utils import UnexpectedLengthError
 from release_ccharp.utils import lazyprop
+from release_ccharp.utils import single
 
 
 class SqatBuilder:
@@ -18,6 +21,7 @@ class SqatBuilder:
         self.update_binary_version()
         self.build_solution()
         self.move_candidates()
+        self.transform_config()
 
     def check_not_already_run(self):
         self.file_deployer.check_not_already_run()
@@ -41,6 +45,25 @@ class SqatBuilder:
         self.os_service.copyfile(config_src, config_dst_production)
         self.os_service.copyfile(connect_src, connect_dst_validation)
         self.os_service.copyfile(connect_src, connect_dst_production)
+
+    def transform_config(self):
+        self._transform_validation_connect_config()
+        self._transform_production_connect_config()
+
+    def _transform_production_connect_config(self):
+        connect_file_path = os.path.join(self.app_paths.production_dir, 'SQATconnect.xml')
+        self.sqat.save_backup_file(connect_file_path)
+        with self.sqat.open_xml(connect_file_path) as xml:
+            configXml = SqatConfigXml(xml)
+            configXml.remove_connection('QC_devel')
+            configXml.remove_connection('QC_practice')
+
+    def _transform_validation_connect_config(self):
+        connect_file_path = os.path.join(self.app_paths.validation_dir, 'SQATconnect.xml')
+        self.sqat.save_backup_file(connect_file_path)
+        with self.sqat.open_xml(connect_file_path) as xml:
+            configXml = SqatConfigXml(xml)
+            configXml.remove_connection('QC_1')
 
     @lazyprop
     def _assembly_file_path(self):
@@ -67,3 +90,28 @@ class SqatBuilder:
     def _application_path(self):
         download_dir = self.app_paths.download_dir
         return os.path.join(download_dir, 'application')
+
+
+class SqatConfigXml:
+    def __init__(self, tree_root):
+        self.tree_root = tree_root
+        self.connection_list = tree_root.findall('Connection')
+
+    def get_connection_string(self, connection_name):
+        node = self._get_node(connection_name)
+        return node.find('ConnectionString').text
+
+    def get_chiasma_connection_string(self, connection_name):
+        node = self._get_node(connection_name)
+        return node.find('ChiasmaConnectionString').text
+
+    def remove_connection(self, connection_name):
+        node = self._get_node(connection_name)
+        self.tree_root.remove(node)
+
+    def _get_node(self, connection_name):
+        try:
+            return single([n for n in self.connection_list if n.find('Name').text == connection_name])
+        except UnexpectedLengthError:
+            raise SnpseqXmlEntryNotFoundException('Entry for connection not found: {}'.format(connection_name))
+

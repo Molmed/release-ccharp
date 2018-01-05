@@ -11,6 +11,7 @@ def lazyprop(fn):
         return getattr(self, attr_name)
     return _lazyprop
 
+
 def single(seq):
     """Returns the first element in a list, throwing an exception if there is an unexpected number of items"""
     if isinstance(seq, types.GeneratorType):

@@ -3,7 +3,10 @@ import os
 from unittest import skip
 from release_ccharp.utils import create_dirs
 from release_ccharp.exceptions import SnpseqReleaseException
+from release_ccharp.exceptions import SnpseqXmlEntryNotFoundException
+from release_ccharp.apps.sqat_scripts.builder import SqatConfigXml
 from tests.unit.sqat_tests.base import SqatBaseTests
+from tests.unit.utility.config import SQAT_CONNECT
 
 
 class SqatBuildTests(SqatBaseTests):
@@ -118,8 +121,104 @@ line 3"""
         copied_file = r'c:\xxx\sqat\candidates\release-1.0.0\production\sqatconnect.xml'
         self.assertTrue(self.os_service.exists(copied_file))
 
-    def test_transform_config__with_validation_directory__orig_file_backed_up(self):
-        pass
+    def test_transform_config__with_validation_directory__orig_connect_file_backed_up(self):
+        # Arrange
+        self.file_builder.add_file_to_validation('sqatconnect.xml', SQAT_CONNECT)
+        self.file_builder.add_file_to_production('sqatconnect.xml')
+
+        # Act
+        self.sqat.builder._transform_validation_connect_config()
+
+        # Assert
+        backed_up_file = r'c:\xxx\sqat\candidates\release-1.0.0\validation\sqatconnect.xml.orig'
+        self.assertTrue(self.os_service.exists(backed_up_file))
+
+    def test_transform_config__with_validation_directory__qc_practice_in_connect_file(self):
+        # Arrange
+        self.file_builder.add_file_to_validation('sqatconnect.xml', SQAT_CONNECT)
+
+        # Act
+        self.sqat.builder._transform_validation_connect_config()
+
+        # Assert
+        connect_file_path = r'c:\xxx\sqat\candidates\release-1.0.0\validation\sqatconnect.xml'
+        with self.sqat.open_xml(connect_file_path) as xml:
+            configXml = SqatConfigXml(xml)
+            connection_string = configXml.get_connection_string('QC_practice')
+            self.assertEqual('data source=mm-wchs001;integrated security=true;initial catalog=QC_practice;',
+                             connection_string)
+
+    def test_transform_config__with_validation_directory__qc_devel_in_connect_file(self):
+        # Arrange
+        self.file_builder.add_file_to_validation('sqatconnect.xml', SQAT_CONNECT)
+
+        # Act
+        self.sqat.builder._transform_validation_connect_config()
+
+        # Assert
+        connect_file_path = r'c:\xxx\sqat\candidates\release-1.0.0\validation\sqatconnect.xml'
+        with self.sqat.open_xml(connect_file_path) as xml:
+            configXml = SqatConfigXml(xml)
+            connection_string = configXml.get_connection_string('QC_devel')
+            self.assertEqual('data source=mm-wchs001;integrated security=true;initial catalog=QC_devel;',
+                             connection_string)
+
+    def test_transform_config__with_validation_directory__qc_1_not_in_connect_file(self):
+        # Arrange
+        self.file_builder.add_file_to_validation('sqatconnect.xml', SQAT_CONNECT)
+
+        # Act
+        self.sqat.builder._transform_validation_connect_config()
+
+        # Assert
+        connect_file_path = r'c:\xxx\sqat\candidates\release-1.0.0\validation\sqatconnect.xml'
+        with self.sqat.open_xml(connect_file_path) as xml:
+            configXml = SqatConfigXml(xml)
+            with self.assertRaises(SnpseqXmlEntryNotFoundException):
+                configXml.get_connection_string('QC_1')
+
+    def test_transform_config__with_production_directory__qc_1_in_connect_file(self):
+        # Arrange
+        self.file_builder.add_file_to_production('sqatconnect.xml', SQAT_CONNECT)
+
+        # Act
+        self.sqat.builder._transform_production_connect_config()
+
+        # Assert
+        connect_file_path = r'c:\xxx\sqat\candidates\release-1.0.0\production\sqatconnect.xml'
+        with self.sqat.open_xml(connect_file_path) as xml:
+            configXml = SqatConfigXml(xml)
+            connection_string = configXml.get_connection_string('QC_1')
+            self.assertEqual('data source=mm-wchs001;integrated security=true;initial catalog=QC_1;',
+                             connection_string)
+
+    def test_transform_config__with_production_directory__qc_devel_not_in_connect_file(self):
+        # Arrange
+        self.file_builder.add_file_to_production('sqatconnect.xml', SQAT_CONNECT)
+
+        # Act
+        self.sqat.builder._transform_production_connect_config()
+
+        # Assert
+        connect_file_path = r'c:\xxx\sqat\candidates\release-1.0.0\production\sqatconnect.xml'
+        with self.sqat.open_xml(connect_file_path) as xml:
+            configXml = SqatConfigXml(xml)
+            with self.assertRaises(SnpseqXmlEntryNotFoundException):
+                configXml.get_connection_string('QC_devel')
+
+    def test_transform_config__with_production_directory__qc_practice_not_in_connect_file(self):
+        # Arrange
+        self.file_builder.add_file_to_production('sqatconnect.xml', SQAT_CONNECT)
+
+        # Act
+        self.sqat.builder._transform_production_connect_config()
+
+        # Assert
+        connect_file_path = r'c:\xxx\sqat\candidates\release-1.0.0\production\sqatconnect.xml'
+        with self.sqat.open_xml(connect_file_path) as xml:
+            configXml = SqatConfigXml(xml)
+            with self.assertRaises(SnpseqXmlEntryNotFoundException):
+                configXml.get_connection_string('QC_practice')
 
 class FileBuilder:
     def __init__(self, filesystem, os_service):
@@ -129,9 +228,21 @@ class FileBuilder:
         self.project_root_path = r'c:\xxx\sqat\candidates\release-1.0.0\GitEdvard-sqat-123\Application\SQAT3Client'
         self.release_path = \
             r'c:\xxx\sqat\candidates\release-1.0.0\gitedvard-sqat-123\application\sqat3client\bin\release'
+        self.validation_path = r'c:\xxx\sqat\candidates\release-1.0.0\validation'
+        self.production_path = r'c:\xxx\sqat\candidates\release-1.0.0\production'
         create_dirs(os_service, self.application_path)
         create_dirs(os_service, self.project_root_path)
         create_dirs(os_service, self.release_path)
+
+    def add_file_to_validation(self, filename='file.txt', content=''):
+        path = os.path.join(self.validation_path, filename)
+        self._log(path)
+        self.filesystem.CreateFile(path, contents=content)
+
+    def add_file_to_production(self, filename='file.txt', content=''):
+        path = os.path.join(self.production_path, filename)
+        self._log(path)
+        self.filesystem.CreateFile(path, contents=content)
 
     def add_file_to_release(self, filename='file.txt', contents=''):
         path = os.path.join(self.release_path, filename)
