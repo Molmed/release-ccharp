@@ -17,7 +17,8 @@ class Application(ApplicationBase):
             whatif=False, config=self.config, path_properties=self.path_properties,
             branch_provider=branch_provider, app_paths=self.app_paths, os_service=os_service)
         file_deployer = FileDeployer(self.path_properties, os_service, self.config, self.app_paths)
-        self.builder = SqatBuilder(self, os_service, self.app_paths, file_deployer, binary_version_updater)
+        self.builder = SqatBuilder(self, os_service, self.app_paths, file_deployer,
+                                   binary_version_updater, windows_commands)
 
     def build(self):
         super(Application, self).build()

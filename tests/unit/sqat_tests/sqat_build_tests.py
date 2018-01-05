@@ -57,6 +57,16 @@ line 3"""
                     'line 3')
         self.assertEqual(expected, c)
 
+    def test_find_solution_path(self):
+        # Arrange
+        self.file_builder.add_file_to_application_path('SQAT3.sln')
+
+        # Act
+        solution_file_path = self.sqat.builder.solution_file_path
+
+        # Assert
+        expected = r'c:\xxx\sqat\candidates\release-1.0.0\gitedvard-sqat-123\application\sqat3.sln'
+        self.assertEqual(expected, solution_file_path.lower())
 
 
 class FileBuilder:
@@ -65,6 +75,8 @@ class FileBuilder:
         self.os_service = os_service
         self.application_path = r'c:\xxx\sqat\candidates\release-1.0.0\GitEdvard-sqat-123\Application'
         self.project_root_path = r'c:\xxx\sqat\candidates\release-1.0.0\GitEdvard-sqat-123\Application\SQAT3Client'
+        create_dirs(os_service, self.application_path)
+        create_dirs(os_service, self.project_root_path)
 
     def add_file_to_application_path(self, filename='file.txt', contents=''):
         path = os.path.join(self.application_path, filename)
