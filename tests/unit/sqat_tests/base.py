@@ -1,5 +1,6 @@
 from __future__ import print_function
 from release_ccharp.apps.sqat import Application
+from release_ccharp.apps.common.directory_handling import AppPaths
 from tests.unit.utility.fake_windows_commands import FakeWindowsCommands
 from tests.unit.base import BaseTests
 
@@ -9,8 +10,8 @@ class SqatBaseTests(BaseTests):
         config = {
             "root_path": r'c:\xxx',
             "git_repo_name": "sqat",
-            "exe_file_name_base": "sqat",
-            "project_root_dir" : "sqat",
+            "exe_file_name_base": "SNP Quality Analysis Tool",
+            "project_root_dir" : "SQAT3Client",
             "owner": "GitEdvard",
             "deploy_root_path": r'c:\xxx\deploy'
         }
