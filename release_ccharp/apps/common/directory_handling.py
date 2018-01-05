@@ -59,6 +59,17 @@ class AppPaths:
         self.os_service.copytree(release_dir, self.validation_dir)
         self.os_service.copytree(release_dir, self.production_dir)
 
+    @lazyprop
+    def common_assembly_file_path(self):
+        properties = os.path.join(self.config["project_root_dir"], 'properties')
+        assembly_subpath = os.path.join(properties, 'assemblyinfo.cs')
+        assembly_file_path = os.path.join(
+            self.download_dir, assembly_subpath)
+        if not self.os_service.exists(assembly_file_path):
+            raise SnpseqReleaseException(
+                "The assembly info file could not be found {}".format(assembly_file_path))
+        return assembly_file_path
+
 
 class FileDeployer:
     def __init__(self, path_properties, os_service, config, app_paths):

@@ -2,7 +2,6 @@ from __future__ import print_function
 import os
 import re
 from release_ccharp.utils import single
-from release_ccharp.utils import lazyprop
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_ccharp.apps.common.base import LatestVersionExaminer
 
@@ -31,22 +30,11 @@ class BinaryVersionUpdater:
         self.app_paths = app_paths
         self.os_service = os_service
 
-    @lazyprop
-    def assembly_file_path(self):
-        properties = os.path.join(self.config["project_root_dir"], 'properties')
-        assembly_subpath = os.path.join(properties, 'assemblyinfo.cs')
-        assembly_file_path = os.path.join(
-            self.app_paths.download_dir, assembly_subpath)
-        if not self.os_service.exists(assembly_file_path):
-            raise SnpseqReleaseException(
-                "The assembly info file could not be found {}".format(assembly_file_path))
-        return assembly_file_path
-
-    def _save_assembly_backup(self):
-        orig_file_path = "{}.orig".format(self.assembly_file_path)
+    def _save_assembly_backup(self, assembly_file_path):
+        orig_file_path = "{}.orig".format(assembly_file_path)
         if not self.os_service.exists(orig_file_path):
             print("Saving backup of original file: {}".format(orig_file_path))
-            self.os_service.copyfile(self.assembly_file_path, orig_file_path)
+            self.os_service.copyfile(assembly_file_path, orig_file_path)
 
     def get_assembly_replace_strings(self, content, new_version):
         match = re.search("assembly: AssemblyVersion\(\".+\"\)", content)
@@ -56,10 +44,10 @@ class BinaryVersionUpdater:
         new_string = "assembly: AssemblyVersion(\"{}\")".format(new_version)
         return replace_string, new_string
 
-    def update_binary_version(self):
+    def update_binary_version(self, assembly_file_path):
         print("Updating assembly info file...")
-        self._save_assembly_backup()
-        with self.os_service.open(self.assembly_file_path, 'r') as f:
+        self._save_assembly_backup(assembly_file_path)
+        with self.os_service.open(assembly_file_path, 'r') as f:
             content = f.read()
         version = self.branch_provider.candidate_version
         current, new = self.get_assembly_replace_strings(content, version)
@@ -70,7 +58,7 @@ class BinaryVersionUpdater:
         print(new)
         updated = content.replace(current, new)
         if not self.whatif:
-            with self.os_service.open(self.assembly_file_path, 'w') as f:
+            with self.os_service.open(assembly_file_path, 'w') as f:
                 f.write(updated)
 
 

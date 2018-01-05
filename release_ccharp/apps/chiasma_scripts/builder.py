@@ -6,9 +6,10 @@ from release_ccharp.utils import create_dirs
 
 
 class ChiasmaBuilder:
-    def __init__(self, chiasma, file_deployer):
+    def __init__(self, chiasma, file_deployer, app_paths):
         self.chiasma = chiasma
         self.file_deployer = file_deployer
+        self.app_paths = app_paths
 
     def run(self):
         self.check_build_not_already_run()
@@ -18,7 +19,8 @@ class ChiasmaBuilder:
         self.transform_config()
 
     def update_binary_version(self):
-        self.chiasma.binary_version_updater.update_binary_version()
+        assembly_file_path = self.app_paths.common_assembly_file_path
+        self.chiasma.binary_version_updater.update_binary_version(assembly_file_path)
 
     def check_build_not_already_run(self):
         self.file_deployer.check_build_not_already_run()
