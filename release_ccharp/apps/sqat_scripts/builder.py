@@ -17,6 +17,7 @@ class SqatBuilder:
         self.check_not_already_run()
         self.update_binary_version()
         self.build_solution()
+        self.move_candidates()
 
     def check_not_already_run(self):
         self.file_deployer.check_not_already_run()
@@ -26,6 +27,20 @@ class SqatBuilder:
 
     def build_solution(self):
         self.windows_commands.build_solution(self.solution_file_path)
+
+    def move_candidates(self):
+        self.app_paths.common_move_candidates(self.sqat.project_root_dir)
+        config_src = os.path.join(self.sqat.project_root_dir, 'SQATconfig.xml')
+        connect_src = os.path.join(self.sqat.project_root_dir, 'SQATconnect.xml')
+        config_dst_validation = os.path.join(self.app_paths.validation_dir, 'SQATconfig.xml')
+        config_dst_production = os.path.join(self.app_paths.production_dir, 'SQATconfig.xml')
+        connect_dst_validation = os.path.join(self.app_paths.validation_dir, 'SQATconnect.xml')
+        connect_dst_production = os.path.join(self.app_paths.production_dir, 'SQATconnect.xml')
+
+        self.os_service.copyfile(config_src, config_dst_validation)
+        self.os_service.copyfile(config_src, config_dst_production)
+        self.os_service.copyfile(connect_src, connect_dst_validation)
+        self.os_service.copyfile(connect_src, connect_dst_production)
 
     @lazyprop
     def _assembly_file_path(self):

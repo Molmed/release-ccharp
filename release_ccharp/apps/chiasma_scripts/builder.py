@@ -42,7 +42,7 @@ class ChiasmaBuilder:
     def move_candidates(self):
         project_root_path = os.path.join(self.app_paths.download_dir,
                                          self.config['project_root_dir'])
-        self.chiasma.app_paths.move_candidates(project_root_path)
+        self.chiasma.app_paths.common_move_candidates(project_root_path)
 
     def _transform_config(self, directory):
         config_file_path = os.path.join(directory, self.chiasma.app_paths.config_file_name)

@@ -54,7 +54,7 @@ class AppPaths:
     def config_file_name(self):
         return "{}.exe.config".format(self.config["exe_file_name_base"])
 
-    def move_candidates(self, project_root_directory):
+    def common_move_candidates(self, project_root_directory):
         bin_dir = os.path.join(project_root_directory, 'bin')
         release_dir = os.path.join(bin_dir, 'release')
         self.os_service.copytree(release_dir, self.validation_dir)

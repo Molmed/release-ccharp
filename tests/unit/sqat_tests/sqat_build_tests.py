@@ -68,6 +68,58 @@ line 3"""
         expected = r'c:\xxx\sqat\candidates\release-1.0.0\gitedvard-sqat-123\application\sqat3.sln'
         self.assertEqual(expected, solution_file_path.lower())
 
+    def test_move_candidates__with_exe_added_to_release__file_copied_to_production(self):
+        # Arrange
+        self.file_builder.add_file_to_project_root('SQATconfig.xml')
+        self.file_builder.add_file_to_project_root('SQATconnect.xml')
+        self.file_builder.add_file_to_release('sqat.exe')
+
+        # Act
+        self.sqat.builder.move_candidates()
+
+        # Assert
+        copied_file = r'c:\xxx\sqat\candidates\release-1.0.0\production\sqat.exe'
+        self.assertTrue(self.os_service.exists(copied_file))
+
+    def test_move_candidates__with_exe_added_to_release__file_copied_to_validation(self):
+        # Arrange
+        self.file_builder.add_file_to_project_root('SQATconfig.xml')
+        self.file_builder.add_file_to_project_root('SQATconnect.xml')
+        self.file_builder.add_file_to_release('sqat.exe')
+
+        # Act
+        self.sqat.builder.move_candidates()
+
+        # Assert
+        copied_file = r'c:\xxx\sqat\candidates\release-1.0.0\validation\sqat.exe'
+        self.assertTrue(self.os_service.exists(copied_file))
+
+    def test_move_candidates__with_config_file_added_to_project_root__file_copied_to_production(self):
+        # Arrange
+        self.file_builder.add_file_to_project_root('SQATconfig.xml')
+        self.file_builder.add_file_to_project_root('SQATconnect.xml')
+
+        # Act
+        self.sqat.builder.move_candidates()
+
+        # Assert
+        copied_file = r'c:\xxx\sqat\candidates\release-1.0.0\production\sqatconfig.xml'
+        self.assertTrue(self.os_service.exists(copied_file))
+
+    def test_move_candidates__with_connect_file_added_to_project_root__file_copied_to_production(self):
+        # Arrange
+        self.file_builder.add_file_to_project_root('SQATconfig.xml')
+        self.file_builder.add_file_to_project_root('SQATconnect.xml')
+
+        # Act
+        self.sqat.builder.move_candidates()
+
+        # Assert
+        copied_file = r'c:\xxx\sqat\candidates\release-1.0.0\production\sqatconnect.xml'
+        self.assertTrue(self.os_service.exists(copied_file))
+
+    def test_transform_config__with_validation_directory__orig_file_backed_up(self):
+        pass
 
 class FileBuilder:
     def __init__(self, filesystem, os_service):
@@ -75,8 +127,16 @@ class FileBuilder:
         self.os_service = os_service
         self.application_path = r'c:\xxx\sqat\candidates\release-1.0.0\GitEdvard-sqat-123\Application'
         self.project_root_path = r'c:\xxx\sqat\candidates\release-1.0.0\GitEdvard-sqat-123\Application\SQAT3Client'
+        self.release_path = \
+            r'c:\xxx\sqat\candidates\release-1.0.0\gitedvard-sqat-123\application\sqat3client\bin\release'
         create_dirs(os_service, self.application_path)
         create_dirs(os_service, self.project_root_path)
+        create_dirs(os_service, self.release_path)
+
+    def add_file_to_release(self, filename='file.txt', contents=''):
+        path = os.path.join(self.release_path, filename)
+        self._log(path)
+        self.filesystem.CreateFile(path, contents=contents)
 
     def add_file_to_application_path(self, filename='file.txt', contents=''):
         path = os.path.join(self.application_path, filename)
