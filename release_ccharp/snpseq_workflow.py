@@ -15,9 +15,13 @@ class SnpseqWorkflow:
     """
     Initializes a release-tools workflow to act on the github provider
     """
-    def __init__(self, whatif, repo, os_service):
+    def __init__(self, whatif, repo, os_service, config=None):
         conf = Config()
-        self.config = conf.open_config(repo)
+        self.os_service = os_service
+        if config is None:
+            self.config = conf.open_config(repo)
+        else:
+            self.config = config
         self.whatif = whatif
         self.repo = repo
         self.paths = SnpseqPathProperties(self.config, self.repo, os_service)
@@ -25,7 +29,7 @@ class SnpseqWorkflow:
         self.paths.branch_provider = BranchProvider(self.workflow)
 
     def _open_github_provider_config(self, config_file):
-        with open(config_file) as f:
+        with self.os_service.open(config_file, 'r') as f:
             contents = yaml.load(f)
         return contents['access_token'] if contents and "access_token" in contents else None
 

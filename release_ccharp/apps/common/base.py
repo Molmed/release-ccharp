@@ -21,13 +21,15 @@ class ApplicationBase(object):
         self.app_paths = AppPaths(self.config, self.path_properties, os_service)
         self.windows_commands = windows_commands
 
-    @contextmanager
-    def open_xml(self, path, backup_origfile=True):
+    def save_backup_file(self, path):
         orig_file_path = "{}.orig".format(path)
-        self.log("Updating xml file: {}".format(path))
-        if backup_origfile and not os.path.exists(orig_file_path):
+        if not os.path.exists(orig_file_path):
             self.log("Saving backup of original file: {}".format(orig_file_path))
             self.os_service.copyfile(path, orig_file_path)
+
+    @contextmanager
+    def open_xml(self, path):
+        self.log("Updating xml file: {}".format(path))
         tree = self.os_service.et_parse(path)
         yield tree.getroot()
         self.os_service.et_write(tree, path)

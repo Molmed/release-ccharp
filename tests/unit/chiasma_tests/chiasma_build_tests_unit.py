@@ -1,16 +1,19 @@
 from __future__ import print_function
+import os
 from unittest import skip
 from pyfakefs.fake_filesystem import FakeFileOpen
 from release_ccharp.apps.common.single_file_read_write import StandardVSConfigXML
+from release_ccharp.utils import create_dirs
 from tests.unit.utility.config import CHIASMA_CONFIG
 from tests.unit.chiasma_tests.base import ChiasmaBaseTests
 
 
 class ChiasmaBuildTests(ChiasmaBaseTests):
     def setUp(self):
-        self.base_setup()
+        self.setup_chiasma()
         chiasma_config_path = (r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config')
         self.filesystem.CreateFile(chiasma_config_path, contents=CHIASMA_CONFIG)
+        self.file_builder = FileBuilder(self.filesystem, self.os_service)
 
     def test__get_version(self):
         version = self.chiasma.branch_provider.candidate_version
@@ -37,6 +40,28 @@ line 3"""
         print(contents)
         self.assertEqual(1, 1)
 
+    def test_move_candidates__with_exe_added_to_release__file_copied_to_production(self):
+        # Arrange
+        self.file_builder.add_file_to_release('chiasma.exe')
+
+        # Act
+        self.chiasma.chiasma_builder.move_candidates()
+
+        # Assert
+        production_exe_path = r'c:\xxx\chiasma\candidates\release-1.0.0\production\chiasma.exe'
+        self.assertTrue(self.os_service.exists(production_exe_path))
+
+    def test_move_candidates__with_exe_added_to_release__file_copied_to_validation(self):
+        # Arrange
+        self.file_builder.add_file_to_release('chiasma.exe')
+
+        # Act
+        self.chiasma.chiasma_builder.move_candidates()
+
+        # Assert
+        production_exe_path = r'c:\xxx\chiasma\candidates\release-1.0.0\validation\chiasma.exe'
+        self.assertTrue(self.os_service.exists(production_exe_path))
+
     def test_transform_config__with_validation_directory__orig_file_backed_up(self):
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_config(validation_dir)
@@ -47,7 +72,7 @@ line 3"""
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_config(validation_dir)
         config_file_path = r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config.orig'
-        with self.chiasma.open_xml(config_file_path, backup_origfile=False) as xml:
+        with self.chiasma.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Molmed.Chiasma")
             self.assertEqual("False", config.get('DilutePlateAutomaticLabelPrint'))
 
@@ -61,7 +86,7 @@ line 3"""
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_config(validation_dir)
         config_file_path = r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config'
-        with self.chiasma.open_xml(config_file_path, backup_origfile=False) as xml:
+        with self.chiasma.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Molmed.Chiasma")
             self.assertEqual("OFFICE", config.get('ApplicationMode'))
             self.assertEqual("600", config.get("RandomProperty"))
@@ -76,7 +101,7 @@ line 3"""
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_config(validation_dir)
         config_file_path = r'c:\xxx\chiasma\candidates\validation\config_lab\chiasma.exe.config'
-        with self.chiasma.open_xml(config_file_path, backup_origfile=False) as xml:
+        with self.chiasma.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Molmed.Chiasma")
             self.assertEqual("LAB", config.get('ApplicationMode'))
             self.assertEqual("600", config.get("RandomProperty"))
@@ -102,3 +127,18 @@ row3"""
         with file_module(file_path) as f:
             contents = "".join([line for line in f])
         self.assertEqual(expected, contents)
+
+
+class FileBuilder:
+    def __init__(self, filesystem, os_service):
+        self.filesystem = filesystem
+        self.release_dir = r'c:\xxx\chiasma\candidates\release-1.0.0\gitedvard-chiasma-123\chiasma\bin\release'
+        create_dirs(os_service, self.release_dir)
+
+    def add_file_to_release(self, filename='file.txt', contents=''):
+        path = os.path.join(self.release_dir, filename)
+        self._log(path)
+        self.filesystem.CreateFile(path, contents=contents)
+
+    def _log(self, file_path):
+        print('add file into: {}'.format(file_path))

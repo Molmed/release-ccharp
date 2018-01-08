@@ -169,7 +169,6 @@ class SnpseqPathProperties:
         archive_version_dir = os.path.join(self.all_versions, str(self.branch_provider.candidate_version))
         return os.path.join(archive_version_dir, self.user_validations_sql_updates_subpath)
 
-
     @property
     def latest_validation_files(self):
         return os.path.join(self.user_validations_latest, self.user_validations_validation_files_subpath)

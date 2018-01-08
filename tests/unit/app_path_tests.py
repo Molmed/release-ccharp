@@ -48,12 +48,14 @@ class AppPathTests(unittest.TestCase):
         self.assertEqual("Chiasma.exe.config", name)
 
     def test_move_candidates__with_one_file_added_in_bin_release__file_found_in_validation(self):
-        self.app_paths.move_candidates()
+        project_root = r'c:\xxx\chiasma\candidates\new-candidate\gitedvard-chiasma-123\chiasma'
+        self.app_paths.common_move_candidates(project_root)
         expected_file = r'c:\xxx\chiasma\candidates\new-candidate\validation\chiasma.exe'
         self.assertTrue(self.os_module.path.exists(expected_file))
 
     def test_move_candidates__with_one_file_added_in_bin_release__file_found_in_production(self):
-        self.app_paths.move_candidates()
+        project_root = r'c:\xxx\chiasma\candidates\new-candidate\gitedvard-chiasma-123\chiasma'
+        self.app_paths.common_move_candidates(project_root)
         expected_file = r'c:\xxx\chiasma\candidates\new-candidate\production\chiasma.exe'
         self.assertTrue(self.os_module.path.exists(expected_file))
 

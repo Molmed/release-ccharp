@@ -1,0 +1,18 @@
+<?xml version="1.0" standalone="yes"?>
+<Connections>
+  <Connection>
+    <Name>QC_1</Name>
+    <ConnectionString>data source=mm-wchs001;integrated security=true;initial catalog=QC_1;</ConnectionString>
+    <ChiasmaConnectionString>data source=mm-wchs001;integrated security=true;initial catalog=GTDB2;</ChiasmaConnectionString>
+  </Connection>
+  <Connection>
+    <Name>QC_devel</Name>
+    <ConnectionString>data source=mm-wchs001;integrated security=true;initial catalog=QC_devel;</ConnectionString>
+    <ChiasmaConnectionString>data source=mm-wchs001;integrated security=true;initial catalog=GTDB2_devel;</ChiasmaConnectionString>
+  </Connection>
+  <Connection>
+    <Name>QC_practice</Name>
+    <ConnectionString>data source=mm-wchs001;integrated security=true;initial catalog=QC_practice;</ConnectionString>
+    <ChiasmaConnectionString>data source=mm-wchs001;integrated security=true;initial catalog=GTDB2_practice;</ChiasmaConnectionString>
+  </Connection>
+</Connections>
