@@ -8,9 +8,11 @@ from release_ccharp.utils import single
 
 
 class SqatBuilder:
-    def __init__(self, sqat, os_service, app_paths, file_deployer, binary_version_updater, windows_commands):
+    def __init__(self, sqat, os_service, path_properties, app_paths, file_deployer,
+                 binary_version_updater, windows_commands):
         self.sqat = sqat
         self.os_service = os_service
+        self.path_properties = path_properties
         self.app_paths = app_paths
         self.file_deployer = file_deployer
         self.binary_version_updater = binary_version_updater
@@ -22,6 +24,7 @@ class SqatBuilder:
         self.build_solution()
         self.move_candidates()
         self.transform_config()
+        self.copy_user_manual()
 
     def check_not_already_run(self):
         self.file_deployer.check_not_already_run()
@@ -55,8 +58,7 @@ class SqatBuilder:
         self.sqat.save_backup_file(connect_file_path)
         with self.sqat.open_xml(connect_file_path) as xml:
             configXml = SqatConfigXml(xml)
-            configXml.remove_connection('QC_devel')
-            configXml.remove_connection('QC_practice')
+            configXml.remove_all_but_one('QC_1')
 
     def _transform_validation_connect_config(self):
         connect_file_path = os.path.join(self.app_paths.validation_dir, 'SQATconnect.xml')
@@ -81,6 +83,17 @@ class SqatBuilder:
             if file.endswith(".sln"):
                 return file
         raise SnpseqReleaseException("The solution file could not be found, directory {}".format(application))
+
+    def copy_user_manual(self):
+        src = os.path.join(self.sqat.path_properties.latest_accepted_candidate_dir,
+                           self.sqat.user_manual_file_name)
+        dst1 = os.path.join(self.app_paths.production_dir,
+                           self.sqat.user_manual_file_name)
+        dst2 = os.path.join(self.path_properties.current_candidate_dir,
+                           self.sqat.user_manual_file_name)
+        self.os_service.copyfile(src, dst1)
+        self.os_service.copyfile(src, dst2)
+
 
     @lazyprop
     def solution_file_path(self):
@@ -108,6 +121,12 @@ class SqatConfigXml:
     def remove_connection(self, connection_name):
         node = self._get_node(connection_name)
         self.tree_root.remove(node)
+
+    def remove_all_but_one(self, connection_name):
+        connections = [n for n in self.connection_list if n.find('Name').text != connection_name]
+        for c in connections:
+            self.tree_root.remove(c)
+
 
     def _get_node(self, connection_name):
         try:

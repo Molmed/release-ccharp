@@ -15,7 +15,7 @@ class SqatDeployValidationTests(SqatBaseTests):
         dest_shortcut_path = r'c:\xxx\sqat\uservalidations\latest\sqat.lnk'
 
         # Act
-        self.sqat.validation_deployer.run()
+        self.sqat.validation_deployer.path_actions.create_shortcut_to_exe()
         shortcut_target = self.sqat.validation_deployer.shortcut_examiner.\
             _extract_shortcut_target(dest_shortcut_path)
 
@@ -176,6 +176,7 @@ class SqatDeployValidationTests(SqatBaseTests):
         dir_objects = [o for o in self.sqat.os_service.listdir(latest)]
         self.assertEqual(2, len(dir_objects))
 
+
 class FileSystemBuilder:
     def __init__(self, sqat, filesystem):
         self.sqat = sqat
@@ -213,3 +214,6 @@ class FileSystemBuilder:
         with self.sqat.os_service.open(path, 'r') as f:
             c = f.read()
         return c
+
+    def _log(self, path):
+        print('add file into: {}'.format(path))

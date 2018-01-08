@@ -220,6 +220,32 @@ line 3"""
             with self.assertRaises(SnpseqXmlEntryNotFoundException):
                 configXml.get_connection_string('QC_practice')
 
+    def test_copy_user_manual__user_manual_in_previous_candidate__user_manual_copied_to_production(self):
+        # Arrange
+        self.file_builder.add_file_in_previous_candidate('User Manual SNP Quality Analysis Tool.doc')
+        create_dirs(self.os_service, r'c:\xxx\sqat\candidates\release-1.0.0\production')
+
+        # Act
+        self.sqat.builder.copy_user_manual()
+
+        # Assert
+        expected_file = r'c:\xxx\sqat\candidates\release-1.0.0\production\User Manual SNP Quality Analysis Tool.doc'
+        self.assertTrue(self.os_service.exists(expected_file))
+
+    def test_copy_user_manual__user_manual_in_previous_candidate__user_manual_copied_to_current_candidate(self):
+        # Arrange
+        self.file_builder.add_file_in_previous_candidate('User Manual SNP Quality Analysis Tool.doc')
+        create_dirs(self.os_service, r'c:\xxx\sqat\candidates\release-1.0.0\production')
+
+        # Act
+        self.sqat.builder.copy_user_manual()
+
+        # Assert
+        expected_file = r'c:\xxx\sqat\candidates\release-1.0.0\User Manual SNP Quality Analysis Tool.doc'
+        self.assertTrue(self.os_service.exists(expected_file))
+
+
+
 class FileBuilder:
     def __init__(self, filesystem, os_service):
         self.filesystem = filesystem
@@ -258,6 +284,11 @@ class FileBuilder:
         path = os.path.join(self.project_root_path, filename)
         self._log(path)
         self.filesystem.CreateFile(path, contents=contents)
+
+    def add_file_in_previous_candidate(self, filename='file.txt', contents=''):
+        path = os.path.join(r'c:\xxx\sqat\candidates\release-0.0.9', filename)
+        self._log(path)
+        self.filesystem.CreateFile(path)
 
     def _log(self, text):
         print('add file into: {}'.format(text))
