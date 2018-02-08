@@ -24,7 +24,7 @@ class ChiasmaBuilder:
         self.chiasma.binary_version_updater.update_binary_version(assembly_file_path)
 
     def check_build_not_already_run(self):
-        self.file_deployer.check_build_not_already_run()
+        self.file_deployer.check_not_already_run()
 
     def build_solution(self):
         solution_file = self._find_solution_file()
