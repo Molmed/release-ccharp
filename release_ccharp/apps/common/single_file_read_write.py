@@ -8,7 +8,7 @@ from release_ccharp.apps.common.base import LatestVersionExaminer
 
 class StandardVSConfigXML:
     def __init__(self, tree_root, app_namespace):
-        settings_node_name = "{}.Properties.Settings".format(app_namespace)
+        settings_node_name = "{}.Settings".format(app_namespace)
         self.setting_list = \
             tree_root.find('applicationSettings').find(settings_node_name).findall('setting')
 

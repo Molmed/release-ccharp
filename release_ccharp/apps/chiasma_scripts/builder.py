@@ -49,7 +49,7 @@ class ChiasmaBuilder:
         db_name = "GTDB2" if directory == self.chiasma.app_paths.production_dir else "GTDB2_practice"
         self.chiasma.save_backup_file(config_file_path)
         with self.chiasma.open_xml(config_file_path) as xml:
-            config = StandardVSConfigXML(xml, "Molmed.Chiasma")
+            config = StandardVSConfigXML(xml, "Molmed.Chiasma.Properties")
             config.update("EnforceAppVersion", "True")
             config.update("DilutePlateAutomaticLabelPrint", "True")
             config.update("DiluteTubeAutomaticLabelPrint", "True")
@@ -61,7 +61,7 @@ class ChiasmaBuilder:
         lab_config_file_path = os.path.join(lab_config_dir, self.chiasma.app_paths.config_file_name)
         self.chiasma.os_service.copyfile(config_file_path, lab_config_file_path)
         with self.chiasma.open_xml(lab_config_file_path) as xml:
-            config = StandardVSConfigXML(xml, "Molmed.Chiasma")
+            config = StandardVSConfigXML(xml, "Molmed.Chiasma.Properties")
             config.update("ApplicationMode", "LAB")
 
     def transform_config(self):
