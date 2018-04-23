@@ -32,7 +32,7 @@ class Application(ApplicationBase):
         path_actions = SnpseqPathActions(
             whatif, self.path_properties, os_service, self.app_paths, self.windows_commands)
         self.validation_deployer = FPValidationDeployer(
-            self, file_deployer, path_actions)
+            self, file_deployer, path_actions, os_service, branch_provider, windows_commands, self.path_properties)
         self.deployer = FPDeployer(
             self.path_properties, file_deployer, path_actions, os_service, branch_provider)
 
