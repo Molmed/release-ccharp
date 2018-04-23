@@ -28,8 +28,9 @@ Intended workflow:
 ``release-ccharp download-release-history <repo-name>``  
 
 ## Adding a new application
-A new application has to be added to the file release_ccharp.config. It should be self explainatory how to fill it in. 
-The changes have to be added to this repo.
+A new application has to be added to the file repo.config. It should be self explainatory how to fill it in.
+The changes have to be added to this repo. In addition you have to define a workflow for the new application.
+Follow the pattern for one of the existing applications under release-ccharp.apps package.
 
 Before running through the deploy workflow the first time, a release has to be added to the repo manually in
 GitHub. You will be asked to enter a name for the tag associated with the release. This tag has to be in the
