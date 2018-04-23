@@ -1,4 +1,5 @@
 from release_ccharp.apps.fp import Application
+from release_ccharp.apps.fp_scripts.builder import ConfigTransformer
 from tests.unit.utility.fake_windows_commands import FakeWindowsCommands
 from tests.unit.base import BaseTests
 
@@ -17,3 +18,4 @@ class FPBaseTests(BaseTests):
         self.os_service = os_service
         self.fp = Application(wf, branch_provider, os_service,
                                    FakeWindowsCommands(self.filesystem), whatif=False)
+        self.config_transformer = ConfigTransformer(self.fp, self.fp.app_paths, os_service)
