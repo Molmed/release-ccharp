@@ -1,0 +1,5 @@
+Tab-delimited configuration file
+
+
+FPConneCTionString	data source=mm-wchs001;integrated security=SSPI;initial catalog=FP;
+ChiasmaConnectionString	data source=mm-wchs001;integrated security=SSPI;initial catalog=GTDB2;  

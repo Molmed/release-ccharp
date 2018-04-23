@@ -8,7 +8,7 @@ from release_ccharp.apps.common.base import LatestVersionExaminer
 
 class StandardVSConfigXML:
     def __init__(self, tree_root, app_namespace):
-        settings_node_name = "{}.Properties.Settings".format(app_namespace)
+        settings_node_name = "{}.Settings".format(app_namespace)
         self.setting_list = \
             tree_root.find('applicationSettings').find(settings_node_name).findall('setting')
 
@@ -37,11 +37,12 @@ class BinaryVersionUpdater:
             self.os_service.copyfile(assembly_file_path, orig_file_path)
 
     def get_assembly_replace_strings(self, content, new_version):
-        match = re.search("assembly: AssemblyVersion\(\".+\"\)", content)
+        match = re.search("(assembly:\s+AssemblyVersion)\(\".+\"\)", content, re.IGNORECASE)
         if match is None:
             raise SnpseqReleaseException("AssemblyVersion could not be found in AssemblyInfo file")
         replace_string = match.group(0)
-        new_string = "assembly: AssemblyVersion(\"{}\")".format(new_version)
+        leading_text = match.group(1)
+        new_string = '{}(\"{}\")'.format(leading_text, new_version)
         return replace_string, new_string
 
     def update_binary_version(self, assembly_file_path):

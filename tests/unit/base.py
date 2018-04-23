@@ -1,5 +1,6 @@
 import unittest
 import os
+import pyperclip
 from pyfakefs import fake_filesystem
 from release_ccharp.snpseq_workflow import SnpseqWorkflow
 from release_ccharp.snpseq_paths import SnpseqPathActions
@@ -32,6 +33,14 @@ class BaseTests(unittest.TestCase):
         latest_dir = os.path.join(path_properties.root_candidates, latest_candidate)
         create_dirs(os_service, latest_dir, False, False)
         filesystem.CreateFile(path_properties.release_tools_config, contents='none')
+
+    def copy_to_clipboard(self, var):
+        if isinstance(var, set):
+            var = list(var)
+        if isinstance(var, list):
+            var = '\n\n'.join(var)
+        print('copied to clipboard:\n{}'.format(var))
+        pyperclip.copy('{}'.format(var))
 
 
 class FakeBranchProvider:

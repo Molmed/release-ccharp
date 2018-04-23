@@ -73,7 +73,7 @@ line 3"""
         self.chiasma.chiasma_builder._transform_config(validation_dir)
         config_file_path = r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config.orig'
         with self.chiasma.open_xml(config_file_path) as xml:
-            config = StandardVSConfigXML(xml, "Molmed.Chiasma")
+            config = StandardVSConfigXML(xml, "Molmed.Chiasma.Properties")
             self.assertEqual("False", config.get('DilutePlateAutomaticLabelPrint'))
 
     def test_transform_config__with_validation_directory__lab_config_exists(self):
@@ -87,7 +87,7 @@ line 3"""
         self.chiasma.chiasma_builder._transform_config(validation_dir)
         config_file_path = r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config'
         with self.chiasma.open_xml(config_file_path) as xml:
-            config = StandardVSConfigXML(xml, "Molmed.Chiasma")
+            config = StandardVSConfigXML(xml, "Molmed.Chiasma.Properties")
             self.assertEqual("OFFICE", config.get('ApplicationMode'))
             self.assertEqual("600", config.get("RandomProperty"))
             self.assertEqual("True", config.get("DilutePlateAutomaticLabelPrint"))
@@ -102,7 +102,7 @@ line 3"""
         self.chiasma.chiasma_builder._transform_config(validation_dir)
         config_file_path = r'c:\xxx\chiasma\candidates\validation\config_lab\chiasma.exe.config'
         with self.chiasma.open_xml(config_file_path) as xml:
-            config = StandardVSConfigXML(xml, "Molmed.Chiasma")
+            config = StandardVSConfigXML(xml, "Molmed.Chiasma.Properties")
             self.assertEqual("LAB", config.get('ApplicationMode'))
             self.assertEqual("600", config.get("RandomProperty"))
             self.assertEqual("True", config.get("DilutePlateAutomaticLabelPrint"))
