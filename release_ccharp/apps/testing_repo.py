@@ -9,6 +9,9 @@ from release_ccharp.apps.sqat_scripts.validation_deployer import SqatValidationD
 from release_ccharp.apps.chiasma_scripts.deployer import ChiasmaDeployer
 from release_ccharp.apps.sqat_scripts.deployer import SqatDeployer
 from release_ccharp.apps.common.single_file_read_write import ShortcutExaminer
+from release_ccharp.apps.fp_scripts.builder import FPBuilder
+from release_ccharp.apps.fp_scripts.validation_deployer import FPValidationDeployer
+from release_ccharp.apps.fp_scripts.deployer import FPDeployer
 from release_ccharp.snpseq_paths import SnpseqPathActions
 from release_ccharp.apps.sqat import Application as SqatApplication
 
@@ -25,45 +28,27 @@ class Application(ApplicationBase):
             branch_provider=branch_provider, app_paths=self.app_paths, os_service=os_service)
         file_deployer = FileDeployer(
             self.path_properties, self.os_service, snpseq_workflow.config, self.app_paths)
-
-        sqat = SqatApplication(snpseq_workflow, branch_provider, os_service, windows_commands, False)
-
-        # Todo: do something about sending sqat to sqat builder when testing, dangerous!
-        self.sqat_builder = SqatBuilder(sqat, os_service, self.path_properties, self.app_paths,
-                                        file_deployer, self.binary_version_updater, windows_commands)
-        self.chiasma_builder = ChiasmaBuilder(self, file_deployer, self.app_paths, self.config)
+        self.fp_builder = FPBuilder(self, file_deployer, self.app_paths, self.config, os_service, windows_commands)
         path_actions = SnpseqPathActions(
             whatif, self.path_properties, os_service, self.app_paths, self.windows_commands)
-        self.chiasma_validation_deployer = ChiasmaValidationDeployer(
+        self.validation_deployer = FPValidationDeployer(
             self, file_deployer, path_actions)
-
-        shortcut_examiner = ShortcutExaminer(
-            branch_provider, os_service, windows_commands,
-            file_deployer, self.path_properties.shortcut_path)
-
-
-        self.sqat_validation_deployer = SqatValidationDeployer(
-            self, file_deployer, path_actions, shortcut_examiner, os_service, self.path_properties)
-
-        self.chiasma_deployer = ChiasmaDeployer(
+        self.deployer = FPDeployer(
             self.path_properties, file_deployer, path_actions, os_service, branch_provider)
-
-        self.sqat_deployer = SqatDeployer(self.path_properties, file_deployer, path_actions,
-                                          os_service, branch_provider)
 
     def build(self):
         super(Application, self).build()
-        self.sqat_builder.run()
+        self.fp_builder.run()
 
     def deploy_validation(self):
         super(Application, self).deploy_validation()
-        self.sqat_validation_deployer.run()
+        self.validation_deployer.run()
 
     def deploy(self):
         super(Application, self).deploy()
-        self.sqat_deployer.run()
+        self.deployer.run()
 
     def download_release_history(self):
         super(Application, self).download_release_history()
         self.snpseq_workflow.download_release_history()
-        self.sqat_deployer.copy_release_history()
+        self.deployer.copy_release_history()
