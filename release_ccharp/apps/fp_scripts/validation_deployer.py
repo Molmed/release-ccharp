@@ -29,7 +29,7 @@ class FPValidationDeployer:
         self.file_deployer.copy_to_latest()
 
     def copy_config_file(self):
-        src = os.path.join(self.file_deployer.app_paths.validation_dir, 'FPDatabaseConfig.txt')
-        dst = os.path.join(self.path_properties.user_validations_latest, 'FPDatabaseConfig.txt')
-        self.os_service.copyfile(src, dst)
+        self.file_deployer.copy_file('FPDatabaseConfig.txt',
+                                     self.file_deployer.app_paths.validation_dir,
+                                     self.path_properties.user_validations_latest)
 

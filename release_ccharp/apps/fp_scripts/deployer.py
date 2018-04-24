@@ -35,5 +35,11 @@ class FPDeployer:
         self.file_deployer.move_latest_to_archive(str(self.branch_provider.candidate_version))
         self.file_deployer.move_sql_scripts_to_archive(str(self.branch_provider.candidate_version))
         self.path_actions.create_shortcut_to_exe()
+        self.copy_config_file()
         delete_directory_contents(self.os_service, self.path_properties.next_validation_files)
         print('ok')
+
+    def copy_config_file(self):
+        self.file_deployer.copy_file('FPDatabaseConfig.txt',
+                                     self.file_deployer.app_paths.validation_dir,
+                                     self.path_properties.user_validations_latest)

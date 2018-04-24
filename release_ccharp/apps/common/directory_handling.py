@@ -166,6 +166,11 @@ class FileDeployer:
         self.os_service.copyfile(src_release_history, dst)
         print('ok')
 
+    def copy_file(self, filename, src_dir, dst_dir):
+        src = os.path.join(src_dir, filename)
+        dst = os.path.join(dst_dir, filename)
+        self.os_service.copyfile(src, dst)
+
     def check_not_already_run(self):
         if self.os_service.exists(self.app_paths.production_dir) or \
                 self.os_service.exists(self.app_paths.validation_dir):
