@@ -188,6 +188,15 @@ class SnpseqPathProperties:
         return os.path.join(self.user_validations_latest, filename)
 
 
+    @property
+    def db_backup_server_dir(self):
+        return self.config['db_backup_server_dir']
+
+    @property
+    def db_backup_filename(self):
+        return self.config['db_backup_filename']
+
+
 class SnpseqPathActions:
     def __init__(self, whatif, path_properties, os_service, app_paths=None, windows_commands=None):
         self.path_properties = path_properties

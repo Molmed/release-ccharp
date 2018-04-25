@@ -10,6 +10,8 @@ class ChiasmaBaseTests(BaseTests):
             "git_repo_name": "chiasma",
             "exe_file_name_base": "Chiasma",
             "project_root_dir" : "Chiasma",
+            'db_backup_server_dir' : r'server_dir',
+            'db_backup_filename' : 'gtdb2_devel_backup.bak',
             "owner": "GitEdvard",
             "deploy_root_path": r'c:\xxx\deploy'
         }

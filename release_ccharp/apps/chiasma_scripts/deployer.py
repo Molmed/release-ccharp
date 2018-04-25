@@ -35,3 +35,16 @@ class ChiasmaDeployer(LogMixin):
         self.file_deployer.move_sql_scripts_to_archive(str(self.branch_provider.candidate_version))
         self.path_actions.create_shortcut_to_exe()
         self.file_deployer.delete_directory_contents(self.path_properties.next_validation_files)
+
+    def copy_backup(self):
+        backup_dir = self.path_properties.db_backup_server_dir
+        filename = self.path_properties.db_backup_filename
+        try:
+            self.file_deployer.copy_file(filename,
+                                         backup_dir,
+                                         self.path_properties.current_candidate_dir)
+        except IOError as e:
+            msg = 'Backup file on server could not be found. Either you have not access to the path, or ' \
+                  'the config file referes to a non existent path. Use option --skip_copy_backup if needed. Original ' \
+                  'error message: {}'.format(str(e))
+            raise IOError(msg)
