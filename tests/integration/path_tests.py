@@ -32,6 +32,7 @@ class PathTests(unittest.TestCase):
         root_path = self.path_properties._repo_root
         self.assertEqual("xxx", root_path)
 
+    @unittest.skip("")
     def test_generate_paths(self):
         generator = SnpseqPathActions(False, self.path_properties, OsService())
         generator.generate_folder_tree()
