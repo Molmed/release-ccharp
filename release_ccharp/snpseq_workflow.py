@@ -29,8 +29,14 @@ class SnpseqWorkflow:
         self.paths.branch_provider = BranchProvider(self.workflow)
 
     def _open_github_provider_config(self, config_file):
-        with self.os_service.open(config_file, 'r') as f:
-            contents = yaml.load(f)
+        try:
+            with self.os_service.open(config_file, 'r') as f:
+                contents = yaml.load(f)
+        except IOError as e:
+            msg = 'The config file could not be found. Probably, you can copy the config file from ' \
+                  'another adjecent repo to the buildconfig folder. ' \
+                  'Original message: {}'.format(str(e))
+            raise IOError(msg)
         return contents['access_token'] if contents and "access_token" in contents else None
 
     def _create_workflow(self):
