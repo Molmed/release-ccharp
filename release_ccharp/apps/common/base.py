@@ -47,7 +47,7 @@ class ApplicationBase(object):
         print('Starting deploy validation')
 
     @abc.abstractmethod
-    def deploy(self):
+    def deploy(self, skip_copy_backup):
         print('Starting deploy')
 
     @abc.abstractmethod
