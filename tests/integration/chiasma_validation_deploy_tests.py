@@ -24,11 +24,11 @@ class ChiasmaValidationDeployTests(unittest.TestCase):
         self.chiasma = Application(wf, branch_provider, OsService(),
                                    WindowsCommands(), whatif=False)
 
-    #@skip("Acts on hard disk. Requires a validation dir and target file Chiasma.exe in validation dir")
+    @skip("Acts on hard disk. Requires a validation dir and target file Chiasma.exe in validation dir")
     def test_create_shortcut(self):
         self.chiasma.validation_deployer.create_shortcut()
 
-    #@skip("Acts on hard disk. Requires a validation dir, target file Chiasma.exe in validation dir")
+    @skip("Acts on hard disk. Requires a validation dir, target file Chiasma.exe in validation dir")
     def test_extract_shortcut_target(self):
         shortcut_path = r'c:\tmp\chiasma\uservalidations\latest\chiasma.lnk'
         target = self.chiasma.validation_deployer.extract_shortcut_target(shortcut_path)
