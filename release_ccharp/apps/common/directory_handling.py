@@ -178,6 +178,9 @@ class FileDeployer:
                 ("Production or validation catalog already exists. " 
                 "They need to be removed before continuing"))
 
+    def delete_directory_contents(self, target_dir):
+        delete_directory_contents(self.os_service, target_dir)
+
 
 class FileDoesNotExistsException(Exception):
     pass
