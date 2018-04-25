@@ -28,25 +28,25 @@ class Application(ApplicationBase):
             branch_provider=branch_provider, app_paths=self.app_paths, os_service=os_service)
         file_deployer = FileDeployer(
             self.path_properties, self.os_service, snpseq_workflow.config, self.app_paths)
-        self.fp_builder = FPBuilder(self, file_deployer, self.app_paths, self.config, os_service, windows_commands)
+        self.chiasma_builder = ChiasmaBuilder(self, file_deployer, self.app_paths, self.config)
         path_actions = SnpseqPathActions(
             whatif, self.path_properties, os_service, self.app_paths, self.windows_commands)
-        self.validation_deployer = FPValidationDeployer(
-            self, file_deployer, path_actions, os_service, branch_provider, windows_commands, self.path_properties)
-        self.deployer = FPDeployer(
-            self.path_properties, file_deployer, path_actions, os_service, branch_provider)
+        self.validation_deployer = ChiasmaValidationDeployer(
+            self, file_deployer, path_actions)
+        self.deployer = ChiasmaDeployer(
+            self.path_properties, file_deployer, path_actions, branch_provider)
 
     def build(self):
         super(Application, self).build()
-        self.fp_builder.run()
+        self.chiasma_builder.run()
 
     def deploy_validation(self):
         super(Application, self).deploy_validation()
         self.validation_deployer.run()
 
-    def deploy(self):
-        super(Application, self).deploy()
-        self.deployer.run()
+    def deploy(self, skip_copy_backup):
+        super(Application, self).deploy(skip_copy_backup)
+        self.deployer.run(skip_copy_backup)
 
     def download_release_history(self):
         super(Application, self).download_release_history()

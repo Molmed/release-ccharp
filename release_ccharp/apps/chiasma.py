@@ -28,7 +28,7 @@ class Application(ApplicationBase):
         self.validation_deployer = ChiasmaValidationDeployer(
             self, file_deployer, path_actions)
         self.deployer = ChiasmaDeployer(
-            self.path_properties, file_deployer, path_actions, os_service, branch_provider)
+            self.path_properties, file_deployer, path_actions, branch_provider)
 
     def build(self):
         super(Application, self).build()
@@ -38,9 +38,9 @@ class Application(ApplicationBase):
         super(Application, self).deploy_validation()
         self.validation_deployer.run()
 
-    def deploy(self):
-        super(Application, self).deploy()
-        self.deployer.run()
+    def deploy(self, skip_copy_backup):
+        super(Application, self).deploy(skip_copy_backup)
+        self.deployer.run(skip_copy_backup)
 
     def download_release_history(self):
         super(Application, self).download_release_history()

@@ -47,7 +47,7 @@ class ApplicationBase(object):
         print('Starting deploy validation')
 
     @abc.abstractmethod
-    def deploy(self):
+    def deploy(self, skip_copy_backup):
         print('Starting deploy')
 
     @abc.abstractmethod
@@ -98,3 +98,11 @@ class LatestVersionExaminer:
     @abc.abstractmethod
     def is_candidate_in_latest(self):
         pass
+
+
+class LogMixin:
+    def execute_and_log(self, fcn, message=None):
+        msg = message or '{}...'.format(fcn.__name__.replace('_', ' '))
+        print(msg)
+        fcn()
+        print('ok')

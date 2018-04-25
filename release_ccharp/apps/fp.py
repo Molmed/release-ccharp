@@ -34,8 +34,8 @@ class Application(ApplicationBase):
         super(Application, self).deploy_validation()
         self.validation_deployer.run()
 
-    def deploy(self):
-        super(Application, self).deploy()
+    def deploy(self, skip_copy_backup):
+        super(Application, self).deploy(skip_copy_backup)
         self.deployer.run()
 
     def download_release_history(self):

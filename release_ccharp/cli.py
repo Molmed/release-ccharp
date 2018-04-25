@@ -67,11 +67,12 @@ def accept(ctx, repo):
 
 @cli.command("deploy")
 @click.argument("repo")
+@click.option("--skip-copy-backup", is_flag=True, default=False)
 @click.pass_context
-def deploy(ctx, repo):
+def deploy(ctx, repo, skip_copy_backup):
     factory = ApplicationFactory()
     instance = factory.get_instance(whatif=ctx.obj['whatif'], repo=repo)
-    instance.deploy()
+    instance.deploy(skip_copy_backup)
 
 
 @cli.command("download-release-history")

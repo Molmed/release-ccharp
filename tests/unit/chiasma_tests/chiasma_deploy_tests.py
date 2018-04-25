@@ -1,7 +1,9 @@
 import os
 from unittest import skip
+from mock import MagicMock
 from release_ccharp.apps.common.directory_handling import FileDoesNotExistsException
 from tests.unit.chiasma_tests.base import ChiasmaBaseTests
+from release_ccharp.utils import create_dirs
 
 
 class ChiasmaDeployTests(ChiasmaBaseTests):
@@ -14,6 +16,57 @@ class ChiasmaDeployTests(ChiasmaBaseTests):
         self.file_builder.add_file_in_production('chiasma.exe.config')
         self.file_builder.add_file_in_production_config_lab('chiasma.exe.config')
         self.file_builder.add_file_in_current_candidate_dir('chiasma-user-manual-v1.0.0.pdf')
+
+    def test_copy_backup__with_backup_added_to_fake_server__backup_exists_in_candidate(self):
+        # Arrange
+        backup_dir = self.chiasma.deployer.path_properties.db_backup_server_dir
+        create_dirs(self.os_service, backup_dir)
+        backup_path = os.path.join(backup_dir, self.chiasma.deployer.path_properties.db_backup_filename)
+        self.filesystem.CreateFile(backup_path)
+
+        # Act
+        self.chiasma.deployer.copy_backup()
+
+        # Assert
+        path = r'c:\xxx\chiasma\candidates\release-1.0.0\gtdb2_devel_backup.bak'
+        self.assertTrue(self.os_service.exists(path))
+
+    def test_copy_backup__with_path_does_not_exists__exception(self):
+        # Arrange
+        # do not add backup file...
+
+        # Act
+        # Assert
+        with self.assertRaises(IOError):
+            self.chiasma.deployer.copy_backup()
+
+    def get_magicmock(self):
+        m = MagicMock()
+        m.__name__ = 'mock'
+        return m
+
+    def mock_out_run(self):
+        self.chiasma.deployer.check_source_files_exists = self.get_magicmock()
+        self.chiasma.deployer.copy_backup = self.get_magicmock()
+        self.chiasma.deployer.file_deployer.move_deploy_files = MagicMock()
+        self.chiasma.deployer.file_deployer.move_user_manual = MagicMock()
+        self.chiasma.deployer.move_to_archive = self.get_magicmock()
+
+    def test_run__with_skip_copy_backup_false__copy_backup_called(self):
+        # Arrange
+        self.mock_out_run()
+        # Act
+        self.chiasma.deployer.run()
+        # Assert
+        self.chiasma.deployer.copy_backup.assert_called_once_with()
+
+    def test_run__with_skip_copy_backup_true__copy_backup_not_called(self):
+        # Arrange
+        self.mock_out_run()
+        # Act
+        self.chiasma.deployer.run(skip_copy_backup=True)
+        # Assert
+        self.chiasma.deployer.copy_backup.assert_not_called()
 
     def test_check_source_files__with_exe_lacking__throws(self):
         # Arrange
