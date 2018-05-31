@@ -113,7 +113,7 @@ line 3"""
             self.assertEqual("False", config.get("DebugMode"))
 
     def test_update_binary_version__with_excerp_from_real_file__update_ok(self):
-        contents = """row 1
+        original_contents = """row 1
 [assembly: AssemblyVersion("1.6.*")]
 row3"""
         expected = """row 1
@@ -121,7 +121,7 @@ row3"""
 row3"""
         file_path = (r'c:\xxx\chiasma\candidates\release-1.0.0\GitEdvard-chiasma-123\chiasma'
                      r'\properties\AssemblyInfo.cs')
-        self.filesystem.CreateFile(file_path, contents=contents)
+        self.filesystem.CreateFile(file_path, contents=original_contents)
         self.chiasma.chiasma_builder.update_binary_version()
         file_module = FakeFileOpen(self.filesystem)
         with file_module(file_path) as f:

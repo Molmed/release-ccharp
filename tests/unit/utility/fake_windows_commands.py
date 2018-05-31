@@ -7,7 +7,7 @@ class FakeWindowsCommands:
         self.filesystem = filesystem
         self.os_module = FakeOsModule(filesystem)
 
-    def build_solution(self):
+    def build_solution(self, path):
         pass
 
     def create_shortcut(self, save_path, target_path):
