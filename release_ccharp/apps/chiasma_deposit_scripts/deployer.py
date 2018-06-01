@@ -13,14 +13,11 @@ class ChiasmaDepositDeployer(LogMixin):
     def run(self):
         self.execute_and_log(self.check_source_files_exists)
         self.file_deployer.move_deploy_files()
-        self.file_deployer.move_user_manual()
         self.execute_and_log(self.move_to_archive, 'Move validation files and sql script to archive...')
 
     def check_source_files_exists(self):
         self.file_deployer.check_exe_file_exists()
         self.file_deployer.check_config_file_exists()
-        self.file_deployer.check_config_lab_file_exists()
-        self.file_deployer.check_user_manual_exists()
 
     def copy_release_history(self):
         self.file_deployer.copy_release_history()

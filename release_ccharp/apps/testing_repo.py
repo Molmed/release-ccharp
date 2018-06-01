@@ -3,10 +3,13 @@ from release_ccharp.apps.common.single_file_read_write import BinaryVersionUpdat
 from release_ccharp.apps.common.base import ApplicationBase
 from release_ccharp.apps.common.directory_handling import FileDeployer
 from release_ccharp.apps.chiasma_scripts.builder import ChiasmaBuilder
+from release_ccharp.apps.chiasma_deposit_scripts.builder import ChiasmaDepositBuilder
 from release_ccharp.apps.sqat_scripts.builder import SqatBuilder
 from release_ccharp.apps.chiasma_scripts.validation_deployer import ChiasmaValidationDeployer
+from release_ccharp.apps.chiasma_deposit_scripts.validation_deployer import ChiasmaDepositValidationDeployer
 from release_ccharp.apps.sqat_scripts.validation_deployer import SqatValidationDeployer
 from release_ccharp.apps.chiasma_scripts.deployer import ChiasmaDeployer
+from release_ccharp.apps.chiasma_deposit_scripts.deployer import ChiasmaDepositDeployer
 from release_ccharp.apps.sqat_scripts.deployer import SqatDeployer
 from release_ccharp.apps.common.single_file_read_write import ShortcutExaminer
 from release_ccharp.apps.fp_scripts.builder import FPBuilder
@@ -28,17 +31,17 @@ class Application(ApplicationBase):
             branch_provider=branch_provider, app_paths=self.app_paths, os_service=os_service)
         file_deployer = FileDeployer(
             self.path_properties, self.os_service, snpseq_workflow.config, self.app_paths)
-        self.chiasma_builder = ChiasmaBuilder(self, file_deployer, self.app_paths, self.config)
+        self.chiasma_deposit_builder = ChiasmaDepositBuilder(self, file_deployer, self.app_paths, self.config)
         path_actions = SnpseqPathActions(
             whatif, self.path_properties, os_service, self.app_paths, self.windows_commands)
-        self.validation_deployer = ChiasmaValidationDeployer(
+        self.validation_deployer = ChiasmaDepositValidationDeployer(
             self, file_deployer, path_actions)
-        self.deployer = ChiasmaDeployer(
+        self.deployer = ChiasmaDepositDeployer(
             self.path_properties, file_deployer, path_actions, branch_provider)
 
     def build(self):
         super(Application, self).build()
-        self.chiasma_builder.run()
+        self.chiasma_deposit_builder.run()
 
     def deploy_validation(self):
         super(Application, self).deploy_validation()
@@ -46,7 +49,7 @@ class Application(ApplicationBase):
 
     def deploy(self, skip_copy_backup):
         super(Application, self).deploy(skip_copy_backup)
-        self.deployer.run(skip_copy_backup)
+        self.deployer.run()
 
     def download_release_history(self):
         super(Application, self).download_release_history()
