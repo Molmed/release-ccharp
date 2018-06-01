@@ -32,7 +32,7 @@ class SnpseqPathProperties:
 
     def _load_subpaths(self):
         here = os.path.dirname(__file__)
-        path = os.path.join(here, 'paths.config')
+        path = os.path.join(here, 'paths.config.txt')
         with open(path, 'r') as f:
             sub_paths = yaml.load(f)
         return sub_paths
