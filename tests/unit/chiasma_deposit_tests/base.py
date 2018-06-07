@@ -1,4 +1,4 @@
-from release_ccharp.apps.chiasma_deposit import Application
+from release_ccharp.apps.chiasmadeposit import Application
 from tests.unit.utility.fake_windows_commands import FakeWindowsCommands
 from tests.unit.base import BaseTests
 
