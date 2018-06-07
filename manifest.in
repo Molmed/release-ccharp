@@ -1,2 +1,2 @@
-include release_ccharp/repo.config
-include release_ccharp/paths.config
+include release_ccharp/repo.config.txt
+include release_ccharp/paths.config.txt
