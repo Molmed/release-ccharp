@@ -6,7 +6,7 @@ from release_ccharp.exceptions import SnpseqReleaseException
 class Config:
     def open_config(self, repo):
         here = os.path.dirname(__file__)
-        path = os.path.join(here, 'repo.config')
+        path = os.path.join(here, 'repo.config.txt')
         with open(path, 'r') as f:
             config = yaml.load(f)
         if not repo in config:

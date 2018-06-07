@@ -11,10 +11,8 @@ chiasma :
 testing-repo :
     root_path : C:\Tmp
     git_repo_name : testing-repo
-    exe_file_name_base : Chiasma
-    project_root_dir : Chiasma
-    db_backup_server_dir : \\130.238.178.226\Latest release
-    db_backup_filename : gtdb2_devel_backup.bak
+    exe_file_name_base : ChiasmaDeposit
+    project_root_dir : ChiasmaDeposit
     owner : GitEdvard
     deploy_root_path : C:\Tmp\testing-repo-deploy
 order :
@@ -38,3 +36,11 @@ fp:
     project_root_dir : FPDatabase_SourceCode
     owner : Molmed
     deploy_root_path : L:\Labsystem\Chiasma\Installation\Klient\FPdatabase
+chiasmadeposit :
+    root_path : P:\lims
+    git_repo_name : ChiasmaDeposit
+    exe_file_name_base : ChiasmaDeposit
+    project_root_dir : ChiasmaDeposit
+    owner : Molmed
+    deploy_root_path : L:\Labsystem\Chiasma\Installation\Klient\ChiasmaDeposit
+

@@ -5,6 +5,10 @@ def load_chiasma_config():
     return _load_file('chiasma.exe.config')
 
 
+def load_chiasma_deposit_config():
+    return _load_file('chiasma_deposit.exe.config')
+
+
 def load_sqat_connect():
     return _load_file('SQATconnect.xml')
 
@@ -26,6 +30,8 @@ def _load_file(file_name):
 
 
 CHIASMA_CONFIG = load_chiasma_config()
+
+CHIASMA_DEPOSIT_CONFIG = load_chiasma_deposit_config()
 
 SQAT_CONNECT = load_sqat_connect()
 
