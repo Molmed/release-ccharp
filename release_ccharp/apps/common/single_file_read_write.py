@@ -16,6 +16,12 @@ class StandardVSConfigXML:
         node = single([n for n in self.setting_list if n.get('name') == key])
         node.find('value').text = value
 
+    def update_and_log(self, key, value):
+        node = single([n for n in self.setting_list if n.get('name') == key])
+        if not node.find('value').text == value:
+            print('Change entry {} to {}'.format(key, value))
+        node.find('value').text = value
+
     def get(self, key):
         node = single([n for n in self.setting_list if n.get('name') == key])
         return node.find('value').text
