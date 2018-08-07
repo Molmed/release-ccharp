@@ -96,6 +96,7 @@ line 3"""
             self.assertEqual("GTDB2_practice", config.get("DatabaseName"))
             self.assertEqual("True", config.get("EnforceAppVersion"))
             self.assertEqual("False", config.get("DebugMode"))
+            self.assertEqual("Ef", config.get("RepositoryImplementation"))
 
     def test_transform_config__with_validation_directory__lab_config_update_ok(self):
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
@@ -111,6 +112,7 @@ line 3"""
             self.assertEqual("GTDB2_practice", config.get("DatabaseName"))
             self.assertEqual("True", config.get("EnforceAppVersion"))
             self.assertEqual("False", config.get("DebugMode"))
+            self.assertEqual("Ef", config.get("RepositoryImplementation"))
 
     def test_update_binary_version__with_excerp_from_real_file__update_ok(self):
         original_contents = """row 1

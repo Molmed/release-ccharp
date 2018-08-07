@@ -29,13 +29,13 @@ class ApplicationBase(object):
 
     @contextmanager
     def open_xml(self, path):
-        self.log("Updating xml file: {}".format(path))
+        self.log("Updating xml file: {}".format(path), print_always=True)
         tree = self.os_service.et_parse(path)
         yield tree.getroot()
         self.os_service.et_write(tree, path)
 
-    def log(self, msg):
-        if self.whatif:
+    def log(self, msg, print_always=False):
+        if self.whatif or print_always:
             print(msg)
 
     @abc.abstractmethod
