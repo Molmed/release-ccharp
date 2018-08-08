@@ -57,7 +57,8 @@ class ApplicationBase(object):
 
 class WindowsCommands:
     def build_solution(self, solution_file_path):
-        build_path = r'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe'
+        #build_path = r'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe'
+        build_path = r'C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe'
         print("build on solution file: {}".format(solution_file_path))
         cmd = [build_path, solution_file_path,
                r'/p:WarningLevel=0',
