@@ -6,6 +6,7 @@ Handles GitHub flow, user manual export and file copying needed at validation an
 ### Installations  (inhouse applications):
 * release-tools (https://github.com/Molmed/release-tools)
 * confluence-tools (https://github.com/withrocks/confluence-tools)
+* If a c# application is to be deployed, Visual Studio 2017 must be installed
 
 The GitHub repo of the application must have the branch structure described in https://github.com/Molmed/release-tools.
 
