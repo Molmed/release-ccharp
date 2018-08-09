@@ -53,6 +53,8 @@ class ChiasmaDepositBuilder:
             config = StandardVSConfigXML(xml, "ChiasmaDeposit.Properties")
             config.update("EnforceAppVersion", "True")
             config.update("DatabaseName", db_name)
+            config.update("ApplicationMode", "LAB")
+
 
     def transform_config(self):
         self._transform_config(self.chiasma_deposit.app_paths.production_dir)

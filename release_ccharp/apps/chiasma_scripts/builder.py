@@ -50,12 +50,12 @@ class ChiasmaBuilder:
         self.chiasma.save_backup_file(config_file_path)
         with self.chiasma.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Molmed.Chiasma.Properties")
-            config.update_and_log("EnforceAppVersion", "True")
-            config.update_and_log("DilutePlateAutomaticLabelPrint", "True")
-            config.update_and_log("DiluteTubeAutomaticLabelPrint", "True")
-            config.update_and_log("DebugMode", "False")
-            config.update_and_log("DatabaseName", db_name)
-            config.update_and_log("RepositoryImplementation", "Ef")
+            config.update("EnforceAppVersion", "True")
+            config.update("DilutePlateAutomaticLabelPrint", "True")
+            config.update("DiluteTubeAutomaticLabelPrint", "True")
+            config.update("DebugMode", "False")
+            config.update("DatabaseName", db_name)
+            config.update("RepositoryImplementation", "Ef")
         lab_config_dir = os.path.join(directory, self.chiasma.path_properties.config_lab_subpath)
         create_dirs(self.chiasma.os_service, lab_config_dir, self.chiasma.whatif,
                     self.chiasma.whatif)
@@ -63,7 +63,7 @@ class ChiasmaBuilder:
         self.chiasma.os_service.copyfile(config_file_path, lab_config_file_path)
         with self.chiasma.open_xml(lab_config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Molmed.Chiasma.Properties")
-            config.update_and_log("ApplicationMode", "LAB")
+            config.update("ApplicationMode", "LAB")
 
     def transform_config(self):
         self._transform_config(self.chiasma.app_paths.production_dir)
