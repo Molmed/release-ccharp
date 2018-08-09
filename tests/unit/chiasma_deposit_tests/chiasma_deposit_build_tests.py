@@ -73,7 +73,7 @@ class ChiasmaDepositBuildTests(ChiasmaDepositBaseTests):
         config_file_path = r'c:\xxx\chiasmadeposit\candidates\validation\chiasmadeposit.exe.config.orig'
         with self.chiasma_deposit.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "ChiasmaDeposit.Properties")
-            self.assertEqual("LAB", config.get('ApplicationMode'))
+            self.assertEqual("OFFICE", config.get('ApplicationMode'))
 
     def test_transform_config__with_validation_directory__config_update_ok(self):
         validation_dir = r'c:\xxx\chiasmadeposit\candidates\validation'
