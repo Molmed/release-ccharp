@@ -58,13 +58,18 @@ class ApplicationBase(object):
 class WindowsCommands:
     def build_solution(self, solution_file_path):
         #build_path = r'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe'
-        build_path = r'C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe'
-        print("build on solution file: {}".format(solution_file_path))
-        cmd = [build_path, solution_file_path,
+        print('Restore nuget packages...')
+        restore_nuget_cmd = ['nuget', r'restore', solution_file_path, r'-Verbosity', r'quiet']
+        call(restore_nuget_cmd)
+        print('Done.')
+        msbuild_path = r'C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe'
+        print("Calling msbuild on solution file: {}".format(solution_file_path))
+        msbuild_cmd = [msbuild_path, solution_file_path,
                r'/p:WarningLevel=0',
                r'/verbosity:minimal',
                r'/p:Configuration=Release']
-        call(cmd)
+        call(msbuild_cmd)
+        print('Done.')
 
     def create_shortcut(self, save_path, target_path):
         shell = Dispatch('WScript.Shell')
