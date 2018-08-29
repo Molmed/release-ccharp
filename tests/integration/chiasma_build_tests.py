@@ -13,7 +13,8 @@ class ChiasmaBuildTests(unittest.TestCase):
             "root_path": r'c:\tmp',
             "git_repo_name": "chiasma",
             "confluence_space_key": "CHI",
-            "owner": "GitEdvard"
+            "owner": "GitEdvard",
+            "exe_file_name_base" : "Chiasma"
         }
         branch_provider = FakeBranchProvider()
         wf = SnpseqWorkflow(whatif=False, repo="chiasma", os_service=OsService())
@@ -59,7 +60,7 @@ class ChiasmaBuildTests(unittest.TestCase):
         self.chiasma.chiasma_builder.move_candidates()
         self.assertEqual(1,2)
 
-    @unittest.skip("")
+    #@unittest.skip("")
     def test_transform_config(self):
         self.chiasma.chiasma_builder.transform_config()
         self.assertEqual(1,2)

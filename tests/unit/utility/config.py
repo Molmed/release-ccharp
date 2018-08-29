@@ -4,6 +4,11 @@ import os
 def load_chiasma_config():
     return _load_file('chiasma.exe.config')
 
+def load_chiama_config_replacement_test():
+    return _load_file('chiasma.exe.config.replacetest')
+
+def load_chiama_config_transformed():
+    return _load_file('chiasma.exe.config.transformed')
 
 def load_chiasma_deposit_config():
     return _load_file('chiasma_deposit.exe.config')
@@ -30,6 +35,10 @@ def _load_file(file_name):
 
 
 CHIASMA_CONFIG = load_chiasma_config()
+
+CHIASMA_CONFIG_REPLACE_TEST = load_chiama_config_replacement_test()
+
+CHIASMA_CONFIG_TRANSFORMED = load_chiama_config_transformed()
 
 CHIASMA_DEPOSIT_CONFIG = load_chiasma_deposit_config()
 
