@@ -1,16 +1,18 @@
 from __future__ import print_function
 import os
 import re
+from contextlib import contextmanager
 from release_ccharp.utils import single
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_ccharp.apps.common.base import LatestVersionExaminer
+from xml.etree.ElementTree import tostring
 
 
 class StandardVSConfigXML:
     def __init__(self, tree_root, app_namespace):
-        settings_node_name = "{}.Settings".format(app_namespace)
+        self.settings_node_name = "{}.Settings".format(app_namespace)
         self.setting_list = \
-            tree_root.find('applicationSettings').find(settings_node_name).findall('setting')
+            tree_root.find('applicationSettings').find(self.settings_node_name).findall('setting')
 
     def update(self, key, value):
         node = single([n for n in self.setting_list if n.get('name') == key])
@@ -21,6 +23,41 @@ class StandardVSConfigXML:
     def get(self, key):
         node = single([n for n in self.setting_list if n.get('name') == key])
         return node.find('value').text
+
+    def transformed_contents(self, original_contents):
+        # Preserv xml structure. Visual studio is picky with it
+        starting_tag = '<{}>'.format(self.settings_node_name)
+        closing_tag = '</{}>'.format(self.settings_node_name)
+        config_start, second_part = original_contents.split(starting_tag)
+        _, config_end = second_part.split(closing_tag)
+        nodes = [tostring(s) for s in self.setting_list]
+        return '{}{}\n{}{}{}'.format(config_start, starting_tag,
+                                                   ''.join(nodes),
+                                                   closing_tag, config_end)
+
+
+class VsConfigOpener:
+    def __init__(self, os_service, log, app_namespace):
+        self.os_service = os_service
+        self.log = log
+        self.app_namespace = app_namespace
+
+    @contextmanager
+    def open(self, path):
+        if self.log is not None:
+            self.log("Updating xml file: {}".format(path), print_always=True)
+        tree = self.os_service.et_parse(path)
+        root = tree.getroot()
+        config = StandardVSConfigXML(root, self.app_namespace)
+        yield config
+        with self.os_service.open(path, 'r') as f:
+            c = f.read()
+        original_contents = c.decode('utf-8-sig')
+        with self.os_service.open(path, 'w') as f:
+            c = config.transformed_contents(original_contents)
+            c = c.encode('utf-8')
+            f.write(c)
+
 
 
 class BinaryVersionUpdater:
