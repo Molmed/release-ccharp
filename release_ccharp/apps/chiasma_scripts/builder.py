@@ -56,7 +56,7 @@ class ChiasmaBuilder:
             config.update("DiluteTubeAutomaticLabelPrint", "True")
             config.update("DebugMode", "False")
             config.update("DatabaseName", db_name)
-            config.update("RepositoryImplementation", "Datareader")
+            config.update("RepositoryImplementation", "Ef")
         lab_config_dir = os.path.join(directory, self.chiasma.path_properties.config_lab_subpath)
         create_dirs(self.chiasma.os_service, lab_config_dir, self.chiasma.whatif,
                     self.chiasma.whatif)
