@@ -46,7 +46,9 @@ class ChiasmaBuilder:
 
     def _transform_config(self, directory):
         config_file_path = os.path.join(directory, self.chiasma.app_paths.config_file_name)
-        db_name = "GTDB2" if directory == self.chiasma.app_paths.production_dir else "GTDB2_practice"
+        provider = TransformSettingsProvider(self.chiasma)
+        db_name, result_web_service = provider.set_env_dependent_variables(directory)
+
         self.chiasma.save_backup_file(config_file_path)
         vs_config = VsConfigOpener(self.chiasma.os_service, self.chiasma.log,
                                    "Molmed.Chiasma.Properties")
@@ -57,6 +59,7 @@ class ChiasmaBuilder:
             config.update("DebugMode", "False")
             config.update("DatabaseName", db_name)
             config.update("RepositoryImplementation", "Ef")
+            config.update("Chiasma_ResultWebServiceDevelopment_ResultWebService", result_web_service)
         lab_config_dir = os.path.join(directory, self.chiasma.path_properties.config_lab_subpath)
         create_dirs(self.chiasma.os_service, lab_config_dir, self.chiasma.whatif,
                     self.chiasma.whatif)
@@ -70,3 +73,26 @@ class ChiasmaBuilder:
     def transform_config(self):
         self._transform_config(self.chiasma.app_paths.production_dir)
         self._transform_config(self.chiasma.app_paths.validation_dir)
+
+
+class TransformSettingsProvider:
+    def __init__(self, chiasma):
+        self.chiasma = chiasma
+
+    def set_env_dependent_variables(self, directory):
+        if directory == self.chiasma.app_paths.production_dir:
+            db_name = "GTDB2"
+            result_web_service = self._web_result_service_production
+        else:
+            db_name = "GTDB2_practice"
+            result_web_service = self._web_result_service_validation
+        return db_name, result_web_service
+
+    @property
+    def _web_result_service_validation(self):
+        return 'http://mm-wchs001:65204/ChiasmaResultServiceValidation/ResultWebService.asmx'
+
+    @property
+    def _web_result_service_production(self):
+        return 'http://mm-wchs001:65200/ChiasmaResultService/ResultWebService.asmx'
+
