@@ -26,6 +26,10 @@ def load_fp_connect_config():
     return _load_file('FPDatabaseConfig.txt')
 
 
+def load_sqat_exe_config():
+    return _load_file('sqat.exe.config')
+
+
 def _load_file(file_name):
     here = os.path.dirname(__file__)
     resources = os.path.join(here, 'resources')
@@ -43,6 +47,8 @@ CHIASMA_CONFIG_TRANSFORMED = load_chiama_config_transformed()
 CHIASMA_DEPOSIT_CONFIG = load_chiasma_deposit_config()
 
 SQAT_CONNECT = load_sqat_connect()
+
+SQAT_EXE_CONFIG = load_sqat_exe_config()
 
 FP_CONFIG = load_fp_config()
 

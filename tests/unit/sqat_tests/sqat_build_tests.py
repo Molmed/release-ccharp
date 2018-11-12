@@ -5,8 +5,10 @@ from release_ccharp.utils import create_dirs
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_ccharp.exceptions import SnpseqXmlEntryNotFoundException
 from release_ccharp.apps.sqat_scripts.builder import SqatConfigXml
+from release_ccharp.apps.common.single_file_read_write import StandardVSConfigXML
 from tests.unit.sqat_tests.base import SqatBaseTests
 from tests.unit.utility.config import SQAT_CONNECT
+from tests.unit.utility.config import SQAT_EXE_CONFIG
 
 
 class SqatBuildTests(SqatBaseTests):
@@ -220,6 +222,30 @@ line 3"""
             with self.assertRaises(SnpseqXmlEntryNotFoundException):
                 configXml.get_connection_string('QC_practice')
 
+    def test_transform_config_vs_xml__with_validation_dir__xml_update_ok(self):
+        sqat_config_path = (r'c:\xxx\sqat\candidates\release-1.0.0\validation\sqat.exe.config')
+        self.filesystem.CreateFile(sqat_config_path, contents=SQAT_EXE_CONFIG)
+        validation_dir = r'c:\xxx\sqat\candidates\release-1.0.0\validation'
+        self.sqat.builder._transform_config_vs_xml(validation_dir)
+        config_file_path = r'c:\xxx\sqat\candidates\release-1.0.0\validation\sqat.exe.config'
+        validation_url = r'http://mm-wchs001:65204/ChiasmaResultServiceValidation/ResultWebService.asmx'
+        with self.sqat.open_xml(config_file_path) as xml:
+            config = StandardVSConfigXML(xml, "Molmed.SQAT.Properties")
+            self.assertEqual(validation_url,
+                             config.get('SNP_Quality_Analysis_Tool_ResultWebServiceDevelopment_ResultWebService'))
+
+    def test_transform_config_vs_xml__with_production_dir__xml_update_ok(self):
+        sqat_config_path = (r'c:\xxx\sqat\candidates\release-1.0.0\production\sqat.exe.config')
+        self.filesystem.CreateFile(sqat_config_path, contents=SQAT_EXE_CONFIG)
+        production_dir = r'c:\xxx\sqat\candidates\release-1.0.0\production'
+        self.sqat.builder._transform_config_vs_xml(production_dir)
+        config_file_path = r'c:\xxx\sqat\candidates\release-1.0.0\production\sqat.exe.config'
+        validation_url = r'http://mm-wchs001:65200/ChiasmaResultService/ResultWebService.asmx'
+        with self.sqat.open_xml(config_file_path) as xml:
+            config = StandardVSConfigXML(xml, "Molmed.SQAT.Properties")
+            self.assertEqual(validation_url,
+                             config.get('SNP_Quality_Analysis_Tool_ResultWebServiceDevelopment_ResultWebService'))
+
     def test_copy_user_manual__user_manual_in_previous_candidate__user_manual_copied_to_production(self):
         # Arrange
         self.file_builder.add_file_in_previous_candidate('User Manual SNP Quality Analysis Tool.doc')
@@ -243,7 +269,6 @@ line 3"""
         # Assert
         expected_file = r'c:\xxx\sqat\candidates\release-1.0.0\User Manual SNP Quality Analysis Tool.doc'
         self.assertTrue(self.os_service.exists(expected_file))
-
 
 
 class FileBuilder:
