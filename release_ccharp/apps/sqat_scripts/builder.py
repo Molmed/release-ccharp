@@ -1,5 +1,6 @@
 from __future__ import print_function
 import os
+from release_ccharp.apps.common.single_file_read_write import VsConfigOpener
 from release_ccharp.exceptions import SnpseqReleaseException
 from release_ccharp.exceptions import SnpseqXmlEntryNotFoundException
 from release_ccharp.utils import UnexpectedLengthError
@@ -52,6 +53,8 @@ class SqatBuilder:
     def transform_config(self):
         self._transform_validation_connect_config()
         self._transform_production_connect_config()
+        self._transform_config_vs_xml(self.app_paths.production_dir)
+        self._transform_config_vs_xml(self.app_paths.validation_dir)
 
     def _transform_production_connect_config(self):
         connect_file_path = os.path.join(self.app_paths.production_dir, 'SQATconnect.xml')
@@ -66,6 +69,16 @@ class SqatBuilder:
         with self.sqat.open_xml(connect_file_path) as xml:
             configXml = SqatConfigXml(xml)
             configXml.remove_connection('QC_1')
+
+    def _transform_config_vs_xml(self, directory):
+        config_file_path = os.path.join(directory, self.sqat.app_paths.config_file_name)
+        provider = TransformSettingsProvider(self.sqat)
+        result_web_service = provider.set_env_dependent_variables(directory)
+        vs_config = VsConfigOpener(self.sqat.os_service, self.sqat.log,
+                                   "Molmed.SQAT.Properties")
+        with vs_config.open(config_file_path) as config:
+            config.update("SNP_Quality_Analysis_Tool_ResultWebServiceDevelopment_ResultWebService",
+                          result_web_service)
 
     @lazyprop
     def _assembly_file_path(self):
@@ -127,10 +140,29 @@ class SqatConfigXml:
         for c in connections:
             self.tree_root.remove(c)
 
-
     def _get_node(self, connection_name):
         try:
             return single([n for n in self.connection_list if n.find('Name').text == connection_name])
         except UnexpectedLengthError:
             raise SnpseqXmlEntryNotFoundException('Entry for connection not found: {}'.format(connection_name))
+
+
+class TransformSettingsProvider:
+    def __init__(self, sqat):
+        self.sqat = sqat
+
+    def set_env_dependent_variables(self, directory):
+        if directory == self.sqat.app_paths.production_dir:
+            result_web_service = self._web_result_service_production
+        else:
+            result_web_service = self._web_result_service_validation
+        return result_web_service
+
+    @property
+    def _web_result_service_validation(self):
+        return 'http://mm-wchs001:65204/ChiasmaResultServiceValidation/ResultWebService.asmx'
+
+    @property
+    def _web_result_service_production(self):
+        return 'http://mm-wchs001:65200/ChiasmaResultService/ResultWebService.asmx'
 
