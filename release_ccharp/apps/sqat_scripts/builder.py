@@ -77,7 +77,7 @@ class SqatBuilder:
         vs_config = VsConfigOpener(self.sqat.os_service, self.sqat.log,
                                    "Molmed.SQAT.Properties")
         with vs_config.open(config_file_path) as config:
-            config.update("SNP_Quality_Analysis_Tool_ResultWebServiceDevelopment_ResultWebService",
+            config.update("SNP_Quality_Analysis_Tool_ResultWebService_ResultWebService",
                           result_web_service)
 
     @lazyprop
