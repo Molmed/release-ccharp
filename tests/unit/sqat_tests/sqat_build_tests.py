@@ -232,7 +232,7 @@ line 3"""
         with self.sqat.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Molmed.SQAT.Properties")
             self.assertEqual(validation_url,
-                             config.get('SNP_Quality_Analysis_Tool_ResultWebServiceDevelopment_ResultWebService'))
+                             config.get('SNP_Quality_Analysis_Tool_ResultWebService_ResultWebService'))
 
     def test_transform_config_vs_xml__with_production_dir__xml_update_ok(self):
         sqat_config_path = (r'c:\xxx\sqat\candidates\release-1.0.0\production\sqat.exe.config')
@@ -244,7 +244,7 @@ line 3"""
         with self.sqat.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Molmed.SQAT.Properties")
             self.assertEqual(validation_url,
-                             config.get('SNP_Quality_Analysis_Tool_ResultWebServiceDevelopment_ResultWebService'))
+                             config.get('SNP_Quality_Analysis_Tool_ResultWebService_ResultWebService'))
 
     def test_copy_user_manual__user_manual_in_previous_candidate__user_manual_copied_to_production(self):
         # Arrange
