@@ -23,9 +23,6 @@
             <setting name="TestMode" serializeAs="String">
                 <value>False</value>
             </setting>
-            <setting name="DatabaseName" serializeAs="String">
-                <value>GTDB2_devel_{INITIALS}</value>
-            </setting>
             <setting name="EnforceAppVersion" serializeAs="String">
                 <value>True</value>
             </setting>
