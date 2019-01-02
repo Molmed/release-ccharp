@@ -4,6 +4,11 @@ import os
 def load_chiasma_config():
     return _load_file('chiasma.exe.config')
 
+
+def load_chiasma_shared_kernel_config():
+    return _load_file('chiasma.sharedkernel.exe.config')
+
+
 def load_chiama_config_replacement_test():
     return _load_file('chiasma.exe.config.replacetest')
 
@@ -39,6 +44,8 @@ def _load_file(file_name):
 
 
 CHIASMA_CONFIG = load_chiasma_config()
+
+CHIASMA_SHAREDKERNEL_CONFIG = load_chiasma_shared_kernel_config()
 
 CHIASMA_CONFIG_REPLACE_TEST = load_chiama_config_replacement_test()
 
