@@ -35,6 +35,10 @@
             <setting name="RepositoryImplementation" serializeAs="String">
                 <value>Datareader</value>
             </setting>
+            <setting name="Chiasma_ResultWebServiceDevelopment_ResultWebService"
+                serializeAs="String">
+                <value>http://mm-wchs001:65203/ChiasmaResultServiceDevelopment/ResultWebService.asmx</value>
+            </setting>
         </Molmed.Chiasma.Properties.Settings>
     </applicationSettings>
   <startup>
