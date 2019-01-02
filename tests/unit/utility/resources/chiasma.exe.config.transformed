@@ -23,9 +23,6 @@
             <setting name="TestMode" serializeAs="String">
                 <value>False</value>
             </setting>
-            <setting name="DatabaseName" serializeAs="String">
-                <value>GTDB2_devel_{INITIALS}</value>
-            </setting>
             <setting name="EnforceAppVersion" serializeAs="String">
                 <value>True</value>
             </setting>
@@ -34,6 +31,10 @@
             </setting>
             <setting name="RepositoryImplementation" serializeAs="String">
                 <value>Datareader</value>
+            </setting>
+            <setting name="Chiasma_ResultWebServiceDevelopment_ResultWebService"
+                serializeAs="String">
+                <value>http://mm-wchs001:65203/ChiasmaResultServiceDevelopment/ResultWebService.asmx</value>
             </setting>
         </Molmed.Chiasma.Properties.Settings>
     </applicationSettings>

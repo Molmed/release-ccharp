@@ -44,11 +44,8 @@ class ChiasmaBuilder:
                                          self.config['project_root_dir'])
         self.chiasma.app_paths.common_move_candidates(project_root_path)
 
-    def _transform_config(self, directory):
+    def _transform_config(self, directory, result_web_service):
         config_file_path = os.path.join(directory, self.chiasma.app_paths.config_file_name)
-        provider = TransformSettingsProvider(self.chiasma)
-        db_name, result_web_service = provider.set_env_dependent_variables(directory)
-
         self.chiasma.save_backup_file(config_file_path)
         vs_config = VsConfigOpener(self.chiasma.os_service, self.chiasma.log,
                                    "Molmed.Chiasma.Properties")
@@ -57,7 +54,6 @@ class ChiasmaBuilder:
             config.update("DilutePlateAutomaticLabelPrint", "True")
             config.update("DiluteTubeAutomaticLabelPrint", "True")
             config.update("DebugMode", "False")
-            config.update("DatabaseName", db_name)
             config.update("RepositoryImplementation", "Ef")
             config.update("Chiasma_ResultWebServiceDevelopment_ResultWebService", result_web_service)
         lab_config_dir = os.path.join(directory, self.chiasma.path_properties.config_lab_subpath)
@@ -70,16 +66,31 @@ class ChiasmaBuilder:
         with vs_config.open(lab_config_file_path) as config:
             config.update("ApplicationMode", "LAB")
 
+    def _transform_shared_kernel_config(self, directory, db_name):
+        config_file_path = os.path.join(directory, 'chiasma.sharedkernel.exe.config')
+
+        self.chiasma.save_backup_file(config_file_path)
+        vs_config = VsConfigOpener(self.chiasma.os_service, self.chiasma.log,
+                                   "Chiasma.SharedKernel.Properties")
+        with vs_config.open(config_file_path) as config:
+            config.update("DatabaseName", db_name)
+
+    def _transform_configs(self, directory):
+        provider = TransformSettingsProvider(self.chiasma)
+        db_name, result_web_service = provider.fetch_env_dependent_variables(directory)
+        self._transform_config(directory, result_web_service)
+        self._transform_shared_kernel_config(directory, db_name)
+
     def transform_config(self):
-        self._transform_config(self.chiasma.app_paths.production_dir)
-        self._transform_config(self.chiasma.app_paths.validation_dir)
+        self._transform_configs(self.chiasma.app_paths.production_dir)
+        self._transform_configs(self.chiasma.app_paths.validation_dir)
 
 
 class TransformSettingsProvider:
     def __init__(self, chiasma):
         self.chiasma = chiasma
 
-    def set_env_dependent_variables(self, directory):
+    def fetch_env_dependent_variables(self, directory):
         if directory == self.chiasma.app_paths.production_dir:
             db_name = "GTDB2"
             result_web_service = self._web_result_service_production
