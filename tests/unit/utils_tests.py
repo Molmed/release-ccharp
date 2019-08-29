@@ -23,20 +23,20 @@ class TestCopyTree(unittest.TestCase):
         create_dirs(self.os_service, self.dest)
 
     def test__with_one_file_in_source_dest_empty__file_copied(self):
-        self.filesystem.CreateFile(r'c:\src\file1.txt')
+        self.filesystem.create_file(r'c:\src\file1.txt')
         copytree_preserve_existing(self.os_service, self.source, self.dest)
         self.assertTrue(self.os_service.exists(r'c:\dst\file1.txt'))
 
     def test__with_two_files_in_source_dest_have_one_file__file_copied(self):
-        self.filesystem.CreateFile(r'c:\src\file1.txt')
-        self.filesystem.CreateFile(r'c:\src\file2.txt')
-        self.filesystem.CreateFile(r'c:\dst\file1.txt')
+        self.filesystem.create_file(r'c:\src\file1.txt')
+        self.filesystem.create_file(r'c:\src\file2.txt')
+        self.filesystem.create_file(r'c:\dst\file1.txt')
         copytree_preserve_existing(self.os_service, self.source, self.dest)
         self.assertTrue(self.os_service.exists(r'c:\dst\file2.txt'))
 
     def test__with_subdir_and_single_file_in_source_dest_empty__file_copied(self):
         create_dirs(self.os_service, r'c:\src\subdir')
-        self.filesystem.CreateFile(r'c:\src\subdir\file1.txt')
+        self.filesystem.create_file(r'c:\src\subdir\file1.txt')
         copytree_preserve_existing(self.os_service, self.source, self.dest)
         self.assertTrue(self.os_service.exists(r'c:\dst\subdir\file1.txt'))
 
@@ -44,12 +44,12 @@ class TestCopyTree(unittest.TestCase):
         create_dirs(self.os_service, r'c:\src\subdir1')
         create_dirs(self.os_service, r'c:\src\subdir2')
         create_dirs(self.os_service, r'c:\dst\subdir2')
-        self.filesystem.CreateFile(r'c:\src\file1.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir1\file2.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir1\file3.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir2\file4.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir2\file5.txt')
-        self.filesystem.CreateFile(r'c:\dst\subdir2\file4.txt')
+        self.filesystem.create_file(r'c:\src\file1.txt')
+        self.filesystem.create_file(r'c:\src\subdir1\file2.txt')
+        self.filesystem.create_file(r'c:\src\subdir1\file3.txt')
+        self.filesystem.create_file(r'c:\src\subdir2\file4.txt')
+        self.filesystem.create_file(r'c:\src\subdir2\file5.txt')
+        self.filesystem.create_file(r'c:\dst\subdir2\file4.txt')
         copytree_preserve_existing(self.os_service, self.source, self.dest)
 
         self.assertTrue(self.os_service.exists(r'c:\dst\file1.txt'))
@@ -59,8 +59,8 @@ class TestCopyTree(unittest.TestCase):
         self.assertTrue(self.os_service.exists(r'c:\dst\subdir2\file5.txt'))
 
     def test__with_file_already_exists_in_destination__file_contents_preserved(self):
-        self.filesystem.CreateFile(r'c:\src\file1.txt', contents='new text')
-        self.filesystem.CreateFile(r'c:\dst\file1.txt', contents='original text')
+        self.filesystem.create_file(r'c:\src\file1.txt', contents='new text')
+        self.filesystem.create_file(r'c:\dst\file1.txt', contents='original text')
 
         copytree_preserve_existing(self.os_service, self.source, self.dest)
 
@@ -74,8 +74,8 @@ class TestCopyTree(unittest.TestCase):
         create_dirs(self.os_service, r'c:\src\subdir2')
         create_dirs(self.os_service, r'c:\src\subdir1\dir1')
         create_dirs(self.os_service, r'c:\src\subdir2\dir2')
-        self.filesystem.CreateFile(r'c:\src\subdir1\dir1\file1.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir2\dir2\file2.txt')
+        self.filesystem.create_file(r'c:\src\subdir1\dir1\file1.txt')
+        self.filesystem.create_file(r'c:\src\subdir2\dir2\file2.txt')
         source1 = r'c:\src\subdir1'
         source2 = r'c:\src\subdir2'
         copytree_preserve_existing(self.os_service, source1, self.dest)
@@ -86,7 +86,7 @@ class TestCopyTree(unittest.TestCase):
 
     def test__copy_delete_and_copy_with_depth_2_in_source__files_copied(self):
         create_dirs(self.os_service, r'c:\src\dir1\dir2')
-        self.filesystem.CreateFile(r'c:\src\dir1\dir2\file.txt')
+        self.filesystem.create_file(r'c:\src\dir1\dir2\file.txt')
         copytree_preserve_existing(self.os_service, self.source, self.dest)
 
         self.assertTrue(self.os_service.exists(r'c:\dst\dir1\dir2\file.txt'))
@@ -98,7 +98,7 @@ class TestCopyTree(unittest.TestCase):
         self.assertTrue(self.os_service.exists(r'c:\dst\dir1\dir2\file.txt'))
 
     def test__copy_to_non_existent_folder__files_copied(self):
-        self.filesystem.CreateFile(r'c:\src\file.txt')
+        self.filesystem.create_file(r'c:\src\file.txt')
         dest = r'c:\dst\dir1'
         copytree_preserve_existing(self.os_service, self.source, dest)
 
@@ -112,8 +112,8 @@ class TestDeleteDirectoryContents(unittest.TestCase):
         self.file1 = r'c:\path1\file1.txt'
         self.file2 = r'c:\path1\path2\file2.txt'
         self.another_folder = r'c:\anotherfolder'
-        self.filesystem.CreateFile(self.file1)
-        self.filesystem.CreateFile(self.file2)
+        self.filesystem.create_file(self.file1)
+        self.filesystem.create_file(self.file2)
         create_dirs(self.os_service, self.another_folder)
 
     def test_doing_nothing__file1_exists(self):
@@ -142,22 +142,22 @@ class TestCopytreeReplaceExisting(unittest.TestCase):
         create_dirs(self.os_service, self.dest)
 
     def test__with_one_file_in_source_dest_empty__file_copied(self):
-        self.filesystem.CreateFile(r'c:\src\file1.txt')
+        self.filesystem.create_file(r'c:\src\file1.txt')
         copytree_replace_existing(self.os_service, self.source, self.dest)
         self.assertTrue(self.os_service.exists(r'c:\dst\file1.txt'))
 
     def test__with_one_file_in_source_dest_have_same_file__file_replaced(self):
-        self.filesystem.CreateFile(r'c:\src\file1.txt', contents='source')
-        self.filesystem.CreateFile(r'c:\dst\file1.txt', contents='destination')
+        self.filesystem.create_file(r'c:\src\file1.txt', contents='source')
+        self.filesystem.create_file(r'c:\dst\file1.txt', contents='destination')
         copytree_replace_existing(self.os_service, self.source, self.dest)
         with self.os_service.open(r'c:\dst\file1.txt', 'r') as f:
             c = f.read()
         self.assertEqual('source', c)
 
     def test__with_one_file_in_source_dest_have_two_files__extra_file_in_dest_untoutched(self):
-        self.filesystem.CreateFile(r'c:\src\file1.txt')
-        self.filesystem.CreateFile(r'c:\dst\file1.txt')
-        self.filesystem.CreateFile(r'c:\dst\file2.txt', contents='destination')
+        self.filesystem.create_file(r'c:\src\file1.txt')
+        self.filesystem.create_file(r'c:\dst\file1.txt')
+        self.filesystem.create_file(r'c:\dst\file2.txt', contents='destination')
         copytree_replace_existing(self.os_service, self.source, self.dest)
         with self.os_service.open(r'c:\dst\file2.txt', 'r') as f:
             c = f.read()
@@ -168,13 +168,13 @@ class TestCopytreeReplaceExisting(unittest.TestCase):
         create_dirs(self.os_service, r'c:\src\subdir1')
         create_dirs(self.os_service, r'c:\src\subdir2')
         create_dirs(self.os_service, r'c:\dst\subdir2')
-        self.filesystem.CreateFile(r'c:\src\source_exclusive1.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir1\source_exclusive2.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir1\source_exclusive3.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir2\common.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir2\source_exclusive4.txt')
-        self.filesystem.CreateFile(r'c:\dst\subdir2\common.txt')
-        self.filesystem.CreateFile(r'c:\dst\subdir2\dst_exclusive', contents='destination')
+        self.filesystem.create_file(r'c:\src\source_exclusive1.txt')
+        self.filesystem.create_file(r'c:\src\subdir1\source_exclusive2.txt')
+        self.filesystem.create_file(r'c:\src\subdir1\source_exclusive3.txt')
+        self.filesystem.create_file(r'c:\src\subdir2\common.txt')
+        self.filesystem.create_file(r'c:\src\subdir2\source_exclusive4.txt')
+        self.filesystem.create_file(r'c:\dst\subdir2\common.txt')
+        self.filesystem.create_file(r'c:\dst\subdir2\dst_exclusive', contents='destination')
 
         # Act
         copytree_replace_existing(self.os_service, self.source, self.dest)
@@ -190,13 +190,13 @@ class TestCopytreeReplaceExisting(unittest.TestCase):
         create_dirs(self.os_service, r'c:\src\subdir1')
         create_dirs(self.os_service, r'c:\src\subdir2')
         create_dirs(self.os_service, r'c:\dst\subdir2')
-        self.filesystem.CreateFile(r'c:\src\source_exclusive1.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir1\source_exclusive2.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir1\source_exclusive3.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir2\common.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir2\source_exclusive4.txt')
-        self.filesystem.CreateFile(r'c:\dst\subdir2\common.txt')
-        self.filesystem.CreateFile(r'c:\dst\subdir2\dst_exclusive.txt', contents='destination')
+        self.filesystem.create_file(r'c:\src\source_exclusive1.txt')
+        self.filesystem.create_file(r'c:\src\subdir1\source_exclusive2.txt')
+        self.filesystem.create_file(r'c:\src\subdir1\source_exclusive3.txt')
+        self.filesystem.create_file(r'c:\src\subdir2\common.txt')
+        self.filesystem.create_file(r'c:\src\subdir2\source_exclusive4.txt')
+        self.filesystem.create_file(r'c:\dst\subdir2\common.txt')
+        self.filesystem.create_file(r'c:\dst\subdir2\dst_exclusive.txt', contents='destination')
 
         # Act
         copytree_replace_existing(self.os_service, self.source, self.dest)
@@ -211,13 +211,13 @@ class TestCopytreeReplaceExisting(unittest.TestCase):
         create_dirs(self.os_service, r'c:\src\subdir1')
         create_dirs(self.os_service, r'c:\src\subdir2')
         create_dirs(self.os_service, r'c:\dst\subdir2')
-        self.filesystem.CreateFile(r'c:\src\source_exclusive1.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir1\source_exclusive2.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir1\source_exclusive3.txt')
-        self.filesystem.CreateFile(r'c:\src\subdir2\common.txt', contents='source')
-        self.filesystem.CreateFile(r'c:\src\subdir2\source_exclusive4.txt')
-        self.filesystem.CreateFile(r'c:\dst\subdir2\common.txt', contents='destination')
-        self.filesystem.CreateFile(r'c:\dst\subdir2\dst_exclusive.txt', contents='destination')
+        self.filesystem.create_file(r'c:\src\source_exclusive1.txt')
+        self.filesystem.create_file(r'c:\src\subdir1\source_exclusive2.txt')
+        self.filesystem.create_file(r'c:\src\subdir1\source_exclusive3.txt')
+        self.filesystem.create_file(r'c:\src\subdir2\common.txt', contents='source')
+        self.filesystem.create_file(r'c:\src\subdir2\source_exclusive4.txt')
+        self.filesystem.create_file(r'c:\dst\subdir2\common.txt', contents='destination')
+        self.filesystem.create_file(r'c:\dst\subdir2\dst_exclusive.txt', contents='destination')
 
         # Act
         copytree_replace_existing(self.os_service, self.source, self.dest)
@@ -341,7 +341,7 @@ class TestIterators(unittest.TestCase):
 
     def test_file_iterator__with_one_single_file__returns_subpath(self):
         # Arrange
-        self.filesystem.CreateFile(r'c:\root\file1.txt')
+        self.filesystem.create_file(r'c:\root\file1.txt')
         file_it = FileIterator(self.os_service, self.root)
 
         # Act
@@ -352,7 +352,7 @@ class TestIterators(unittest.TestCase):
 
     def test_file_iterator__with_file_in_subdir__returns_subpath(self):
         # Arrange
-        self.filesystem.CreateFile(r'c:\root\subdir\file1.txt')
+        self.filesystem.create_file(r'c:\root\subdir\file1.txt')
         file_it = FileIterator(self.os_service, self.root)
 
         # Act
@@ -416,7 +416,7 @@ class TestStreamHandling(unittest.TestCase):
         self.assertEqual('j', c)
 
     def test_fake_os_service_open__with_fake_file_with_contents__contents_is_read(self):
-        self.filesystem.CreateFile(r'c:\src\file.txt', contents='contents')
+        self.filesystem.create_file(r'c:\src\file.txt', contents='contents')
         with self.os_service.open(r'c:\src\file.txt', 'r') as f:
             c = f.read()
         self.assertEqual('contents', c)

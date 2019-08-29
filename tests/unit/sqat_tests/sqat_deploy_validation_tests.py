@@ -11,7 +11,7 @@ class SqatDeployValidationTests(SqatBaseTests):
     def test_create_shortcut__with_target_exists_in_candidates__extract_shortcut_target_works(self):
         # Arrange
         fake_target_path = r'c:\xxx\sqat\candidates\release-1.0.0\validation\sqat.exe'
-        self.filesystem.CreateFile(fake_target_path)
+        self.filesystem.create_file(fake_target_path)
         dest_shortcut_path = r'c:\xxx\sqat\uservalidations\latest\sqat.lnk'
 
         # Act
@@ -26,7 +26,7 @@ class SqatDeployValidationTests(SqatBaseTests):
         # Arrange
         validation_file = \
             r'c:\xxx\sqat\uservalidations\allversions\_next_release\validationfiles\validation_file.txt'
-        self.filesystem.CreateFile(validation_file)
+        self.filesystem.create_file(validation_file)
         self.file_builder.add_shortcut()
 
         # Act
@@ -190,15 +190,15 @@ class FileSystemBuilder:
 
     def add_validation_file_in_latest(self, filename='validationfile.txt', contents=''):
         path = os.path.join(self.sqat.path_properties.latest_validation_files, filename)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_validation_file_in_next(self, filename='validationfile.txt', contents=''):
         path = os.path.join(self.sqat.path_properties.next_validation_files, filename)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_sql_script_in_next(self, filename='script1.sql', contents=''):
         path = os.path.join(self.sqat.path_properties.next_sql_updates, filename)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_validation_file_in_archive(self, filename='validationfile.txt', contents=''):
         """
@@ -207,7 +207,7 @@ class FileSystemBuilder:
         :return:
         """
         path = os.path.join(self.sqat.path_properties.archive_dir_validation_files, filename)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def get_contents(self, path):
         c = None

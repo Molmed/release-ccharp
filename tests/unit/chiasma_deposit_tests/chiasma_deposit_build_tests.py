@@ -12,7 +12,7 @@ class ChiasmaDepositBuildTests(ChiasmaDepositBaseTests):
     def setUp(self):
         self.setup_chiasma_deposit()
         validation_config_path = (r'c:\xxx\chiasmadeposit\candidates\validation\chiasmadeposit.exe.config')
-        self.filesystem.CreateFile(validation_config_path, contents=CHIASMA_DEPOSIT_CONFIG)
+        self.filesystem.create_file(validation_config_path, contents=CHIASMA_DEPOSIT_CONFIG)
         self.file_builder = FileBuilder(self.filesystem, self.os_service)
 
     def test__get_version(self):
@@ -107,7 +107,7 @@ class ChiasmaDepositBuildTests(ChiasmaDepositBaseTests):
         expected = str.join('\n', expected_list)
         file_path = (r'c:\xxx\chiasmadeposit\candidates\release-1.0.0\GitEdvard-chiasmadeposit-123\chiasmadeposit'
                      r'\properties\AssemblyInfo.cs')
-        self.filesystem.CreateFile(file_path, contents=original_contents)
+        self.filesystem.create_file(file_path, contents=original_contents)
         self.chiasma_deposit.chiasma_deposit_builder.update_binary_version()
         file_module = FakeFileOpen(self.filesystem)
         with file_module(file_path) as f:
@@ -118,7 +118,7 @@ class ChiasmaDepositBuildTests(ChiasmaDepositBaseTests):
         # Arrange
         solution_file_path = (r'c:\xxx\chiasmadeposit\candidates\release-1.0.0\gitedvard-chiasmadeposit-123'
                               r'\chiasmadeposit.sln')
-        self.filesystem.CreateFile(solution_file_path)
+        self.filesystem.create_file(solution_file_path)
 
         # Act
         self.chiasma_deposit.chiasma_deposit_builder.build_solution()
@@ -132,12 +132,12 @@ class FileBuilder:
 
     def create_production_config_file(self):
         release_config_path = (r'c:\xxx\chiasmadeposit\candidates\release-1.0.0\production\chiasmadeposit.exe.config')
-        self.filesystem.CreateFile(release_config_path, contents=CHIASMA_DEPOSIT_CONFIG)
+        self.filesystem.create_file(release_config_path, contents=CHIASMA_DEPOSIT_CONFIG)
 
     def add_file_to_release(self, filename='file.txt', contents=''):
         path = os.path.join(self.release_dir, filename)
         self._log(path)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def _log(self, file_path):
         print('add file into: {}'.format(file_path))

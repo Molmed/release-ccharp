@@ -84,7 +84,7 @@ class FPValidationDeployTests(FPBaseTests):
 
     def test_create_shortcut__with_shortcut_exists_in_target__copy_without_error(self):
         fake_destination_link = r'c:\xxx\fp\uservalidations\latest\fpdatabase.lnk'
-        self.filesystem.CreateFile(fake_destination_link)
+        self.filesystem.create_file(fake_destination_link)
 
         # Act
         self.fp.validation_deployer.path_actions.create_shortcut_to_exe()
@@ -95,7 +95,7 @@ class FPValidationDeployTests(FPBaseTests):
     def test_create_shortcut__with_target_exists_in_candidates__extract_shortcut_target_works(self):
         # Arrange
         fake_target_path = r'c:\xxx\fp\candidates\release-1.0.0\validation\fpdatabase.exe'
-        self.filesystem.CreateFile(fake_target_path)
+        self.filesystem.create_file(fake_target_path)
         dest_shortcut_path = r'c:\xxx\fp\uservalidations\latest\fpdatabase.lnk'
 
         # Act
@@ -125,11 +125,11 @@ class FileSystemBuilder:
         :return:
         """
         path = os.path.join(self.fp.path_properties.archive_dir_validation_files, filename)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_file_in_validation(self, filename='file.txt', contents=''):
         path = os.path.join(self.fp.app_paths.validation_dir, filename)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def get_contents(self, path):
         c = None

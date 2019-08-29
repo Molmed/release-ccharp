@@ -224,7 +224,7 @@ line 3"""
 
     def test_transform_config_vs_xml__with_validation_dir__xml_update_ok(self):
         sqat_config_path = (r'c:\xxx\sqat\candidates\release-1.0.0\validation\sqat.exe.config')
-        self.filesystem.CreateFile(sqat_config_path, contents=SQAT_EXE_CONFIG)
+        self.filesystem.create_file(sqat_config_path, contents=SQAT_EXE_CONFIG)
         validation_dir = r'c:\xxx\sqat\candidates\release-1.0.0\validation'
         self.sqat.builder._transform_config_vs_xml(validation_dir)
         config_file_path = r'c:\xxx\sqat\candidates\release-1.0.0\validation\sqat.exe.config'
@@ -236,7 +236,7 @@ line 3"""
 
     def test_transform_config_vs_xml__with_production_dir__xml_update_ok(self):
         sqat_config_path = (r'c:\xxx\sqat\candidates\release-1.0.0\production\sqat.exe.config')
-        self.filesystem.CreateFile(sqat_config_path, contents=SQAT_EXE_CONFIG)
+        self.filesystem.create_file(sqat_config_path, contents=SQAT_EXE_CONFIG)
         production_dir = r'c:\xxx\sqat\candidates\release-1.0.0\production'
         self.sqat.builder._transform_config_vs_xml(production_dir)
         config_file_path = r'c:\xxx\sqat\candidates\release-1.0.0\production\sqat.exe.config'
@@ -288,32 +288,32 @@ class FileBuilder:
     def add_file_to_validation(self, filename='file.txt', content=''):
         path = os.path.join(self.validation_path, filename)
         self._log(path)
-        self.filesystem.CreateFile(path, contents=content)
+        self.filesystem.create_file(path, contents=content)
 
     def add_file_to_production(self, filename='file.txt', content=''):
         path = os.path.join(self.production_path, filename)
         self._log(path)
-        self.filesystem.CreateFile(path, contents=content)
+        self.filesystem.create_file(path, contents=content)
 
     def add_file_to_release(self, filename='file.txt', contents=''):
         path = os.path.join(self.release_path, filename)
         self._log(path)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_file_to_application_path(self, filename='file.txt', contents=''):
         path = os.path.join(self.application_path, filename)
         self._log(path)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_file_to_project_root(self, filename='file.txt', contents=''):
         path = os.path.join(self.project_root_path, filename)
         self._log(path)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_file_in_previous_candidate(self, filename='file.txt', contents=''):
         path = os.path.join(r'c:\xxx\sqat\candidates\release-0.0.9', filename)
         self._log(path)
-        self.filesystem.CreateFile(path)
+        self.filesystem.create_file(path)
 
     def _log(self, text):
         print('add file into: {}'.format(text))

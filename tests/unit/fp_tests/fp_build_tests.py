@@ -15,7 +15,7 @@ class FPBuildTests(FPBaseTests):
     def setUp(self):
         self.setup_fp()
         fp_config_path = (r'c:\xxx\fp\candidates\validation\FPDatabase.exe.config')
-        self.filesystem.CreateFile(fp_config_path, contents=FP_CONFIG)
+        self.filesystem.create_file(fp_config_path, contents=FP_CONFIG)
         self.file_builder = FileBuilder(self.filesystem, self.os_service)
 
     def test_assembly_file_path(self):
@@ -139,7 +139,7 @@ ChiasmaConnectionString	data source=mm-wchs001;integrated security=SSPI;initial 
     def test_transform_txt_config__with_validation_directory__update_ok_for_validation(self):
         # Arrange
         fp_config_path = (r'c:\xxx\fp\candidates\validation\FPDatabaseConfig.txt')
-        self.filesystem.CreateFile(fp_config_path, contents=FP_CONNECT_CONFIG)
+        self.filesystem.create_file(fp_config_path, contents=FP_CONNECT_CONFIG)
         validation_dir = r'c:\xxx\fp\candidates\validation'
 
         # Act
@@ -159,7 +159,7 @@ ChiasmaConnectionString	data source=mm-wchs001;integrated security=SSPI;initial 
     def test_transform_txt_config__with_production_directory__update_ok_for_production(self):
             # Arrange
             fp_config_path = (r'c:\xxx\fp\candidates\release-1.0.0\production\FPDatabaseConfig.txt')
-            self.filesystem.CreateFile(fp_config_path, contents=FP_CONNECT_CONFIG)
+            self.filesystem.create_file(fp_config_path, contents=FP_CONNECT_CONFIG)
             production_dir = r'c:\xxx\fp\candidates\release-1.0.0\production'
 
             # Act
@@ -221,12 +221,12 @@ class FileBuilder:
     def add_file_to_bin(self, filename='file.txt', contents=''):
         path = os.path.join(self.bin_dir, filename)
         self._log(path)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_file_to_code_root(self, filename='file.txt', contents=''):
         path = os.path.join(self.code_root_dir, filename)
         self._log(path)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def _log(self, file_path):
         print('add file into: {}'.format(file_path))

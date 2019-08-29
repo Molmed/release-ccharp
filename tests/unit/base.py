@@ -32,7 +32,7 @@ class BaseTests(unittest.TestCase):
         latest_candidate = 'release-{}'.format(branch_provider.latest_version)
         latest_dir = os.path.join(path_properties.root_candidates, latest_candidate)
         create_dirs(os_service, latest_dir, False, False)
-        filesystem.CreateFile(path_properties.release_tools_config, contents='none')
+        filesystem.create_file(path_properties.release_tools_config, contents='none')
 
     def copy_to_clipboard(self, var):
         if isinstance(var, set):

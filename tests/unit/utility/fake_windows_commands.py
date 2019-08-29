@@ -12,7 +12,7 @@ class FakeWindowsCommands:
 
     def create_shortcut(self, save_path, target_path):
         if not self.os_module.path.exists(save_path):
-            self.filesystem.CreateFile(save_path, contents=target_path)
+            self.filesystem.create_file(save_path, contents=target_path)
 
     def extract_shortcut_target(self, shortcut_path):
         file_module = FakeFileOpen(self.filesystem)

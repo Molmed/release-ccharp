@@ -19,7 +19,7 @@ class AppPathTests(unittest.TestCase):
         filesystem = fake_filesystem.FakeFilesystem()
         chiasma_exe = (r'c:\xxx\chiasma\candidates\new-candidate\GitEdvard-chiasma-123\chiasma\bin'
                        r'\release\chiasma.exe')
-        filesystem.CreateFile(chiasma_exe)
+        filesystem.create_file(chiasma_exe)
         branch_provider = FakeBranchProvider()
         path_properties = SnpseqPathProperties(config, "chiasma", None)
         path_properties.branch_provider = branch_provider

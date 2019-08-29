@@ -14,7 +14,7 @@ class ChiasmaValidationDeployTests(ChiasmaBaseTests):
 
     def test_create_shortcut__with_shortcut_exists_in_target__copy_without_error(self):
         fake_destination_link = r'c:\xxx\chiasma\uservalidations\latest\chiasma.lnk'
-        self.filesystem.CreateFile(fake_destination_link)
+        self.filesystem.create_file(fake_destination_link)
 
         # Act
         self.chiasma.validation_deployer.path_actions.create_shortcut_to_exe()
@@ -25,7 +25,7 @@ class ChiasmaValidationDeployTests(ChiasmaBaseTests):
     def test_create_shortcut__with_target_exists_in_candidates__extract_shortcut_target_works(self):
         # Arrange
         fake_target_path = r'c:\xxx\chiasma\candidates\release-1.0.0\validation\chiasma.exe'
-        self.filesystem.CreateFile(fake_target_path)
+        self.filesystem.create_file(fake_target_path)
         dest_shortcut_path = r'c:\xxx\chiasma\uservalidations\latest\chiasma.lnk'
 
         # Act
@@ -40,7 +40,7 @@ class ChiasmaValidationDeployTests(ChiasmaBaseTests):
         # Arrange
         validation_file = \
             r'c:\xxx\chiasma\uservalidations\allversions\_next_release\validationfiles\validation_file.txt'
-        self.filesystem.CreateFile(validation_file)
+        self.filesystem.create_file(validation_file)
         self.file_builder.add_shortcut()
 
         # Act
@@ -54,7 +54,7 @@ class ChiasmaValidationDeployTests(ChiasmaBaseTests):
         # Arrange
         validation_file = \
             r'c:\xxx\chiasma\uservalidations\allversions\_next_hotfix\validationfiles\validation_file.txt'
-        self.filesystem.CreateFile(validation_file)
+        self.filesystem.create_file(validation_file)
         self.chiasma.branch_provider.candidate_branch = "hotfix-1.0.1"
         self.file_builder.add_shortcut()
 
@@ -219,15 +219,15 @@ class FileSystemBuilder:
 
     def add_validation_file_in_latest(self, filename='validationfile.txt', contents=''):
         path = os.path.join(self.chiasma.path_properties.latest_validation_files, filename)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_validation_file_in_next(self, filename='validationfile.txt', contents=''):
         path = os.path.join(self.chiasma.path_properties.next_validation_files, filename)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_sql_script_in_next(self, filename='script1.sql', contents=''):
         path = os.path.join(self.chiasma.path_properties.next_sql_updates, filename)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_validation_file_in_archive(self, filename='validationfile.txt', contents=''):
         """
@@ -236,7 +236,7 @@ class FileSystemBuilder:
         :return:
         """
         path = os.path.join(self.chiasma.path_properties.archive_dir_validation_files, filename)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def get_contents(self, path):
         c = None

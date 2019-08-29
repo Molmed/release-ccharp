@@ -92,8 +92,8 @@ class FileSystemBuilder:
 
     def add_file_in_production(self, filename='filename.txt'):
         path = os.path.join(self.fp.app_paths.production_dir, filename)
-        self.filesystem.CreateFile(path)
+        self.filesystem.create_file(path)
 
     def add_file_in_validation(self, filename='filename.txt'):
         path = os.path.join(self.fp.app_paths.validation_dir, filename)
-        self.filesystem.CreateFile(path)
+        self.filesystem.create_file(path)

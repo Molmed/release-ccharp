@@ -50,8 +50,8 @@ class FakeOsService:
     def et_write(self, tree, path):
         contents = ET.tostring(tree.getroot())
         if self.os_module.path.exists(path):
-            self.filesystem.RemoveObject(path)
-        self.filesystem.CreateFile(path, contents=contents)
+            self.filesystem.remove_object(path)
+        self.filesystem.create_file(path, contents=contents)
 
     @contextmanager
     def open(self, path, mode):
@@ -69,8 +69,8 @@ class FakeOsService:
 
         def write(text):
             if self.exists(path):
-                self.filesystem.RemoveObject(path)
-            self.filesystem.CreateFile(path, contents=text)
+                self.filesystem.remove_object(path)
+            self.filesystem.create_file(path, contents=text)
 
         file_module.read = read
         file_module.write = write
