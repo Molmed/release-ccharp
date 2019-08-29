@@ -31,7 +31,7 @@ class SnpseqWorkflow:
     def _open_github_provider_config(self, config_file):
         try:
             with self.os_service.open(config_file, 'r') as f:
-                contents = yaml.load(f)
+                contents = yaml.load(f, Loader=yaml.FullLoader)
         except IOError as e:
             msg = 'The config file could not be found. Probably, you can copy the config file from ' \
                   'another adjecent repo to the buildconfig folder. ' \
