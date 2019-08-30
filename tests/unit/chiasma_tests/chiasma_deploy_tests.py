@@ -22,7 +22,7 @@ class ChiasmaDeployTests(ChiasmaBaseTests):
         backup_dir = self.chiasma.deployer.path_properties.db_backup_server_dir
         create_dirs(self.os_service, backup_dir)
         backup_path = os.path.join(backup_dir, self.chiasma.deployer.path_properties.db_backup_filename)
-        self.filesystem.CreateFile(backup_path)
+        self.filesystem.create_file(backup_path)
 
         # Act
         self.chiasma.deployer.copy_backup()
@@ -256,34 +256,34 @@ class FileSystemBuilder:
 
     def add_file_in_production(self, filename='filename.txt'):
         path = os.path.join(self.chiasma.app_paths.production_dir, filename)
-        self.filesystem.CreateFile(path)
+        self.filesystem.create_file(path)
 
     def add_file_in_production_config_lab(self, filename='file.txt'):
         path = os.path.join(self.chiasma.app_paths.production_config_lab_dir, filename)
-        self.filesystem.CreateFile(path)
+        self.filesystem.create_file(path)
 
     def add_file_in_current_candidate_dir(self, filename='file.txt'):
         path = os.path.join(self.chiasma.path_properties.current_candidate_dir, filename)
-        self.filesystem.CreateFile(path)
+        self.filesystem.create_file(path)
 
     def add_file_in_latest_candidate_dir(self, filename='file.txt'):
         path = os.path.join(self.chiasma.path_properties.latest_accepted_candidate_dir, filename)
         print('add file into: {}'.format(path))
-        self.filesystem.CreateFile(path)
+        self.filesystem.create_file(path)
 
     def add_validation_file_in_latest(self, filename='validationfile.txt', contents=''):
         path = os.path.join(self.chiasma.path_properties.latest_validation_files, filename)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_validation_file_in_next(self, filename='validationfile.txt', contents=''):
         path = os.path.join(self.chiasma.path_properties.next_validation_files, filename)
         print('add file into: {}'.format(path))
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_sql_script_in_next(self, filename='script1.sql', contents=''):
         path = os.path.join(self.chiasma.path_properties.next_sql_updates, filename)
         print('add file into: {}'.format(path))
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_shortcut(self, candidate_dir='release-1.0.0'):
         cand_path = os.path.join(self.chiasma.path_properties.root_candidates, candidate_dir)

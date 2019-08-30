@@ -143,21 +143,21 @@ class FileSystemBuilder:
 
     def add_file_in_production(self, filename='filename.txt'):
         path = os.path.join(self.chiasma_deposit.app_paths.production_dir, filename)
-        self.filesystem.CreateFile(path)
+        self.filesystem.create_file(path)
 
     def add_file_in_latest_candidate_dir(self, filename='file.txt'):
         path = os.path.join(self.chiasma_deposit.path_properties.latest_accepted_candidate_dir, filename)
         print('add file into: {}'.format(path))
-        self.filesystem.CreateFile(path)
+        self.filesystem.create_file(path)
 
     def add_validation_file_in_latest(self, filename='validationfile.txt', contents=''):
         path = os.path.join(self.chiasma_deposit.path_properties.latest_validation_files, filename)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_validation_file_in_next(self, filename='validationfile.txt', contents=''):
         path = os.path.join(self.chiasma_deposit.path_properties.next_validation_files, filename)
         print('add file into: {}'.format(path))
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def add_shortcut(self, candidate_dir='release-1.0.0'):
         cand_path = os.path.join(self.chiasma_deposit.path_properties.root_candidates, candidate_dir)

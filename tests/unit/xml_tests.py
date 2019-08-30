@@ -19,7 +19,7 @@ class TestCopyTree(ChiasmaBaseTests):
     def setUp(self):
         self.setup_chiasma()
         chiasma_config_path = (r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config')
-        self.filesystem.CreateFile(chiasma_config_path, contents=CHIASMA_CONFIG)
+        self.filesystem.create_file(chiasma_config_path, contents=CHIASMA_CONFIG)
 
     def test_write_xml(self):
         myns = 'http://myns.com'
@@ -54,7 +54,7 @@ class TestCopyTree(ChiasmaBaseTests):
         os_service = FakeOsService(self.filesystem)
         path= r'c:\xxx\configfile'
         create_dirs(os_service, r'c:\xxx')
-        self.filesystem.CreateFile(path, contents=CHIASMA_CONFIG)
+        self.filesystem.create_file(path, contents=CHIASMA_CONFIG)
         vs_config_opener = VsConfigOpener(os_service, None, "Molmed.Chiasma.Properties")
         with vs_config_opener.open(path) as c:
             c.update("EnforceAppVersion", "True")

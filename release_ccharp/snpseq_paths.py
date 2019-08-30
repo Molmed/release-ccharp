@@ -34,7 +34,7 @@ class SnpseqPathProperties:
         here = os.path.dirname(__file__)
         path = os.path.join(here, 'paths.config.txt')
         with open(path, 'r') as f:
-            sub_paths = yaml.load(f)
+            sub_paths = yaml.load(f, Loader=yaml.FullLoader)
         return sub_paths
 
     @property

@@ -5,6 +5,7 @@ from pyfakefs.fake_filesystem import FakeFileOpen
 from xml.etree import ElementTree as ET
 from xml.etree.ElementTree import ElementTree
 from contextlib import contextmanager
+from release_ccharp.utils import copytree_replace_existing
 
 
 class FakeOsService:
@@ -23,10 +24,15 @@ class FakeOsService:
         return self.os_module.path.isfile(path)
 
     def copytree(self, src, dst):
-        self.shutil_module.copytree(src, dst)
+        copytree_replace_existing(self, src, dst)
 
     def copyfile(self, src, dst):
-        self.shutil_module.copyfile(src, dst)
+        if self.exists(dst):
+            self.remove_file(dst)
+        fake_open = FakeFileOpen(self.filesystem)
+        with fake_open(src) as f:
+            contents = ''.join([line for line in f])
+        self.filesystem.create_file(dst, contents=contents)
 
     def exists(self, path):
         return self.os_module.path.exists(path)
@@ -44,8 +50,8 @@ class FakeOsService:
     def et_write(self, tree, path):
         contents = ET.tostring(tree.getroot())
         if self.os_module.path.exists(path):
-            self.filesystem.RemoveObject(path)
-        self.filesystem.CreateFile(path, contents=contents)
+            self.filesystem.remove_object(path)
+        self.filesystem.create_file(path, contents=contents)
 
     @contextmanager
     def open(self, path, mode):
@@ -63,8 +69,8 @@ class FakeOsService:
 
         def write(text):
             if self.exists(path):
-                self.filesystem.RemoveObject(path)
-            self.filesystem.CreateFile(path, contents=text)
+                self.filesystem.remove_object(path)
+            self.filesystem.create_file(path, contents=text)
 
         file_module.read = read
         file_module.write = write
@@ -74,4 +80,4 @@ class FakeOsService:
         self.os_module.unlink(path)
 
     def rmtree(self, path):
-        self.shutil_module.rmtree(path)
+        self.filesystem.remove_object(path)

@@ -14,8 +14,8 @@ class ChiasmaBuildTests(ChiasmaBaseTests):
         self.setup_chiasma()
         chiasma_config_path = (r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config')
         shared_kernel_config_path = (r'c:\xxx\chiasma\candidates\validation\chiasma.sharedkernel.exe.config')
-        self.filesystem.CreateFile(chiasma_config_path, contents=CHIASMA_CONFIG)
-        self.filesystem.CreateFile(shared_kernel_config_path, contents=CHIASMA_SHAREDKERNEL_CONFIG)
+        self.filesystem.create_file(chiasma_config_path, contents=CHIASMA_CONFIG)
+        self.filesystem.create_file(shared_kernel_config_path, contents=CHIASMA_SHAREDKERNEL_CONFIG)
         self.file_builder = FileBuilder(self.filesystem, self.os_service)
 
     def test__get_version(self):
@@ -141,7 +141,7 @@ row3"""
 row3"""
         file_path = (r'c:\xxx\chiasma\candidates\release-1.0.0\GitEdvard-chiasma-123\chiasma'
                      r'\properties\AssemblyInfo.cs')
-        self.filesystem.CreateFile(file_path, contents=original_contents)
+        self.filesystem.create_file(file_path, contents=original_contents)
         self.chiasma.chiasma_builder.update_binary_version()
         file_module = FakeFileOpen(self.filesystem)
         with file_module(file_path) as f:
@@ -158,7 +158,7 @@ class FileBuilder:
     def add_file_to_release(self, filename='file.txt', contents=''):
         path = os.path.join(self.release_dir, filename)
         self._log(path)
-        self.filesystem.CreateFile(path, contents=contents)
+        self.filesystem.create_file(path, contents=contents)
 
     def _log(self, file_path):
         print('add file into: {}'.format(file_path))

@@ -10,7 +10,7 @@ class SqatConfigXmlTests(SqatBaseTests):
     def setUp(self):
         self.setup_sqat()
         self.connect_file_path = r'c:\xxx\connect.xml'
-        self.filesystem.CreateFile(self.connect_file_path, contents=SQAT_CONNECT)
+        self.filesystem.create_file(self.connect_file_path, contents=SQAT_CONNECT)
 
     def test_get_production_connection__with_original_connect_file__connection_string_achieved(self):
         # Arrange

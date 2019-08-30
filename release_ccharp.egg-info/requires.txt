@@ -1,7 +1,0 @@
-click
-PyPDF2
-reportlab
-
-[dev]
-
-[test]
