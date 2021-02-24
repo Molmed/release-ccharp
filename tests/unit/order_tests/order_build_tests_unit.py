@@ -89,6 +89,7 @@ line 3"""
         with self.order.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "PlattformOrdMan.Properties")
             self.assertEqual("OFFICE", config.get('ApplicationMode'))
+            self.assertEqual("True", config.get('EnforceAppVersion'))
 
     def test_transform_config__with_validation_directory__lab_config_update_ok(self):
         validation_dir = r'c:\xxx\order\candidates\validation'

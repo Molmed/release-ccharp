@@ -51,6 +51,7 @@ class OrderBuilder:
                                    "PlattformOrdMan.Properties")
         with vs_config.open(config_file_path) as config:
             config.update("DatabaseName", db_name)
+            config.update("EnforceAppVersion", "True")
         lab_config_dir = os.path.join(directory, self.order.path_properties.config_lab_subpath)
         create_dirs(self.order.os_service, lab_config_dir, self.order.whatif,
                     self.order.whatif)
