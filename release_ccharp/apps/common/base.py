@@ -57,10 +57,8 @@ class ApplicationBase(object):
 
 class WindowsCommands:
     def build_solution(self, solution_file_path):
-        #build_path = r'C:\Program Files (x86)\MSBuild\14.0\Bin\MSBuild.exe'
         print('Restore nuget packages...')
-        # restore_nuget_cmd = ['nuget', r'restore', solution_file_path, r'-Verbosity', r'quiet']
-        restore_nuget_cmd = ['nuget', r'restore', solution_file_path]
+        restore_nuget_cmd = ['nuget', r'restore', solution_file_path, r'-Verbosity', r'quiet']
         call(restore_nuget_cmd)
         print('Done.')
         msbuild_path = r'C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin\MSBuild.exe'

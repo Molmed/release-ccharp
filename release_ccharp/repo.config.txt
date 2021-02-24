@@ -16,7 +16,7 @@ testing-repo :
     owner : GitEdvard
     deploy_root_path : C:\Tmp\testing-repo-deploy
 order :
-    root_path : P:\lims
+    root_path : c:\tmp
     git_repo_name : PlattformOrdMan
     exe_file_name_base : Order
     project_root_dir : PlattformOrdMan
