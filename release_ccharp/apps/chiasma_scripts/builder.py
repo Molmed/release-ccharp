@@ -66,7 +66,7 @@ class ChiasmaBuilder:
         with vs_config.open(lab_config_file_path) as config:
             config.update("ApplicationMode", "LAB")
 
-    def _transform_shared_kernel_config(self, directory, db_name):
+    def _transform_shared_kernel_config(self, directory, db_name, projman_db_name):
         config_file_path = os.path.join(directory, 'chiasma.sharedkernel.exe.config')
 
         self.chiasma.save_backup_file(config_file_path)
@@ -74,12 +74,14 @@ class ChiasmaBuilder:
                                    "Chiasma.SharedKernel.Properties")
         with vs_config.open(config_file_path) as config:
             config.update("DatabaseName", db_name)
+            config.update("ProjmanDatabaseName", projman_db_name)
 
     def _transform_configs(self, directory):
         provider = TransformSettingsProvider(self.chiasma)
-        db_name, result_web_service = provider.fetch_env_dependent_variables(directory)
+        db_name, result_web_service, projman_db_name = \
+            provider.fetch_env_dependent_variables(directory)
         self._transform_config(directory, result_web_service)
-        self._transform_shared_kernel_config(directory, db_name)
+        self._transform_shared_kernel_config(directory, db_name, projman_db_name)
 
     def transform_config(self):
         self._transform_configs(self.chiasma.app_paths.production_dir)
@@ -94,10 +96,12 @@ class TransformSettingsProvider:
         if directory == self.chiasma.app_paths.production_dir:
             db_name = "GTDB2"
             result_web_service = self._web_result_service_production
+            projman_db_name = "ProjectMan"
         else:
             db_name = "GTDB2_practice"
             result_web_service = self._web_result_service_validation
-        return db_name, result_web_service
+            projman_db_name = "ProjectMan_devel"
+        return db_name, result_web_service, projman_db_name
 
     @property
     def _web_result_service_validation(self):

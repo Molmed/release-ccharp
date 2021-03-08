@@ -1,6 +1,7 @@
 from __future__ import print_function
 import os
 from unittest import skip
+import pytest
 from pyfakefs.fake_filesystem import FakeFileOpen
 from release_ccharp.apps.common.single_file_read_write import StandardVSConfigXML
 from release_ccharp.utils import create_dirs
@@ -100,6 +101,7 @@ line 3"""
             self.assertEqual("False", config.get("DebugMode"))
             self.assertEqual("Ef", config.get("RepositoryImplementation"))
 
+    @pytest.mark.now
     def test_transform_config_for_shared_kernel__with_validation_dir__xml_update_ok(self):
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_configs(validation_dir)
@@ -107,6 +109,7 @@ line 3"""
         with self.chiasma.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Chiasma.SharedKernel.Properties")
             self.assertEqual("GTDB2_practice", config.get("DatabaseName"))
+            self.assertEqual("ProjectMan_devel", config.get("ProjmanDatabaseName"))
 
     def test_transform_config__with_validation_directory__lab_config_update_ok(self):
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
@@ -123,6 +126,7 @@ line 3"""
             self.assertEqual("False", config.get("DebugMode"))
             self.assertEqual("Ef", config.get("RepositoryImplementation"))
 
+    @pytest.mark.now
     def test_transform_shared_kernel_config__with_validation_directory__lab_config_update_ok(self):
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_configs(validation_dir)
@@ -131,6 +135,7 @@ line 3"""
         with self.chiasma.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Chiasma.SharedKernel.Properties")
             self.assertEqual("GTDB2_practice", config.get("DatabaseName"))
+            self.assertEqual("ProjectMan_devel", config.get("ProjmanDatabaseName"))
 
     def test_update_binary_version__with_excerp_from_real_file__update_ok(self):
         original_contents = """row 1
