@@ -62,7 +62,7 @@ class WindowsCommands:
         restore_nuget_cmd = ['nuget', r'restore', solution_file_path, r'-Verbosity', r'quiet']
         call(restore_nuget_cmd)
         print('Done.')
-        msbuild_path = r'C:\Program Files (x86)\Microsoft Visual Studio\2017\Professional\MSBuild\15.0\Bin\MSBuild.exe'
+        msbuild_path = r'C:\Program Files (x86)\Microsoft Visual Studio\2019\BuildTools\MSBuild\Current\Bin\MSBuild.exe'
         print("Calling msbuild on solution file: {}".format(solution_file_path))
         msbuild_cmd = [msbuild_path, solution_file_path,
                r'/p:WarningLevel=0',
