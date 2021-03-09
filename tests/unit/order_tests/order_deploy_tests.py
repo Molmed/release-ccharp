@@ -29,7 +29,7 @@ class OrderDeployTests(OrderBaseTests):
         self.order.deployer.copy_backup()
 
         # Assert
-        path = r'c:\xxx\order\candidates\release-1.0.0\bookkeeping_devel_backup.bak'
+        path = r'c:\xxx\order\candidates\release-1.0.0\order_devel_backup.bak'
         self.assertTrue(self.os_service.exists(path))
 
     def test_copy_backup__with_path_does_not_exists__exception(self):

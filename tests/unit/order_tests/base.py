@@ -11,7 +11,7 @@ class OrderBaseTests(BaseTests):
             "exe_file_name_base": "Order",
             "project_root_dir" : "PlattformOrdMan",
             'db_backup_server_dir' : r'server_dir',
-            'db_backup_filename' : 'bookkeeping_devel_backup.bak',
+            'db_backup_filename' : 'order_devel_backup.bak',
             "owner": "GitEdvard",
             "deploy_root_path": r'c:\xxx\deploy'
         }

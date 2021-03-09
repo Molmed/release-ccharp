@@ -20,6 +20,8 @@ order :
     git_repo_name : PlattformOrdMan
     exe_file_name_base : Order
     project_root_dir : PlattformOrdMan
+    db_backup_server_dir : \\130.238.178.226\Latest release
+    db_backup_filename : order_devel_backup.bak
     owner : Molmed
     deploy_root_path : L:\Labsystem\Chiasma\Installation\Klient\Order\Filer
 sqat:
