@@ -10,7 +10,7 @@ class OsService():
     Encapsulates os calls in order to make possible to mock them in tests
     """
     def listdir(self, path):
-        return  os.listdir(path)
+        return os.listdir(path)
 
     def isdir(self, path):
         return os.path.isdir(path)
