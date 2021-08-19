@@ -1,5 +1,6 @@
 import unittest
 import re
+import pytest
 from pyfakefs import fake_filesystem
 from release_ccharp.snpseq_paths import SnpseqPathProperties
 from release_ccharp.snpseq_paths import SnpseqPathActions

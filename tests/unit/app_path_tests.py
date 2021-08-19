@@ -1,5 +1,6 @@
 from __future__ import print_function
 import unittest
+import pytest
 from pyfakefs import fake_filesystem
 from release_ccharp.apps.common.directory_handling import AppPaths
 from release_ccharp.snpseq_paths import SnpseqPathProperties
@@ -30,6 +31,13 @@ class AppPathTests(unittest.TestCase):
     def test_find_download_directory__with_one_matching_dir_in_candidate__return_matching_dir(self):
         dirname = self.app_paths.find_download_directory_name()
         self.assertEqual("GitEdvard-chiasma-123", dirname)
+
+    @pytest.mark.now
+    def test_get_path_to_database_delivery(self):
+        database_delivery_exe = self.app_paths.database_delivery_exe
+        expected = (r'c:\xxx\chiasma\candidates\new-candidate\GitEdvard-chiasma-123'
+                     r'\DatabaseDelivery\bin\Release\DatabaseDelivery.exe')
+        self.assertEqual(expected, database_delivery_exe)
 
     def test_download_dir__with_added_download_dir_according_to_setup__returns_correctly(self):
         dirname = self.app_paths.download_dir

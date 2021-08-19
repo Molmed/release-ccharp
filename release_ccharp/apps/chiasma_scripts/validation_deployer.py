@@ -1,7 +1,7 @@
 from __future__ import print_function
-import os
-from release_ccharp.utils import lazyprop
 from release_ccharp.apps.common.single_file_read_write import ShortcutExaminer
+from subprocess import call
+import os
 
 
 class ChiasmaValidationDeployer:
@@ -17,6 +17,7 @@ class ChiasmaValidationDeployer:
     def run(self):
         self.copy_validation_files()
         self.path_actions.create_shortcut_to_exe()
+        self.update_database()
 
     def copy_validation_files(self):
         if not self.shortcut_examiner.is_candidate_in_latest:
@@ -24,3 +25,18 @@ class ChiasmaValidationDeployer:
         if self.os_service.exists(self.chiasma.path_properties.archive_dir_validation_files):
             self.file_deployer.back_move_from_archive()
         self.file_deployer.copy_to_latest()
+
+    def update_database(self):
+        self._update_database("devel")
+        self._update_database("practice")
+
+    def _update_database(self, destination):
+        # destination: <devel|practice>
+        database_delivery_path = self.chiasma.app_paths.database_delivery_exe
+        print("Calling DatabaseDelivery.exe to migrate {} db: \n{}"
+              .format(destination, database_delivery_path))
+        cmd = [database_delivery_path,
+               destination]
+        call(cmd)
+        print('Done.')
+

@@ -101,7 +101,6 @@ line 3"""
             self.assertEqual("False", config.get("DebugMode"))
             self.assertEqual("Ef", config.get("RepositoryImplementation"))
 
-    @pytest.mark.now
     def test_transform_config_for_shared_kernel__with_validation_dir__xml_update_ok(self):
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_configs(validation_dir)
@@ -126,7 +125,6 @@ line 3"""
             self.assertEqual("False", config.get("DebugMode"))
             self.assertEqual("Ef", config.get("RepositoryImplementation"))
 
-    @pytest.mark.now
     def test_transform_shared_kernel_config__with_validation_directory__lab_config_update_ok(self):
         validation_dir = r'c:\xxx\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_configs(validation_dir)
