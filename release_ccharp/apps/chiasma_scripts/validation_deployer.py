@@ -1,14 +1,14 @@
 from __future__ import print_function
 from release_ccharp.apps.common.single_file_read_write import ShortcutExaminer
 from subprocess import call
-import os
 
 
 class ChiasmaValidationDeployer:
-    def __init__(self, chiasma, file_deployer, path_actions):
+    def __init__(self, chiasma, file_deployer, path_actions, local_app_paths):
         self.chiasma = chiasma
         self.file_deployer = file_deployer
         self.os_service = file_deployer.os_service
+        self.local_app_paths = local_app_paths
         self.shortcut_examiner = ShortcutExaminer(
             self.chiasma.branch_provider, self.os_service, self.chiasma.windows_commands,
             file_deployer, self.chiasma.path_properties.shortcut_path)
@@ -32,11 +32,11 @@ class ChiasmaValidationDeployer:
 
     def _update_database(self, destination):
         # destination: <devel|practice>
-        database_delivery_path = self.chiasma.app_paths.database_delivery_exe
+        database_delivery_path = self.local_app_paths.database_delivery_exe
         print("Calling DatabaseDelivery.exe to migrate {} db: \n{}"
               .format(destination, database_delivery_path))
         cmd = [database_delivery_path,
                destination]
-        call(cmd)
+        self.chiasma.windows_commands.call_subprocess(cmd)
         print('Done.')
 

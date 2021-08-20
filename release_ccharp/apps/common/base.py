@@ -15,10 +15,12 @@ class ApplicationBase(object):
         self.snpseq_workflow = snpseq_workflow
         self.config = snpseq_workflow.config
         self.path_properties = snpseq_workflow.paths
+        self.local_path_properties = snpseq_workflow.local_paths
         self.branch_provider = branch_provider
         self.whatif = whatif
         self.os_service = os_service
         self.app_paths = AppPaths(self.config, self.path_properties, os_service)
+        self.local_app_paths = AppPaths(self.config, self.local_path_properties, os_service)
         self.windows_commands = windows_commands
 
     def save_backup_file(self, path):
@@ -69,6 +71,9 @@ class WindowsCommands:
                r'/p:Configuration=Release']
         call(msbuild_cmd)
         print('Done.')
+
+    def call_subprocess(self, cmd):
+        call(cmd)
 
     def create_shortcut(self, save_path, target_path):
         shell = Dispatch('WScript.Shell')

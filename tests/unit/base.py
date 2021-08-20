@@ -18,7 +18,10 @@ class BaseTests(unittest.TestCase):
         path_properties = SnpseqPathProperties(config, repo, os_service, "file_area")
         path_properties.branch_provider = branch_provider
         self.prepare_folder_tree(os_service, branch_provider, path_properties, self.filesystem)
-        wf = SnpseqWorkflow(whatif=False, repo=repo, os_service=os_service, config=config)
+        wf = SnpseqWorkflow(
+            whatif=False, repo=repo, os_service=os_service,
+            config=config, branch_provider=branch_provider
+        )
         wf.paths.branch_provider = branch_provider
         return wf, branch_provider, os_service
 

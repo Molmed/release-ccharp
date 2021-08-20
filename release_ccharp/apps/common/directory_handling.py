@@ -43,7 +43,6 @@ class AppPaths:
             r'DatabaseDelivery\bin\Release\DatabaseDelivery.exe'
         )
 
-
     @lazyprop
     def validation_dir(self):
         cand_dir = self.path_properties.current_candidate_dir
