@@ -28,7 +28,7 @@ class Application(ApplicationBase):
         self.validation_deployer = ChiasmaValidationDeployer(
             self, file_deployer, path_actions, self.local_app_paths)
         self.deployer = ChiasmaDeployer(
-            self.path_properties, file_deployer, path_actions, branch_provider)
+            self, self.path_properties, file_deployer, path_actions, branch_provider)
 
     def build(self):
         super(Application, self).build()

@@ -20,3 +20,6 @@ class FakeWindowsCommands:
             contents = "".join([line for line in f])
         return contents
 
+    def call_subprocess(self, cmd):
+        pass
+

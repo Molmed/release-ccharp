@@ -28,11 +28,11 @@ class ChiasmaBuilder:
 
     def build_solution(self):
         solution_file = self._find_solution_file()
-        solution_file_path = os.path.join(self.chiasma.app_paths.download_dir, solution_file)
+        solution_file_path = os.path.join(self.chiasma.local_app_paths.download_dir, solution_file)
         self.chiasma.windows_commands.build_solution(solution_file_path)
 
     def _find_solution_file(self):
-        download_dir = self.chiasma.app_paths.download_dir
+        download_dir = self.chiasma.local_app_paths.download_dir
         lst = [o for o in os.listdir(download_dir) if os.path.isfile(os.path.join(download_dir, o))]
         for file in lst:
             if file.endswith(".sln"):
@@ -40,12 +40,12 @@ class ChiasmaBuilder:
         raise SnpseqReleaseException("The solution file could not be found, directory {}".format(download_dir))
 
     def move_candidates(self):
-        project_root_path = os.path.join(self.app_paths.download_dir,
+        project_root_path = os.path.join(self.chiasma.local_app_paths.download_dir,
                                          self.config['project_root_dir'])
-        self.chiasma.app_paths.common_move_candidates(project_root_path)
+        self.chiasma.local_app_paths.common_move_candidates(project_root_path)
 
     def _transform_config(self, directory, result_web_service):
-        config_file_path = os.path.join(directory, self.chiasma.app_paths.config_file_name)
+        config_file_path = os.path.join(directory, self.chiasma.local_app_paths.config_file_name)
         self.chiasma.save_backup_file(config_file_path)
         vs_config = VsConfigOpener(self.chiasma.os_service, self.chiasma.log,
                                    "Molmed.Chiasma.Properties")
@@ -56,10 +56,10 @@ class ChiasmaBuilder:
             config.update("DebugMode", "False")
             config.update("RepositoryImplementation", "Ef")
             config.update("Chiasma_ResultWebServiceDevelopment_ResultWebService", result_web_service)
-        lab_config_dir = os.path.join(directory, self.chiasma.path_properties.config_lab_subpath)
+        lab_config_dir = os.path.join(directory, self.chiasma.local_path_properties.config_lab_subpath)
         create_dirs(self.chiasma.os_service, lab_config_dir, self.chiasma.whatif,
                     self.chiasma.whatif)
-        lab_config_file_path = os.path.join(lab_config_dir, self.chiasma.app_paths.config_file_name)
+        lab_config_file_path = os.path.join(lab_config_dir, self.chiasma.local_app_paths.config_file_name)
         self.chiasma.os_service.copyfile(config_file_path, lab_config_file_path)
         vs_config = VsConfigOpener(self.chiasma.os_service, self.chiasma.log,
                                    "Molmed.Chiasma.Properties")
@@ -84,8 +84,8 @@ class ChiasmaBuilder:
         self._transform_shared_kernel_config(directory, db_name, projman_db_name)
 
     def transform_config(self):
-        self._transform_configs(self.chiasma.app_paths.production_dir)
-        self._transform_configs(self.chiasma.app_paths.validation_dir)
+        self._transform_configs(self.chiasma.local_app_paths.production_dir)
+        self._transform_configs(self.chiasma.local_app_paths.validation_dir)
 
 
 class TransformSettingsProvider:

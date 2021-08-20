@@ -1,10 +1,10 @@
 from __future__ import print_function
-from release_ccharp.utils import delete_directory_contents
 from release_ccharp.apps.common.base import LogMixin
 
 
 class ChiasmaDeployer(LogMixin):
-    def __init__(self, path_properties, file_deployer, path_actions, branch_provider):
+    def __init__(self, chiasma, path_properties, file_deployer, path_actions, branch_provider):
+        self.chiasma = chiasma
         self.path_properties = path_properties
         self.file_deployer = file_deployer
         self.branch_provider = branch_provider
@@ -17,6 +17,7 @@ class ChiasmaDeployer(LogMixin):
         self.execute_and_log(self.move_to_archive, 'Move validation files and sql script to archive...')
         if not skip_copy_backup:
             self.execute_and_log(self.copy_backup, 'Copy backup of devel db to current candidate...')
+        self._update_database("operational")
 
     def check_source_files_exists(self):
         self.file_deployer.check_exe_file_exists()
@@ -50,3 +51,12 @@ class ChiasmaDeployer(LogMixin):
                   'the config file referes to a non existent path. Use option --skip_copy_backup if needed. Original ' \
                   'error message: {}'.format(str(e))
             raise IOError(msg)
+
+    def _update_database(self, destination):
+        database_delivery_path = self.chiasma.local_app_paths.database_delivery_exe
+        print("Calling DatabaseDelivery.exe to migrate {} db: \n{}"
+              .format(destination, database_delivery_path))
+        cmd = [database_delivery_path,
+               destination]
+        self.chiasma.windows_commands.call_subprocess(cmd)
+        print('Done.')
