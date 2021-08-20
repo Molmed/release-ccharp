@@ -15,7 +15,7 @@ class BaseTests(unittest.TestCase):
         self.filesystem = fake_filesystem.FakeFilesystem()
         os_service = FakeOsService(self.filesystem)
         self.os_module = os_service.os_module
-        path_properties = SnpseqPathProperties(config, repo, os_service)
+        path_properties = SnpseqPathProperties(config, repo, os_service, "file_area")
         path_properties.branch_provider = branch_provider
         self.prepare_folder_tree(os_service, branch_provider, path_properties, self.filesystem)
         wf = SnpseqWorkflow(whatif=False, repo=repo, os_service=os_service, config=config)

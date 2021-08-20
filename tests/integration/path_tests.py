@@ -11,7 +11,9 @@ class PathTests(unittest.TestCase):
     def setUp(self):
         conf = Config()
         self.path_properties = SnpseqPathProperties(
-            conf.open_config(repo='testing-repo'), repo='testing-repo', os_service=None)
+            conf.open_config(
+                repo='testing-repo'), repo='testing-repo', os_service=None, environment="file_area"
+        )
 
     @unittest.skip("")
     def test_find_current_candidate_dir(self):
