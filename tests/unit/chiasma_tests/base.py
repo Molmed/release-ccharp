@@ -9,7 +9,7 @@ class ChiasmaBaseTests(BaseTests):
     def setup_chiasma(self):
         config = {
             "root_path": r'c:\xxx',
-            "local_root_path": r'c:\xxx',
+            "local_root_path": r'c:\local',
             "git_repo_name": "chiasma",
             "exe_file_name_base": "Chiasma",
             "project_root_dir" : "Chiasma",
@@ -22,7 +22,7 @@ class ChiasmaBaseTests(BaseTests):
         self.os_service = os_service
         self.chiasma = Application(wf, branch_provider, os_service,
                                    FakeWindowsCommands(self.filesystem), whatif=False)
-        path = r'c:\xxx\chiasma\candidates\release-1.0.0\GitEdvard-chiasma-123\DatabaseDelivery\bin\release'
+        path = r'c:\local\chiasma\candidates\release-1.0.0\GitEdvard-chiasma-123\DatabaseDelivery\bin\release'
         database_delivery_path = os.path.join(
             path, r'DatabaseDelivery.exe'
         )

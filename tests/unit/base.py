@@ -15,9 +15,9 @@ class BaseTests(unittest.TestCase):
         self.filesystem = fake_filesystem.FakeFilesystem()
         os_service = FakeOsService(self.filesystem)
         self.os_module = os_service.os_module
-        path_properties = SnpseqPathProperties(config, repo, os_service, "file_area")
-        path_properties.branch_provider = branch_provider
-        self.prepare_folder_tree(os_service, branch_provider, path_properties, self.filesystem)
+        self.prepare_folder_tree(config, repo, os_service, branch_provider, "file_area")
+        if "local_root_path" in config:
+            self.prepare_folder_tree(config, repo, os_service, branch_provider, "local")
         wf = SnpseqWorkflow(
             whatif=False, repo=repo, os_service=os_service,
             config=config, branch_provider=branch_provider
@@ -25,7 +25,9 @@ class BaseTests(unittest.TestCase):
         wf.paths.branch_provider = branch_provider
         return wf, branch_provider, os_service
 
-    def prepare_folder_tree(self, os_service, branch_provider, path_properties, filesystem):
+    def prepare_folder_tree(self, config, repo, os_service, branch_provider, location):
+        path_properties = SnpseqPathProperties(config, repo, os_service, location)
+        path_properties.branch_provider = branch_provider
         path_actions = SnpseqPathActions(
             whatif=False, path_properties=path_properties,
             os_service=os_service
@@ -35,7 +37,7 @@ class BaseTests(unittest.TestCase):
         latest_candidate = 'release-{}'.format(branch_provider.latest_version)
         latest_dir = os.path.join(path_properties.root_candidates, latest_candidate)
         create_dirs(os_service, latest_dir, False, False)
-        filesystem.create_file(path_properties.release_tools_config, contents='none')
+        self.filesystem.create_file(path_properties.release_tools_config, contents='none')
 
     def copy_to_clipboard(self, var):
         if isinstance(var, set):

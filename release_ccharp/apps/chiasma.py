@@ -26,7 +26,7 @@ class Application(ApplicationBase):
         path_actions = SnpseqPathActions(
             whatif, self.path_properties, os_service, self.app_paths, self.windows_commands)
         self.validation_deployer = ChiasmaValidationDeployer(
-            self, file_deployer, path_actions, self.local_app_paths)
+            self, file_deployer, path_actions, self.path_properties, self.local_app_paths)
         self.deployer = ChiasmaDeployer(
             self, self.path_properties, file_deployer, path_actions, branch_provider)
 
