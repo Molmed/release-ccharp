@@ -13,8 +13,8 @@ from tests.unit.chiasma_tests.base import ChiasmaBaseTests
 class ChiasmaBuildTests(ChiasmaBaseTests):
     def setUp(self):
         self.setup_chiasma()
-        chiasma_config_path = (r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config')
-        shared_kernel_config_path = (r'c:\xxx\chiasma\candidates\validation\chiasma.sharedkernel.exe.config')
+        chiasma_config_path = (r'c:\local\chiasma\candidates\validation\chiasma.exe.config')
+        shared_kernel_config_path = (r'c:\local\chiasma\candidates\validation\chiasma.sharedkernel.exe.config')
         self.filesystem.create_file(chiasma_config_path, contents=CHIASMA_CONFIG)
         self.filesystem.create_file(shared_kernel_config_path, contents=CHIASMA_SHAREDKERNEL_CONFIG)
         self.file_builder = FileBuilder(self.filesystem, self.os_service)
@@ -24,8 +24,8 @@ class ChiasmaBuildTests(ChiasmaBaseTests):
         self.assertEqual("1.0.0", version)
 
     def test__repo_root(self):
-        root_path = self.chiasma.path_properties._repo_root
-        self.assertEqual(r'c:\xxx\chiasma', root_path)
+        root_path = self.chiasma.local_path_properties._repo_root
+        self.assertEqual(r'c:\local\chiasma', root_path)
 
     def test_replace_assebly_version(self):
         s = """line1
@@ -39,7 +39,7 @@ line 3"""
         print(CHIASMA_CONFIG)
         filesystem =  self.chiasma.os_service.filesystem
         file_module = FakeFileOpen(filesystem)
-        path = r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config'
+        path = r'c:\local\chiasma\candidates\validation\chiasma.exe.config'
         contents = file_module(path)
         print(contents)
         self.assertEqual(1, 1)
@@ -52,7 +52,7 @@ line 3"""
         self.chiasma.chiasma_builder.move_candidates()
 
         # Assert
-        production_exe_path = r'c:\xxx\chiasma\candidates\release-1.0.0\production\chiasma.exe'
+        production_exe_path = r'c:\local\chiasma\candidates\release-1.0.0\production\chiasma.exe'
         self.assertTrue(self.os_service.exists(production_exe_path))
 
     def test_move_candidates__with_exe_added_to_release__file_copied_to_validation(self):
@@ -63,33 +63,33 @@ line 3"""
         self.chiasma.chiasma_builder.move_candidates()
 
         # Assert
-        production_exe_path = r'c:\xxx\chiasma\candidates\release-1.0.0\validation\chiasma.exe'
-        self.assertTrue(self.os_service.exists(production_exe_path))
+        validation_exe_path = r'c:\local\chiasma\candidates\release-1.0.0\validation\chiasma.exe'
+        self.assertTrue(self.os_service.exists(validation_exe_path))
 
     def test_transform_config__with_validation_directory__orig_file_backed_up(self):
-        validation_dir = r'c:\xxx\chiasma\candidates\validation'
+        validation_dir = r'c:\local\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_configs(validation_dir)
-        backuped_file = r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config.orig'
+        backuped_file = r'c:\local\chiasma\candidates\validation\chiasma.exe.config.orig'
         self.assertTrue(self.os_module.path.exists(backuped_file))
 
     def test_transform_config__with_validation_directory__backed_up_config_one_changed_entry_ok(self):
-        validation_dir = r'c:\xxx\chiasma\candidates\validation'
+        validation_dir = r'c:\local\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_configs(validation_dir)
-        config_file_path = r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config.orig'
+        config_file_path = r'c:\local\chiasma\candidates\validation\chiasma.exe.config.orig'
         with self.chiasma.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Molmed.Chiasma.Properties")
             self.assertEqual("False", config.get('DilutePlateAutomaticLabelPrint'))
 
     def test_transform_config__with_validation_directory__lab_config_exists(self):
-        validation_dir = r'c:\xxx\chiasma\candidates\validation'
+        validation_dir = r'c:\local\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_configs(validation_dir)
-        lab_config_file_path = r'c:\xxx\chiasma\candidates\validation\config_lab\chiasma.exe.config'
+        lab_config_file_path = r'c:\local\chiasma\candidates\validation\config_lab\chiasma.exe.config'
         self.assertTrue(self.os_module.path.exists(lab_config_file_path))
 
     def test_transform_config__with_validation_directory__xml_update_ok_in_office_config(self):
-        validation_dir = r'c:\xxx\chiasma\candidates\validation'
+        validation_dir = r'c:\local\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_configs(validation_dir)
-        config_file_path = r'c:\xxx\chiasma\candidates\validation\chiasma.exe.config'
+        config_file_path = r'c:\local\chiasma\candidates\validation\chiasma.exe.config'
         with self.chiasma.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Molmed.Chiasma.Properties")
             self.assertEqual("OFFICE", config.get('ApplicationMode'))
@@ -101,20 +101,19 @@ line 3"""
             self.assertEqual("False", config.get("DebugMode"))
             self.assertEqual("Ef", config.get("RepositoryImplementation"))
 
-    @pytest.mark.now
     def test_transform_config_for_shared_kernel__with_validation_dir__xml_update_ok(self):
-        validation_dir = r'c:\xxx\chiasma\candidates\validation'
+        validation_dir = r'c:\local\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_configs(validation_dir)
-        config_file_path = r'c:\xxx\chiasma\candidates\validation\chiasma.sharedkernel.exe.config'
+        config_file_path = r'c:\local\chiasma\candidates\validation\chiasma.sharedkernel.exe.config'
         with self.chiasma.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Chiasma.SharedKernel.Properties")
             self.assertEqual("GTDB2_practice", config.get("DatabaseName"))
             self.assertEqual("ProjectMan_devel", config.get("ProjmanDatabaseName"))
 
     def test_transform_config__with_validation_directory__lab_config_update_ok(self):
-        validation_dir = r'c:\xxx\chiasma\candidates\validation'
+        validation_dir = r'c:\local\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_configs(validation_dir)
-        config_file_path = r'c:\xxx\chiasma\candidates\validation\config_lab\chiasma.exe.config'
+        config_file_path = r'c:\local\chiasma\candidates\validation\config_lab\chiasma.exe.config'
         with self.chiasma.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Molmed.Chiasma.Properties")
             self.assertEqual("LAB", config.get('ApplicationMode'))
@@ -126,12 +125,11 @@ line 3"""
             self.assertEqual("False", config.get("DebugMode"))
             self.assertEqual("Ef", config.get("RepositoryImplementation"))
 
-    @pytest.mark.now
     def test_transform_shared_kernel_config__with_validation_directory__lab_config_update_ok(self):
-        validation_dir = r'c:\xxx\chiasma\candidates\validation'
+        validation_dir = r'c:\local\chiasma\candidates\validation'
         self.chiasma.chiasma_builder._transform_configs(validation_dir)
         # Note, shared kernel config is not in lab-config dir!
-        config_file_path = r'c:\xxx\chiasma\candidates\validation\chiasma.sharedkernel.exe.config'
+        config_file_path = r'c:\local\chiasma\candidates\validation\chiasma.sharedkernel.exe.config'
         with self.chiasma.open_xml(config_file_path) as xml:
             config = StandardVSConfigXML(xml, "Chiasma.SharedKernel.Properties")
             self.assertEqual("GTDB2_practice", config.get("DatabaseName"))
@@ -144,7 +142,7 @@ row3"""
         expected = """row 1
 [assembly: AssemblyVersion("1.0.0")]
 row3"""
-        file_path = (r'c:\xxx\chiasma\candidates\release-1.0.0\GitEdvard-chiasma-123\chiasma'
+        file_path = (r'c:\local\chiasma\candidates\release-1.0.0\GitEdvard-chiasma-123\chiasma'
                      r'\properties\AssemblyInfo.cs')
         self.filesystem.create_file(file_path, contents=original_contents)
         self.chiasma.chiasma_builder.update_binary_version()
@@ -157,7 +155,7 @@ row3"""
 class FileBuilder:
     def __init__(self, filesystem, os_service):
         self.filesystem = filesystem
-        self.release_dir = r'c:\xxx\chiasma\candidates\release-1.0.0\gitedvard-chiasma-123\chiasma\bin\release'
+        self.release_dir = r'c:\local\chiasma\candidates\release-1.0.0\gitedvard-chiasma-123\chiasma\bin\release'
         create_dirs(os_service, self.release_dir)
 
     def add_file_to_release(self, filename='file.txt', contents=''):

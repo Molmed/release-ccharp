@@ -37,6 +37,13 @@ class AppPaths:
                             download_directory_name)
 
     @lazyprop
+    def database_delivery_exe(self):
+        return os.path.join(
+            self.download_dir,
+            r'DatabaseDelivery\bin\Release\DatabaseDelivery.exe'
+        )
+
+    @lazyprop
     def validation_dir(self):
         cand_dir = self.path_properties.current_candidate_dir
         return os.path.join(cand_dir, "validation")

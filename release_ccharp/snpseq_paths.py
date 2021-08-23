@@ -8,10 +8,18 @@ from release_ccharp.utils import lazyprop
 
 
 class SnpseqPathProperties:
-    def __init__(self, config, repo, os_service):
+    def __init__(self, config, repo, os_service, environment):
+        """
+
+        :param config:
+        :param repo:
+        :param os_service:
+        :param environment: <"local"|"file_area">
+        """
         self.config = config
         self.repo = repo
         self.os_service = os_service
+        self.environment = environment
         self.branch_provider = None
         sub_paths = self._load_subpaths()
         self.build_config_subpath = sub_paths['build_config_subpath']
@@ -39,7 +47,14 @@ class SnpseqPathProperties:
 
     @property
     def _repo_root(self):
-        return os.path.join(self.config['root_path'], self.repo)
+        if self.environment == "file_area":
+            return os.path.join(self.config['root_path'], self.repo)
+        elif self.environment == "local":
+            return os.path.join(self.config['local_root_path'], self.repo)
+        else:
+            raise ValueError("environment variable must be either 'file_area', "
+                             "or 'local', current value: {}"
+                             .format(self.environment))
 
     @property
     def _candidate_tag(self):

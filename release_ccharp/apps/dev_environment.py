@@ -12,7 +12,7 @@ class TestEnvironmentProvider:
 
     def generate(self, config):
         # Prepare
-        path_properites = SnpseqPathProperties(config, config["git_repo_name"], OsService())
+        path_properites = SnpseqPathProperties(config, config["git_repo_name"], OsService(), "local")
         path_actions = SnpseqPathActions(whatif=False, path_properties=path_properites,
                                          os_service=OsService())
         wf = SnpseqWorkflow(whatif=False, repo=config["git_repo_name"], os_service=OsService())

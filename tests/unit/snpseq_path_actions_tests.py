@@ -1,5 +1,6 @@
 import unittest
 import re
+import pytest
 from pyfakefs import fake_filesystem
 from release_ccharp.snpseq_paths import SnpseqPathProperties
 from release_ccharp.snpseq_paths import SnpseqPathActions
@@ -14,7 +15,7 @@ class SnpseqPathActionsTests(unittest.TestCase):
             "owner": "GitEdvard"
         }
         filesystem = fake_filesystem.FakeFilesystem()
-        self.path_properties = SnpseqPathProperties(config, "chiasma", None)
+        self.path_properties = SnpseqPathProperties(config, "chiasma", None, "file_area")
         self.path_properties.branch_provider = FakeBranchProvider()
         self.path_actions = SnpseqPathActions(whatif=False, path_properties=self.path_properties,
                                               os_service=FakeOsService(filesystem))

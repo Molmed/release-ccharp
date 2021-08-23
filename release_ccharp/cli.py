@@ -101,14 +101,22 @@ def generate_user_manual(ctx, repo, copy_latest):
 @cli.command("generate-folder-tree")
 @click.argument("repo")
 @click.pass_context
-def generate_folder_tree(ctx, repo):
+def generate_folder_tree(ctx, repo, environment="file_area"):
+    """
+
+    :param ctx:
+    :param repo:
+    :param environment: <"local"|"file_area">
+    :return:
+    """
     c = Config()
     config = c.open_config(repo)
-    path_properites = SnpseqPathProperties(config, repo, OsService())
+    path_properites = SnpseqPathProperties(config, repo, OsService(), environment)
     path_actions = SnpseqPathActions(whatif=ctx.obj['whatif'],
                                      path_properties=path_properites,
                                      os_service=OsService())
     path_actions.generate_folder_tree()
+
 
 @cli.command("status")
 @click.argument("repo")
@@ -117,8 +125,10 @@ def status(ctx, repo):
     wf = SnpseqWorkflow(whatif=ctx.obj['whatif'], repo=repo, os_service=OsService())
     wf.status()
 
+
 def cli_main():
     cli(obj={})
+
 
 if __name__ == "__main__":
     cli_main()

@@ -15,7 +15,7 @@ class SnpseqWorkflow:
     """
     Initializes a release-tools workflow to act on the github provider
     """
-    def __init__(self, whatif, repo, os_service, config=None):
+    def __init__(self, whatif, repo, os_service, config=None, branch_provider=None):
         conf = Config()
         self.os_service = os_service
         if config is None:
@@ -24,9 +24,11 @@ class SnpseqWorkflow:
             self.config = config
         self.whatif = whatif
         self.repo = repo
-        self.paths = SnpseqPathProperties(self.config, self.repo, os_service)
+        self.paths = SnpseqPathProperties(self.config, self.repo, os_service, "file_area")
+        self.local_paths = SnpseqPathProperties(self.config, self.repo, os_service, "local")
         self.workflow = self._create_workflow()
-        self.paths.branch_provider = BranchProvider(self.workflow)
+        self.paths.branch_provider = branch_provider or BranchProvider(self.workflow)
+        self.local_paths.branch_provider = branch_provider or BranchProvider(self.workflow)
 
     def _open_github_provider_config(self, config_file):
         try:
@@ -55,7 +57,7 @@ class SnpseqWorkflow:
         self.workflow.create_hotfix()
 
     def download(self):
-        self.workflow.download_next_in_queue(path=self.paths.root_candidates, force=False)
+        self.workflow.download_next_in_queue(path=self.local_paths.root_candidates, force=False)
 
     def accept(self):
         self.workflow.accept_release_candidate(force=False)

@@ -1,5 +1,6 @@
 chiasma :
     root_path : P:\lims
+    local_root_path : C:\Tmp
     git_repo_name : chiasma
     exe_file_name_base : Chiasma
     project_root_dir : Chiasma
@@ -10,6 +11,7 @@ chiasma :
     deploy_root_path : L:\Labsystem\Chiasma\Installation\Klient\Chiasma\Filer
 testing-repo :
     root_path : C:\Tmp
+    local_root_path : C:\Tmp
     git_repo_name : testing-repo
     exe_file_name_base : ChiasmaDeposit
     project_root_dir : ChiasmaDeposit
@@ -17,6 +19,7 @@ testing-repo :
     deploy_root_path : C:\Tmp\testing-repo-deploy
 order :
     root_path : P:\lims
+    local_root_path : C:\Tmp
     git_repo_name : PlattformOrdMan
     exe_file_name_base : Order
     project_root_dir : PlattformOrdMan
@@ -26,6 +29,7 @@ order :
     deploy_root_path : L:\Labsystem\Chiasma\Installation\Klient\Order\Filer
 sqat:
     root_path : P:\lims
+    local_root_path : C:\Tmp
     git_repo_name : SNPQualityAnalysisTool
     exe_file_name_base : SNP Quality Analysis Tool
     project_root_dir : SQAT3Client
@@ -33,6 +37,7 @@ sqat:
     deploy_root_path : L:\Labsystem\Chiasma\Installation\Klient\SNP Quality Analysis Tool
 fp:
     root_path : P:\lims
+    local_root_path : C:\Tmp
     git_repo_name : FPdatabase
     exe_file_name_base : FPDatabase
     project_root_dir : FPDatabase_SourceCode
@@ -40,6 +45,7 @@ fp:
     deploy_root_path : L:\Labsystem\Chiasma\Installation\Klient\FPdatabase
 chiasmadeposit :
     root_path : P:\lims
+    local_root_path : C:\Tmp
     git_repo_name : ChiasmaDeposit
     exe_file_name_base : ChiasmaDeposit
     project_root_dir : ChiasmaDeposit

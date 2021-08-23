@@ -22,13 +22,13 @@ class Application(ApplicationBase):
             branch_provider=branch_provider, app_paths=self.app_paths, os_service=os_service)
         file_deployer = FileDeployer(
             self.path_properties, self.os_service, snpseq_workflow.config, self.app_paths)
-        self.chiasma_builder = ChiasmaBuilder(self, file_deployer, self.app_paths, self.config)
+        self.chiasma_builder = ChiasmaBuilder(self, file_deployer, self.local_app_paths, self.config)
         path_actions = SnpseqPathActions(
             whatif, self.path_properties, os_service, self.app_paths, self.windows_commands)
         self.validation_deployer = ChiasmaValidationDeployer(
-            self, file_deployer, path_actions)
+            self, file_deployer, path_actions, self.path_properties, self.local_app_paths)
         self.deployer = ChiasmaDeployer(
-            self.path_properties, file_deployer, path_actions, branch_provider)
+            self, self.path_properties, file_deployer, path_actions, branch_provider)
 
     def build(self):
         super(Application, self).build()
