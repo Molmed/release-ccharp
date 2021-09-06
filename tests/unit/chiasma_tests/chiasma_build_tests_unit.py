@@ -4,6 +4,7 @@ from unittest import skip
 import pytest
 from pyfakefs.fake_filesystem import FakeFileOpen
 from release_ccharp.apps.common.single_file_read_write import StandardVSConfigXML
+from release_ccharp.exceptions import SnpseqReleaseException
 from release_ccharp.utils import create_dirs
 from tests.unit.utility.config import CHIASMA_CONFIG
 from tests.unit.utility.config import CHIASMA_SHAREDKERNEL_CONFIG
@@ -34,6 +35,11 @@ line 3"""
         (current, new) = self.chiasma.binary_version_updater.get_assembly_replace_strings(s, "1.0.0")
         self.assertEqual("assembly: AssemblyVersion(\"1.6.*\")", current)
         self.assertEqual("assembly: AssemblyVersion(\"1.0.0\")", new)
+
+    def test_production_folder_exists_render_error_message(self):
+        self.filesystem.create_file(r'c:\local\chiasma\candidates\release-1.0.0\production\chiasma.exe')
+        with self.assertRaises(SnpseqReleaseException):
+            self.chiasma.chiasma_builder.check_build_not_already_run()
 
     def test_read_file(self):
         print(CHIASMA_CONFIG)
