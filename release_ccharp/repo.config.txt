@@ -1,5 +1,5 @@
 chiasma :
-    root_path : P:\lims
+    root_path : G:\Silver\snpseq_info\lims
     local_root_path : C:\Tmp
     git_repo_name : chiasma
     exe_file_name_base : Chiasma
@@ -8,7 +8,7 @@ chiasma :
     db_backup_server_dir : \\130.238.178.226\Latest release
     db_backup_filename : gtdb2_devel_backup.bak
     owner : Molmed
-    deploy_root_path : L:\Labsystem\Chiasma\Installation\Klient\Chiasma\Filer
+    deploy_root_path : G:\Silver\snpseq_lab_general\Labsystem\Chiasma\Installation\Klient\Chiasma\Filer
 testing-repo :
     root_path : C:\Tmp
     local_root_path : C:\Tmp
@@ -18,7 +18,7 @@ testing-repo :
     owner : GitEdvard
     deploy_root_path : C:\Tmp\testing-repo-deploy
 order :
-    root_path : P:\lims
+    root_path : G:\Silver\snpseq_info\lims
     local_root_path : C:\Tmp
     git_repo_name : PlattformOrdMan
     exe_file_name_base : Order
@@ -26,29 +26,28 @@ order :
     db_backup_server_dir : \\130.238.178.226\Latest release
     db_backup_filename : order_devel_backup.bak
     owner : Molmed
-    deploy_root_path : L:\Labsystem\Chiasma\Installation\Klient\Order\Filer
+    deploy_root_path : G:\Silver\snpseq_lab_general\Labsystem\Chiasma\Installation\Klient\Order\Filer
 sqat:
-    root_path : P:\lims
+    root_path : G:\Silver\snpseq_info\lims
     local_root_path : C:\Tmp
     git_repo_name : SNPQualityAnalysisTool
     exe_file_name_base : SNP Quality Analysis Tool
     project_root_dir : SQAT3Client
     owner : Molmed
-    deploy_root_path : L:\Labsystem\Chiasma\Installation\Klient\SNP Quality Analysis Tool
+    deploy_root_path : G:\Silver\snpseq_lab_general\Labsystem\Chiasma\Installation\Klient\SNP Quality Analysis Tool
 fp:
-    root_path : P:\lims
+    root_path : G:\Silver\snpseq_info\lims
     local_root_path : C:\Tmp
     git_repo_name : FPdatabase
     exe_file_name_base : FPDatabase
     project_root_dir : FPDatabase_SourceCode
     owner : Molmed
-    deploy_root_path : L:\Labsystem\Chiasma\Installation\Klient\FPdatabase
+    deploy_root_path : G:\Silver\snpseq_lab_general\Labsystem\Chiasma\Installation\Klient\FPdatabase
 chiasmadeposit :
-    root_path : P:\lims
+    root_path : G:\Silver\snpseq_info\lims
     local_root_path : C:\Tmp
     git_repo_name : ChiasmaDeposit
     exe_file_name_base : ChiasmaDeposit
     project_root_dir : ChiasmaDeposit
     owner : Molmed
-    deploy_root_path : L:\Labsystem\Chiasma\Installation\Klient\ChiasmaDeposit
-
+    deploy_root_path : G:\Silver\snpseq_lab_general\Labsystem\Chiasma\Installation\Klient\ChiasmaDeposit
