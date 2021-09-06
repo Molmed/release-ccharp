@@ -24,7 +24,11 @@ class ChiasmaBuilder:
         self.chiasma.binary_version_updater.update_binary_version(assembly_file_path)
 
     def check_build_not_already_run(self):
-        self.file_deployer.check_not_already_run()
+        if self.chiasma.os_service.exists(self.app_paths.production_dir) or \
+                self.chiasma.os_service.exists(self.app_paths.validation_dir):
+            raise SnpseqReleaseException(
+                ("Production or validation catalog already exists. " 
+                "They need to be removed before continuing"))
 
     def build_solution(self):
         solution_file = self._find_solution_file()

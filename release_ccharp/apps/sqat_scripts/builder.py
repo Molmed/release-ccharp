@@ -28,7 +28,11 @@ class SqatBuilder:
         self.copy_user_manual()
 
     def check_not_already_run(self):
-        self.file_deployer.check_not_already_run()
+        if self.sqat.os_service.exists(self.app_paths.production_dir) or \
+                self.sqat.os_service.exists(self.app_paths.validation_dir):
+            raise SnpseqReleaseException(
+                ("Production or validation catalog already exists. "
+                 "They need to be removed before continuing"))
 
     def update_binary_version(self):
         self.binary_version_updater.update_binary_version(self._assembly_file_path)
